@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical" >
+
+    <include layout="@layout/prayer_hdr" />
+    
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="48dp"
+        android:orientation="horizontal" >
+
+        <LinearLayout
+            android:id="@+id/section_date_index"
+            android:layout_width="40dp"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:gravity="center_vertical"
+            android:background="@color/normal_day_bg_color" >
+
+            <TextView
+                android:id="@+id/day_of_week"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textStyle="bold"
+                android:textColor="@color/normal_day_color"
+                android:gravity="center" />
+
+            <TextView
+                android:id="@+id/day_number"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textStyle="bold"
+                android:textColor="@color/normal_weekday_color"
+                android:gravity="center" />
+        </LinearLayout>
+
+        <ImageView
+            android:id="@+id/fajr_view"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:contentDescription="@string/fajr" />
+
+        <ImageView
+            android:id="@+id/dhuhr_view"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:background="@color/shaded_column_color"
+            android:contentDescription="@string/dhuhr" />
+
+        <ImageView
+            android:id="@+id/asr_view"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:contentDescription="@string/asr" />
+
+        <ImageView
+            android:id="@+id/maghrib_view"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:background="@color/shaded_column_color"
+            android:contentDescription="@string/maghrib" />
+
+        <ImageView
+            android:id="@+id/isha_view"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:contentDescription="@string/isha" />
+    </LinearLayout>
+
+    <View android:id="@+id/list_divider"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@android:drawable/divider_horizontal_dark" />
+</LinearLayout>

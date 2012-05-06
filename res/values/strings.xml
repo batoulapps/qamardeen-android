@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">QamarDeen</string>
+    
+    <string name="prayers_tab">Prayers</string>
+    <string name="quran_tab">Quran</string>
+    <string name="sadaqah_tab">Sadaqah</string>
+    <string name="fasting_tab">Fasting</string>
+    
+    <string name="fajr">Fajr</string>
+    <string name="dhuhr">Dhuhr</string>
+    <string name="asr">Asr</string>
+    <string name="maghrib">Maghrib</string>
+    <string name="isha">Isha</string>
+    
+    <string name="settings_menu">Settings</string>
+</resources>
