@@ -14,52 +14,10 @@
         android:textStyle="bold"
         android:background="@color/hdr_month_bg_color" />
     
-    <LinearLayout
-        android:id="@+id/salah_hdr"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:background="@color/hdr_background"
-        android:orientation="horizontal" >
-
-        <TextView
-            android:id="@+id/fajr_view"
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:gravity="center|center_vertical"
-            android:textColor="@color/white" />
-
-        <TextView
-            android:id="@+id/dhuhr_view"
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:gravity="center|center_vertical"
-            android:textColor="@color/white" />
-
-        <TextView
-            android:id="@+id/asr_view"
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:gravity="center|center_vertical"
-            android:textColor="@color/white" />
-
-        <TextView
-            android:id="@+id/maghrib_view"
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:gravity="center|center_vertical"
-            android:textColor="@color/white" />
-
-        <TextView
-            android:id="@+id/isha_view"
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:gravity="center|center_vertical"
-            android:textColor="@color/white" />
-    </LinearLayout>
+    <com.batoulapps.QamarDeen.ui.widgets.PrayerBoxesHeaderLayout
+            android:id="@+id/prayer_header_boxes"
+            android:background="@color/hdr_background"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
 
 </LinearLayout>

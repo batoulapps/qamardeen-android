@@ -4,7 +4,7 @@
     <color name="white">#ffffffff</color>
     
     <!-- header colors -->
-    <color name="hdr_background">#99d6d6d6</color>
+    <color name="hdr_background">#55d6d6d6</color>
     <color name="hdr_month_bg_color">#440b0b</color>
     <color name="pinned_hdr_month_bg_color">#aa440b0b</color>
     <color name="pinned_hdr_background">#aa666666</color>
@@ -19,5 +19,5 @@
     <color name="normal_day_color">#ff5858</color>
     
     <!-- shaded column color -->
-    <color name="shaded_column_color">#e2e2e2</color>
+    <color name="shaded_column_color">#55e2e2e2</color>
 </resources>

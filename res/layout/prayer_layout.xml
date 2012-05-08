@@ -36,42 +36,10 @@
                 android:gravity="center" />
         </LinearLayout>
 
-        <ImageView
-            android:id="@+id/fajr_view"
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:contentDescription="@string/fajr" />
-
-        <ImageView
-            android:id="@+id/dhuhr_view"
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:background="@color/shaded_column_color"
-            android:contentDescription="@string/dhuhr" />
-
-        <ImageView
-            android:id="@+id/asr_view"
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:contentDescription="@string/asr" />
-
-        <ImageView
-            android:id="@+id/maghrib_view"
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:background="@color/shaded_column_color"
-            android:contentDescription="@string/maghrib" />
-
-        <ImageView
-            android:id="@+id/isha_view"
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:contentDescription="@string/isha" />
+        <com.batoulapps.QamarDeen.ui.widgets.PrayerBoxesLayout
+            android:id="@+id/prayer_boxes"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
     </LinearLayout>
 
     <View android:id="@+id/list_divider"

@@ -8,10 +8,12 @@
     <string name="fasting_tab">Fasting</string>
     
     <string name="fajr">Fajr</string>
+    <string name="duha">Duha</string>
     <string name="dhuhr">Dhuhr</string>
     <string name="asr">Asr</string>
     <string name="maghrib">Maghrib</string>
     <string name="isha">Isha</string>
+    <string name="qiyyam">Qiyyam</string>
     
     <string name="settings_menu">Settings</string>
 </resources>
