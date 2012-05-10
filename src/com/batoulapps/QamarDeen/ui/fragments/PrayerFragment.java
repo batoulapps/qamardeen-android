@@ -24,6 +24,7 @@ import com.batoulapps.QamarDeen.ui.widgets.PinnedHeaderListView;
 import com.batoulapps.QamarDeen.ui.widgets.PinnedHeaderListView.PinnedHeaderAdapter;
 import com.batoulapps.QamarDeen.ui.widgets.PrayerBoxesHeaderLayout;
 import com.batoulapps.QamarDeen.ui.widgets.PrayerBoxesLayout;
+import com.batoulapps.QamarDeen.utils.QamarTime;
 
 public class PrayerFragment extends SherlockFragment {
 
@@ -68,10 +69,10 @@ public class PrayerFragment extends SherlockFragment {
       }
       
       public void addDays(int daysToAdd){
-         Calendar endCalendar = Calendar.getInstance();
+         Calendar endCalendar = QamarTime.getTodayCalendar();
          endCalendar.add(Calendar.DATE, -1 * (mDays.size() + daysToAdd));
          
-         Calendar calculations = Calendar.getInstance();
+         Calendar calculations = QamarTime.getTodayCalendar();
          calculations.add(Calendar.DATE, -1 * mDays.size());
 
          while (calculations.compareTo(endCalendar) >= 0){

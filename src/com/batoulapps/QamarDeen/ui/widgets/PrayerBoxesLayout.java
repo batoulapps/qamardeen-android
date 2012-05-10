@@ -9,27 +9,26 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 
 import com.batoulapps.QamarDeen.R;
+import com.batoulapps.QamarDeen.data.QamarConstants;
+import com.batoulapps.QamarDeen.data.QamarConstants.Prayers;
 
 public class PrayerBoxesLayout extends LinearLayout {
    
    private Context mContext = null;
    private List<ImageView> mImages = null;
-   private boolean mIsExtendedMode = false;
-   
-   private static int DUHA = 1;
-   private static int QIYYAM = 6;
+   private boolean mIsExtendedMode = false; 
 
-   public PrayerBoxesLayout(Context context) {
+   public PrayerBoxesLayout(Context context){
       super(context);
       init(context);
    }
    
-   public PrayerBoxesLayout(Context context, AttributeSet attrs) {
+   public PrayerBoxesLayout(Context context, AttributeSet attrs){
       super(context, attrs);
       init(context);
    }
    
-   public PrayerBoxesLayout(Context context, AttributeSet attrs, int defStyle) {
+   public PrayerBoxesLayout(Context context, AttributeSet attrs, int defStyle){
       super(context, attrs, defStyle);
       init(context);
    }
@@ -38,7 +37,7 @@ public class PrayerBoxesLayout extends LinearLayout {
       mContext = context;
       mImages = new ArrayList<ImageView>();
       for (int i=0; i<5; i++){
-         ImageView image = getImageView(i);
+         ImageView image = getImageView(QamarConstants.PRAYER_LIST[i]);
          addView(image, i);
          mImages.add(image);
       }
@@ -58,12 +57,12 @@ public class PrayerBoxesLayout extends LinearLayout {
    public void setExtendedMode(boolean extendedMode){
       if (extendedMode && !mIsExtendedMode){
          // add duha after fajr
-         ImageView duha = getImageView(DUHA);
+         ImageView duha = getImageView(Prayers.DUHA);
          addView(duha, 1);
-         mImages.add(DUHA, duha);
+         mImages.add(Prayers.DUHA, duha);
          
          // add qiyyam to the end
-         ImageView qiyyam = getImageView(QIYYAM);
+         ImageView qiyyam = getImageView(Prayers.QIYYAM);
          addView(qiyyam);
          mImages.add(qiyyam);
          
@@ -72,13 +71,13 @@ public class PrayerBoxesLayout extends LinearLayout {
       }
       else if (!extendedMode && mIsExtendedMode){
          // remove qiyyam
-         ImageView tahajjud = mImages.remove(QIYYAM);
+         ImageView tahajjud = mImages.remove(Prayers.QIYYAM);
          tahajjud.setBackgroundDrawable(null);
          tahajjud.setImageDrawable(null);
          removeView(tahajjud);
          
          // remove duha
-         ImageView shuruq = mImages.remove(DUHA);
+         ImageView shuruq = mImages.remove(Prayers.DUHA);
          shuruq.setBackgroundDrawable(null);
          shuruq.setImageDrawable(null);
          removeView(shuruq);     
