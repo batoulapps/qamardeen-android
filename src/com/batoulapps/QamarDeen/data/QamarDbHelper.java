@@ -11,7 +11,7 @@ public class QamarDbHelper extends SQLiteOpenHelper {
    private static final String DATABASE_CREATE =
          "create table prayers(" +
          "_id integer primary key autoincrement, " +
-         "when timestamp not null, " +
+         "ts timestamp not null, " +
          "salah integer not null, " +
          "status integer not null);";
    

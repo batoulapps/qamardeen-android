@@ -4,7 +4,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.util.AttributeSet;
+import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 
@@ -51,9 +53,67 @@ public class PrayerBoxesLayout extends LinearLayout {
       LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(0,
             LayoutParams.MATCH_PARENT, 1);
       image.setLayoutParams(lp);
+      image.setOnClickListener(mImageClickListener);
       return image;
    }
+      
+   protected OnClickListener mImageClickListener = new OnClickListener(){
+      @Override
+      public void onClick(View v) {
+      }
+   };
    
+   /**
+    * sets the prayer squares given an array of values
+    * @param items an array of 7 items with the values
+    * for each salah for that day.
+    */
+   public void setPrayerSquares(int[] items){
+      for (int i = 0; i < items.length; i++){
+         togglePrayerSquare(i, items[i]);
+      }
+   }
+   
+   /**
+    * set all the prayer squares to empty/unselected
+    */
+   public void clearPrayerSquares(){
+      for (ImageView image : mImages){
+         Integer tag = (Integer)image.getTag();
+         togglePrayerSquare(tag, 0);
+      }
+   }
+   
+   /**
+    * sets the salah square's value
+    * @param salah the salah
+    * @param type the type to set that prayer to
+    */
+   public void togglePrayerSquare(int salah, int type){
+      View salahSquare = findViewWithTag(salah);
+      if (salahSquare != null){
+         if (type > 0){
+            // set the square to the right resource
+            int[] resources = new int[]{ Color.RED, Color.GREEN, Color.BLUE, 
+                  Color.CYAN, Color.YELLOW, Color.MAGENTA };
+            salahSquare.setBackgroundColor(resources[type-1]);
+         }
+         else {
+            // type is 0, so we want to reset this square
+            int res = R.color.transparent;
+            int salahIndex = mIsExtendedMode? salah :
+               (salah == 0? salah : salah-1);
+            if (salahIndex % 2 != 0){ res = R.color.shaded_column_color; }
+            
+            salahSquare.setBackgroundResource(res);
+         }
+      }
+   }
+   
+   /**
+    * toggles whether or not we should show duha and qiyyam or not
+    * @param extendedMode whether or not to show duha and qiyyam
+    */
    public void setExtendedMode(boolean extendedMode){
       if (extendedMode && !mIsExtendedMode){
          // add duha after fajr

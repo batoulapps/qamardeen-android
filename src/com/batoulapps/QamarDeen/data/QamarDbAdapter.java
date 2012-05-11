@@ -14,7 +14,7 @@ public class QamarDbAdapter {
    protected static class PrayersTable {
       public static final String TABLE_NAME = "prayers";
       public static final String ID = "_id";
-      public static final String TIME = "when";
+      public static final String TIME = "ts";
       public static final String PRAYER = "salah";
       public static final String STATUS = "status";
    }
@@ -30,16 +30,26 @@ public class QamarDbAdapter {
    }
    
    public void close(){
-      mDbHelper.close();
+      if (mDbHelper != null){
+         mDbHelper.close();
+         mDbHelper = null;
+         mDb = null;
+      }
    }
    
-   public Cursor getPrayerEntries(long minDate) throws SQLException {
+   /**
+    * gets the prayer entries for a specific time range
+    * @param max the maximum timestamp to fetch (in seconds, gmt at 12:00)
+    * @param min the minimum timestamp to fetch (in seconds, gmt at 12:00)
+    * @return Cursor of the results
+    * @throws SQLException if an issue occurs
+    */
+   public Cursor getPrayerEntries(long max, long min) throws SQLException {
+      if (mDbHelper == null){ open(); }
       Cursor cursor = mDb.query(PrayersTable.TABLE_NAME,
-            null, PrayersTable.TIME + " > " + minDate,
+            null, PrayersTable.TIME + " > " + min + " AND " + 
+            PrayersTable.TIME + " <= " + max,
             null, null, null, PrayersTable.TIME + " DESC");
-      if (cursor != null){
-         cursor.moveToFirst();
-      }
       return cursor;
    }
 }

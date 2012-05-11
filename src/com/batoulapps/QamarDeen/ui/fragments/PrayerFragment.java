@@ -4,10 +4,14 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import android.content.Context;
 import android.content.res.Resources;
+import android.database.Cursor;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.text.format.DateUtils;
 import android.view.LayoutInflater;
@@ -19,7 +23,9 @@ import android.widget.BaseAdapter;
 import android.widget.TextView;
 
 import com.actionbarsherlock.app.SherlockFragment;
+import com.batoulapps.QamarDeen.QamarDeenActivity;
 import com.batoulapps.QamarDeen.R;
+import com.batoulapps.QamarDeen.data.QamarDbAdapter;
 import com.batoulapps.QamarDeen.ui.widgets.PinnedHeaderListView;
 import com.batoulapps.QamarDeen.ui.widgets.PinnedHeaderListView.PinnedHeaderAdapter;
 import com.batoulapps.QamarDeen.ui.widgets.PrayerBoxesHeaderLayout;
@@ -30,6 +36,7 @@ public class PrayerFragment extends SherlockFragment {
 
    private PinnedHeaderListView mListView = null;
    private PrayerListAdapter mListAdapter = null;
+   private AsyncTask<Long, Void, Cursor> loadingTask = null;
    
    public static PrayerFragment newInstance(){
       return new PrayerFragment();
@@ -56,11 +63,108 @@ public class PrayerFragment extends SherlockFragment {
       return view;
    }
    
+   /**
+    * gets prayer data for a range of times
+    * @param maxDate the max date to get prayer data for.  may be null.
+    * @param minDate the min date to get prayer data for.  may be null.
+    */
+   private void requestPrayerData(Long maxDate, Long minDate){
+      if (loadingTask != null){
+         loadingTask.cancel(true);
+      }
+      
+      Calendar calendar = QamarTime.getTodayCalendar();
+      if (maxDate == null){
+         // if no max date, set it to today
+         maxDate = calendar.getTimeInMillis();
+      }
+      else { calendar.setTimeInMillis(maxDate); }
+      
+      // need ts of 12:00:00 on the max day in gmt
+      maxDate = QamarTime.getGMTTimeFromLocal(calendar);
+      
+      if (minDate == null){
+         // if no min date, backup 30 days
+         calendar.add(Calendar.DATE, -1 * 30);
+         minDate = calendar.getTimeInMillis();
+      }
+      else { calendar.setTimeInMillis(minDate); }
+      
+      // need ts 12:00:00 on the min day in gmt
+      minDate = QamarTime.getGMTTimeFromLocal(calendar);
+      
+      // get the data from the database
+      loadingTask = new DataTask();
+      loadingTask.execute(maxDate, minDate);
+   }
+   
+   /**
+    * AsyncTask that asynchronously gets prayer data from the database
+    * and updates the cursor accordingly.
+    */
+   private class DataTask extends AsyncTask<Long, Void, Cursor> {
+      
+      @Override
+      protected Cursor doInBackground(Long... params){
+         long maxDate = params[0];
+         long minDate = params[1];
+         
+         QamarDeenActivity activity =
+               (QamarDeenActivity)PrayerFragment.this.getActivity();
+         QamarDbAdapter adapter = activity.getDatabaseAdapter();
+         return adapter.getPrayerEntries(maxDate / 1000, minDate / 1000);
+         
+         /*
+         // testing code
+         MatrixCursor mc = new MatrixCursor(new String[]{ "_id", "ts", "salah", "status" });
+         mc.newRow().add(1).add(1336694400).add(4).add(1);
+         mc.newRow().add(2).add(1336435200).add(3).add(2);
+         return mc;
+         */
+      }
+      
+      @Override
+      protected void onPostExecute(Cursor cursor){
+         if (cursor != null){
+            if (cursor.moveToFirst()){
+               Map<Long, int[]> data = new HashMap<Long, int[]>();
+               do {
+                  long timestamp = cursor.getLong(1) * 1000;
+                  int prayer = cursor.getInt(2);
+                  int status = cursor.getInt(3);
+                  
+                  // time calculations
+                  Calendar gmtCal = QamarTime.getGMTCalendar();
+                  gmtCal.setTimeInMillis(timestamp);
+                  long localTimestamp = QamarTime.getLocalTimeFromGMT(gmtCal);
+                  
+                  // get or make columns for the data
+                  int[] columns = data.get(localTimestamp);
+                  if (columns == null){ columns = new int[7]; }
+                  
+                  columns[prayer] = status;
+                  data.put(localTimestamp, columns);
+               }
+               while (cursor.moveToNext());
+               
+               if (!data.isEmpty()){
+                  // set the data in the adapter
+                  PrayerFragment.this.mListAdapter.addDayData(data);
+                  PrayerFragment.this.mListAdapter.notifyDataSetChanged();
+               }
+            }
+            cursor.close();
+         }
+         loadingTask = null;
+      }
+   }
+   
    private class PrayerListAdapter extends BaseAdapter implements 
          OnScrollListener, PinnedHeaderAdapter {
       private List<Date> mDays;
       private LayoutInflater mInflater;
       private boolean mIsExtendedMode = false;
+      private Map<Long, int[]> dataMap = new HashMap<Long, int[]>();
 
       public PrayerListAdapter(Context context){
          mInflater = LayoutInflater.from(context);
@@ -68,17 +172,35 @@ public class PrayerFragment extends SherlockFragment {
          addDays(30);
       }
       
+      /**
+       * extend the list to add n more days.  puts in a request
+       * for those days to the database.
+       * @param daysToAdd number of days to add
+       */
       public void addDays(int daysToAdd){
+         // end calendar is the new minimum date based on what
+         // data we already have and how many days we want to add
          Calendar endCalendar = QamarTime.getTodayCalendar();
          endCalendar.add(Calendar.DATE, -1 * (mDays.size() + daysToAdd));
+         long minDate = endCalendar.getTimeInMillis();
          
+         // calculations is today minus the number of days we already
+         // have (the current minimum date that is populated).
          Calendar calculations = QamarTime.getTodayCalendar();
          calculations.add(Calendar.DATE, -1 * mDays.size());
+         long maxDate = calculations.getTimeInMillis();
 
          while (calculations.compareTo(endCalendar) >= 0){
             mDays.add(calculations.getTime());
             calculations.add(Calendar.DATE, -1);
          }
+         
+         // request the data from the database
+         requestPrayerData(maxDate, minDate);
+      }
+      
+      public void addDayData(Map<Long, int[]> data){
+         dataMap.putAll(data);
       }
       
       public int getCount(){
@@ -122,6 +244,8 @@ public class PrayerFragment extends SherlockFragment {
          }
          else { holder = (ViewHolder)convertView.getTag(); }
          
+         // handling for the color of the day area based on whether
+         // the day represents today or not
          Resources res = getActivity().getResources();
          if (DateUtils.isToday(date.getTime())){
             holder.dateAreaView.setBackgroundResource(R.color.today_bg_color);
@@ -163,10 +287,22 @@ public class PrayerFragment extends SherlockFragment {
          else {
             holder.dividerView.setVisibility(View.VISIBLE);
          }
+         
+         // set the salah data
+         int[] prayerStatus = dataMap.get(date.getTime());
+         if (prayerStatus != null){
+            holder.boxes.setPrayerSquares(prayerStatus);
+         }
+         else { holder.boxes.clearPrayerSquares(); }
    
          return convertView;
       }
       
+      /**
+       * gets the section for a particular position in the list
+       * @param position the position of the list item
+       * @return the section number (which is just the month number)
+       */
       public int getSectionForPosition(int position){
          Date info = (Date)getItem(position);
          Calendar calendar = Calendar.getInstance();
@@ -174,6 +310,12 @@ public class PrayerFragment extends SherlockFragment {
          return calendar.get(Calendar.MONTH) + 1;
       }
       
+      /**
+       * gets the position of the first item for a particular section
+       * @param section the section number (currently a month)
+       * @return the first position where an item that has that section
+       * occurs.  this is used for figuring out whether to show the header
+       */
       public int getPositionForSection(int section){
          int max = mDays.size();
          Calendar calendar = Calendar.getInstance();
