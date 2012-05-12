@@ -19,6 +19,7 @@ public class PrayerBoxesLayout extends LinearLayout {
    private Context mContext = null;
    private List<ImageView> mImages = null;
    private boolean mIsExtendedMode = false; 
+   private SalahClickListener mSalahClickListener = null;
 
    public PrayerBoxesLayout(Context context){
       super(context);
@@ -60,8 +61,27 @@ public class PrayerBoxesLayout extends LinearLayout {
    protected OnClickListener mImageClickListener = new OnClickListener(){
       @Override
       public void onClick(View v) {
+         if (mSalahClickListener != null){
+            Integer salah = (Integer)v.getTag();
+            mSalahClickListener.onSalahClicked(salah);
+         }
       }
    };
+   
+   /**
+    * salah click listener
+    */
+   public interface SalahClickListener {
+      public void onSalahClicked(int salah);
+   }
+   
+   /**
+    * handle the click of a salah box
+    * @param listener a salah click listener
+    */
+   public void setSalahClickListener(SalahClickListener listener){
+      mSalahClickListener = listener;
+   }
    
    /**
     * sets the prayer squares given an array of values

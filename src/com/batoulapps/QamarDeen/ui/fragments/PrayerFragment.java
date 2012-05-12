@@ -30,6 +30,7 @@ import com.batoulapps.QamarDeen.ui.widgets.PinnedHeaderListView;
 import com.batoulapps.QamarDeen.ui.widgets.PinnedHeaderListView.PinnedHeaderAdapter;
 import com.batoulapps.QamarDeen.ui.widgets.PrayerBoxesHeaderLayout;
 import com.batoulapps.QamarDeen.ui.widgets.PrayerBoxesLayout;
+import com.batoulapps.QamarDeen.ui.widgets.PrayerBoxesLayout.SalahClickListener;
 import com.batoulapps.QamarDeen.utils.QamarTime;
 
 public class PrayerFragment extends SherlockFragment {
@@ -37,6 +38,7 @@ public class PrayerFragment extends SherlockFragment {
    private PinnedHeaderListView mListView = null;
    private PrayerListAdapter mListAdapter = null;
    private AsyncTask<Long, Void, Cursor> loadingTask = null;
+   private int mHeaderHeight = 0;
    
    public static PrayerFragment newInstance(){
       return new PrayerFragment();
@@ -45,6 +47,8 @@ public class PrayerFragment extends SherlockFragment {
    @Override
    public void onCreate(Bundle savedInstanceState){
       super.onCreate(savedInstanceState);
+      mHeaderHeight = getActivity().getResources()
+            .getDimensionPixelSize(R.dimen.header_height);
    }
    
    @Override
@@ -294,6 +298,32 @@ public class PrayerFragment extends SherlockFragment {
             holder.boxes.setPrayerSquares(prayerStatus);
          }
          else { holder.boxes.clearPrayerSquares(); }
+         
+         final int currentRow = position;
+         holder.boxes.setSalahClickListener(new SalahClickListener(){
+            
+            @Override
+            public void onSalahClicked(int salah){
+               // use this to determine if we have a header here or not
+               int section = getSectionForPosition(currentRow);
+               int firstRowForSection = getPositionForSection(section);
+               
+               // scroll either to 0 (if we are part of a header) or to
+               // just under the header
+               int scrollHeight =
+                     (firstRowForSection == currentRow)? 0 : mHeaderHeight; 
+               
+               if (android.os.Build.VERSION.SDK_INT >= 11){
+                  // honeycomb+, we get smooth scrolling
+                  mListView.smoothScrollToPositionFromTop(currentRow,
+                        scrollHeight);
+               }
+               else {
+                  // works on older android versions
+                  mListView.setSelectionFromTop(currentRow, scrollHeight);
+               }
+            }
+         });
    
          return convertView;
       }
