@@ -11,15 +11,19 @@ import java.util.Map;
 import android.content.Context;
 import android.content.res.Resources;
 import android.database.Cursor;
+import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.text.format.DateUtils;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.view.ViewGroup;
+import android.view.ViewGroup.LayoutParams;
 import android.widget.AbsListView;
 import android.widget.AbsListView.OnScrollListener;
 import android.widget.BaseAdapter;
+import android.widget.PopupWindow;
 import android.widget.TextView;
 
 import com.actionbarsherlock.app.SherlockFragment;
@@ -31,6 +35,7 @@ import com.batoulapps.QamarDeen.ui.widgets.PinnedHeaderListView.PinnedHeaderAdap
 import com.batoulapps.QamarDeen.ui.widgets.PrayerBoxesHeaderLayout;
 import com.batoulapps.QamarDeen.ui.widgets.PrayerBoxesLayout;
 import com.batoulapps.QamarDeen.ui.widgets.PrayerBoxesLayout.SalahClickListener;
+import com.batoulapps.QamarDeen.ui.widgets.SelectorWidget;
 import com.batoulapps.QamarDeen.utils.QamarTime;
 
 public class PrayerFragment extends SherlockFragment {
@@ -38,6 +43,8 @@ public class PrayerFragment extends SherlockFragment {
    private PinnedHeaderListView mListView = null;
    private PrayerListAdapter mListAdapter = null;
    private AsyncTask<Long, Void, Cursor> loadingTask = null;
+   private PopupWindow mPopupWindow = null;
+   private View mPopupWindowView = null;
    private int mHeaderHeight = 0;
    
    public static PrayerFragment newInstance(){
@@ -161,6 +168,33 @@ public class PrayerFragment extends SherlockFragment {
          }
          loadingTask = null;
       }
+   }
+   
+   private void popupSalahBox(View clickedView){
+      if (mPopupWindow == null || mPopupWindowView == null){
+         LayoutInflater inflater =
+               (LayoutInflater)getActivity().getLayoutInflater();
+         mPopupWindowView = inflater.inflate(R.layout.popup_layout, null);
+         mPopupWindow = new PopupWindow(mPopupWindowView,
+               LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT);
+         Drawable drawable = getActivity().getResources()
+               .getDrawable(R.color.popup_background);
+         mPopupWindow.setBackgroundDrawable(drawable);
+         
+         View button = mPopupWindowView.findViewById(R.id.cancel_button);
+         button.setOnClickListener(new OnClickListener(){
+            public void onClick(View view){
+               mPopupWindow.dismiss();
+            }
+         });
+      }
+      
+      String[] textIds = getActivity().getResources()
+            .getStringArray(R.array.prayer_options);
+      SelectorWidget sw = (SelectorWidget)mPopupWindowView
+            .findViewById(R.id.selector_widget);
+      sw.setSelectionItems(textIds, null);
+      mPopupWindow.showAsDropDown(clickedView);
    }
    
    private class PrayerListAdapter extends BaseAdapter implements 
@@ -303,7 +337,7 @@ public class PrayerFragment extends SherlockFragment {
          holder.boxes.setSalahClickListener(new SalahClickListener(){
             
             @Override
-            public void onSalahClicked(int salah){
+            public void onSalahClicked(View view, int salah){
                // use this to determine if we have a header here or not
                int section = getSectionForPosition(currentRow);
                int firstRowForSection = getPositionForSection(section);
@@ -322,6 +356,12 @@ public class PrayerFragment extends SherlockFragment {
                   // works on older android versions
                   mListView.setSelectionFromTop(currentRow, scrollHeight);
                }
+               
+               final View v = view;
+               view.postDelayed(
+                     new Runnable(){
+                        public void run(){ popupSalahBox(v); } 
+                     }, 50);
             }
          });
    

@@ -20,4 +20,7 @@
     
     <!-- shaded column color -->
     <color name="shaded_column_color">#55e2e2e2</color>
+    
+    <!-- popup -->
+    <color name="popup_background">#cc000000</color>
 </resources>

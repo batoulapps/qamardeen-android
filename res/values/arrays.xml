@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="prayer_options">
+        <item>@string/jama_sunnah</item>
+        <item>@string/jama</item>
+        <item>@string/alone_sunnah</item>
+        <item>@string/alone</item>
+        <item>@string/late</item>
+        <item>@string/not_set</item>        
+    </string-array>
+</resources>

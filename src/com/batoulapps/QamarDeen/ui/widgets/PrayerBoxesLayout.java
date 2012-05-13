@@ -63,7 +63,7 @@ public class PrayerBoxesLayout extends LinearLayout {
       public void onClick(View v) {
          if (mSalahClickListener != null){
             Integer salah = (Integer)v.getTag();
-            mSalahClickListener.onSalahClicked(salah);
+            mSalahClickListener.onSalahClicked(v, salah);
          }
       }
    };
@@ -72,7 +72,7 @@ public class PrayerBoxesLayout extends LinearLayout {
     * salah click listener
     */
    public interface SalahClickListener {
-      public void onSalahClicked(int salah);
+      public void onSalahClicked(View view, int salah);
    }
    
    /**
