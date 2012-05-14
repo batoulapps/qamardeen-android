@@ -15,6 +15,7 @@ import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.text.format.DateUtils;
+import android.util.DisplayMetrics;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -64,14 +65,35 @@ public class PrayerFragment extends SherlockFragment {
       View view = inflater.inflate(R.layout.qamar_list, container, false);
       mListView = (PinnedHeaderListView)view.findViewById(R.id.list);
       mListAdapter = new PrayerListAdapter(getActivity());
+      
+      // set the footer
+      DisplayMetrics metrics = new DisplayMetrics();
+      getActivity().getWindowManager().getDefaultDisplay().getMetrics(metrics);
+
+      View footer = inflater.inflate(R.layout.list_footer, null, false);
+      View emptySpace = (View)footer.findViewById(R.id.empty_space);
+      emptySpace.getLayoutParams().height = metrics.heightPixels;
+      mListView.addFooterView(footer);
+      
+      // set the adapter
       mListView.setAdapter(mListAdapter);
       
+      // set pinned header
       mListView.setPinnedHeaderView(
             LayoutInflater.from(getActivity())
             .inflate(R.layout.prayer_hdr, mListView, false));
       mListView.setOnScrollListener(mListAdapter);
       mListView.setDividerHeight(0);
+      
       return view;
+   }
+   
+   @Override
+   public void onPause() {
+      if (mPopupWindow != null){
+         mPopupWindow.dismiss();
+      }
+      super.onPause();
    }
    
    /**
@@ -404,7 +426,7 @@ public class PrayerFragment extends SherlockFragment {
             return PINNED_HEADER_GONE;
          }
 
-         if (position < 0) {
+         if (position < 0 || position >= getCount()) {
             return PINNED_HEADER_GONE;
          }
 

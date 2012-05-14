@@ -20,6 +20,8 @@
     
     <string name="settings_menu">Settings</string>
     
+    <string name="load_more">Show More</string>
+    
     <string name="jama_sunnah">Jama\'a + Sunnah</string>
     <string name="jama">Jama\'a</string>
     <string name="alone_sunnah">Alone + Sunnah</string>
