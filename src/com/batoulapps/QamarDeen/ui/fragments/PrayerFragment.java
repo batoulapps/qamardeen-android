@@ -8,44 +8,41 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.res.Resources;
 import android.database.Cursor;
-import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.text.format.DateUtils;
 import android.util.DisplayMetrics;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.view.ViewGroup.LayoutParams;
 import android.widget.AbsListView;
 import android.widget.AbsListView.OnScrollListener;
 import android.widget.BaseAdapter;
-import android.widget.PopupWindow;
 import android.widget.TextView;
 
 import com.actionbarsherlock.app.SherlockFragment;
 import com.batoulapps.QamarDeen.QamarDeenActivity;
 import com.batoulapps.QamarDeen.R;
 import com.batoulapps.QamarDeen.data.QamarDbAdapter;
+import com.batoulapps.QamarDeen.ui.helpers.QamarSelectorHelper;
 import com.batoulapps.QamarDeen.ui.widgets.PinnedHeaderListView;
 import com.batoulapps.QamarDeen.ui.widgets.PinnedHeaderListView.PinnedHeaderAdapter;
 import com.batoulapps.QamarDeen.ui.widgets.PrayerBoxesHeaderLayout;
 import com.batoulapps.QamarDeen.ui.widgets.PrayerBoxesLayout;
 import com.batoulapps.QamarDeen.ui.widgets.PrayerBoxesLayout.SalahClickListener;
-import com.batoulapps.QamarDeen.ui.widgets.SelectorWidget;
 import com.batoulapps.QamarDeen.utils.QamarTime;
 
 public class PrayerFragment extends SherlockFragment {
 
    private PinnedHeaderListView mListView = null;
    private PrayerListAdapter mListAdapter = null;
-   private AsyncTask<Long, Void, Cursor> loadingTask = null;
-   private PopupWindow mPopupWindow = null;
-   private View mPopupWindowView = null;
+   private AsyncTask<Long, Void, Cursor> mLoadingTask = null;
+   private QamarSelectorHelper mPopupHelper = null;
    private int mHeaderHeight = 0;
    
    public static PrayerFragment newInstance(){
@@ -55,24 +52,33 @@ public class PrayerFragment extends SherlockFragment {
    @Override
    public void onCreate(Bundle savedInstanceState){
       super.onCreate(savedInstanceState);
-      mHeaderHeight = getActivity().getResources()
-            .getDimensionPixelSize(R.dimen.header_height);
    }
    
    @Override
    public View onCreateView(LayoutInflater inflater, ViewGroup container,
                             Bundle savedInstanceState){
+      Activity activity = getActivity();
       View view = inflater.inflate(R.layout.qamar_list, container, false);
       mListView = (PinnedHeaderListView)view.findViewById(R.id.list);
-      mListAdapter = new PrayerListAdapter(getActivity());
+      mListAdapter = new PrayerListAdapter(activity);
+      
+      // read some dimensions
+      Resources res = activity.getResources();
+      mHeaderHeight = res.getDimensionPixelSize(R.dimen.header_height);
+      int itemHeight = res.getDimensionPixelSize(R.dimen.list_item_height);
+      int abHeight = 
+            res.getDimensionPixelSize(R.dimen.abs__action_bar_default_height);
       
       // set the footer
       DisplayMetrics metrics = new DisplayMetrics();
-      getActivity().getWindowManager().getDefaultDisplay().getMetrics(metrics);
-
+      activity.getWindowManager().getDefaultDisplay().getMetrics(metrics);
+      
+      int footerHeight = metrics.heightPixels -
+            ((2 * abHeight) + itemHeight + mHeaderHeight);
       View footer = inflater.inflate(R.layout.list_footer, null, false);
-      View emptySpace = (View)footer.findViewById(R.id.empty_space);
-      emptySpace.getLayoutParams().height = metrics.heightPixels;
+      AbsListView.LayoutParams ll = new AbsListView.LayoutParams(
+            LayoutParams.MATCH_PARENT, footerHeight);
+      footer.setLayoutParams(ll);
       mListView.addFooterView(footer);
       
       // set the adapter
@@ -80,18 +86,19 @@ public class PrayerFragment extends SherlockFragment {
       
       // set pinned header
       mListView.setPinnedHeaderView(
-            LayoutInflater.from(getActivity())
+            LayoutInflater.from(activity)
             .inflate(R.layout.prayer_hdr, mListView, false));
       mListView.setOnScrollListener(mListAdapter);
       mListView.setDividerHeight(0);
       
+      mPopupHelper = new QamarSelectorHelper(activity);
       return view;
    }
    
    @Override
    public void onPause() {
-      if (mPopupWindow != null){
-         mPopupWindow.dismiss();
+      if (mPopupHelper != null){
+         mPopupHelper.dismissPopup();
       }
       super.onPause();
    }
@@ -102,8 +109,8 @@ public class PrayerFragment extends SherlockFragment {
     * @param minDate the min date to get prayer data for.  may be null.
     */
    private void requestPrayerData(Long maxDate, Long minDate){
-      if (loadingTask != null){
-         loadingTask.cancel(true);
+      if (mLoadingTask != null){
+         mLoadingTask.cancel(true);
       }
       
       Calendar calendar = QamarTime.getTodayCalendar();
@@ -127,8 +134,8 @@ public class PrayerFragment extends SherlockFragment {
       minDate = QamarTime.getGMTTimeFromLocal(calendar);
       
       // get the data from the database
-      loadingTask = new DataTask();
-      loadingTask.execute(maxDate, minDate);
+      mLoadingTask = new DataTask();
+      mLoadingTask.execute(maxDate, minDate);
    }
    
    /**
@@ -188,35 +195,12 @@ public class PrayerFragment extends SherlockFragment {
             }
             cursor.close();
          }
-         loadingTask = null;
+         mLoadingTask = null;
       }
    }
    
-   private void popupSalahBox(View clickedView){
-      if (mPopupWindow == null || mPopupWindowView == null){
-         LayoutInflater inflater =
-               (LayoutInflater)getActivity().getLayoutInflater();
-         mPopupWindowView = inflater.inflate(R.layout.popup_layout, null);
-         mPopupWindow = new PopupWindow(mPopupWindowView,
-               LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT);
-         Drawable drawable = getActivity().getResources()
-               .getDrawable(R.color.popup_background);
-         mPopupWindow.setBackgroundDrawable(drawable);
-         
-         View button = mPopupWindowView.findViewById(R.id.cancel_button);
-         button.setOnClickListener(new OnClickListener(){
-            public void onClick(View view){
-               mPopupWindow.dismiss();
-            }
-         });
-      }
-      
-      String[] textIds = getActivity().getResources()
-            .getStringArray(R.array.prayer_options);
-      SelectorWidget sw = (SelectorWidget)mPopupWindowView
-            .findViewById(R.id.selector_widget);
-      sw.setSelectionItems(textIds, null);
-      mPopupWindow.showAsDropDown(clickedView);
+   private void popupSalahBox(View anchorView, int currentRow){
+      mPopupHelper.showPopup(anchorView, currentRow, R.array.prayer_options);
    }
    
    private class PrayerListAdapter extends BaseAdapter implements 
@@ -382,7 +366,9 @@ public class PrayerFragment extends SherlockFragment {
                final View v = view;
                view.postDelayed(
                      new Runnable(){
-                        public void run(){ popupSalahBox(v); } 
+                        public void run(){ 
+                           popupSalahBox(v, currentRow);
+                        } 
                      }, 50);
             }
          });
