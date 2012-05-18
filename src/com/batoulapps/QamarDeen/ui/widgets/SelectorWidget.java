@@ -5,6 +5,7 @@ import java.util.List;
 
 import android.content.Context;
 import android.util.AttributeSet;
+import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -14,6 +15,7 @@ public class SelectorWidget extends LinearLayout {
 
    private Context mContext = null;
    private List<TextView> mOptionItems = null;
+   private ItemSelectListener mItemSelectListener = null;
    
    public SelectorWidget(Context context){
       super(context);
@@ -35,7 +37,25 @@ public class SelectorWidget extends LinearLayout {
       setOrientation(HORIZONTAL);
    }
    
-   public void setSelectionItems(String[] labels, int[] imageIds){
+   protected OnClickListener mOnClickListener = new OnClickListener(){    
+      @Override
+      public void onClick(View v) {
+         if (mItemSelectListener != null){
+            int item = (Integer)v.getTag();
+            mItemSelectListener.itemSelected(item);
+         }
+      }
+   };
+   
+   public interface ItemSelectListener {
+      public void itemSelected(int item);
+   }
+   
+   public void setItemSelectListener(ItemSelectListener listener){
+      mItemSelectListener = listener;
+   }
+   
+   public void setSelectionItems(String[] labels, int[] tags, int[] imageIds){
       removeAllViews();
       
       // left layout
@@ -55,9 +75,13 @@ public class SelectorWidget extends LinearLayout {
          TextView tv = new TextView(mContext);
          tv.setTextAppearance(mContext, R.style.popup_text_style);
          tv.setText(labels[i]);
+         tv.setTag(tags[i]);
          
          // add images to the textviews
          //tv.setCompoundDrawablesWithIntrinsicBounds(imageIds[i], 0, 0, 0);
+         
+         // set button click listener
+         tv.setOnClickListener(mOnClickListener);
          
          if (i % 2 == 0){
             leftLayout.addView(tv, textParams);

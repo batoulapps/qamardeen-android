@@ -1,5 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    
+    <!-- possible values for prayer -->
     <string-array name="prayer_options">
         <item>@string/jama_sunnah</item>
         <item>@string/jama</item>
@@ -8,4 +10,14 @@
         <item>@string/late</item>
         <item>@string/not_set</item>        
     </string-array>
+    
+    <!-- map "prayer_options" to corresponding values -->
+    <integer-array name="prayer_values">
+        <item>4</item>  <!-- jama3a with sunnah -->
+        <item>3</item>  <!-- jama3a -->
+        <item>2</item>  <!-- alone with sunnah -->
+        <item>1</item>  <!-- alone -->
+        <item>5</item>  <!-- late -->
+        <item>0</item>  <!-- not set -->
+    </integer-array>
 </resources>

@@ -30,6 +30,7 @@ import com.batoulapps.QamarDeen.QamarDeenActivity;
 import com.batoulapps.QamarDeen.R;
 import com.batoulapps.QamarDeen.data.QamarDbAdapter;
 import com.batoulapps.QamarDeen.ui.helpers.QamarSelectorHelper;
+import com.batoulapps.QamarDeen.ui.helpers.QamarSelectorHelper.OnQamarSelectionListener;
 import com.batoulapps.QamarDeen.ui.widgets.PinnedHeaderListView;
 import com.batoulapps.QamarDeen.ui.widgets.PinnedHeaderListView.PinnedHeaderAdapter;
 import com.batoulapps.QamarDeen.ui.widgets.PrayerBoxesHeaderLayout;
@@ -37,11 +38,12 @@ import com.batoulapps.QamarDeen.ui.widgets.PrayerBoxesLayout;
 import com.batoulapps.QamarDeen.ui.widgets.PrayerBoxesLayout.SalahClickListener;
 import com.batoulapps.QamarDeen.utils.QamarTime;
 
-public class PrayerFragment extends SherlockFragment {
+public class PrayerFragment extends SherlockFragment implements OnQamarSelectionListener {
 
    private PinnedHeaderListView mListView = null;
    private PrayerListAdapter mListAdapter = null;
    private AsyncTask<Long, Void, Cursor> mLoadingTask = null;
+   private AsyncTask<Integer, Void, Boolean> mWritingTask = null;
    private QamarSelectorHelper mPopupHelper = null;
    private int mHeaderHeight = 0;
    
@@ -134,7 +136,7 @@ public class PrayerFragment extends SherlockFragment {
       minDate = QamarTime.getGMTTimeFromLocal(calendar);
       
       // get the data from the database
-      mLoadingTask = new DataTask();
+      mLoadingTask = new ReadPrayerDataTask();
       mLoadingTask.execute(maxDate, minDate);
    }
    
@@ -142,7 +144,7 @@ public class PrayerFragment extends SherlockFragment {
     * AsyncTask that asynchronously gets prayer data from the database
     * and updates the cursor accordingly.
     */
-   private class DataTask extends AsyncTask<Long, Void, Cursor> {
+   private class ReadPrayerDataTask extends AsyncTask<Long, Void, Cursor> {
       
       @Override
       protected Cursor doInBackground(Long... params){
@@ -153,14 +155,6 @@ public class PrayerFragment extends SherlockFragment {
                (QamarDeenActivity)PrayerFragment.this.getActivity();
          QamarDbAdapter adapter = activity.getDatabaseAdapter();
          return adapter.getPrayerEntries(maxDate / 1000, minDate / 1000);
-         
-         /*
-         // testing code
-         MatrixCursor mc = new MatrixCursor(new String[]{ "_id", "ts", "salah", "status" });
-         mc.newRow().add(1).add(1336694400).add(4).add(1);
-         mc.newRow().add(2).add(1336435200).add(3).add(2);
-         return mc;
-         */
       }
       
       @Override
@@ -199,8 +193,87 @@ public class PrayerFragment extends SherlockFragment {
       }
    }
    
-   private void popupSalahBox(View anchorView, int currentRow){
-      mPopupHelper.showPopup(anchorView, currentRow, R.array.prayer_options);
+   private void popupSalahBox(View anchorView, int currentRow, int salah){
+      mPopupHelper.showPopup(this, anchorView, currentRow, salah,
+            R.array.prayer_options, R.array.prayer_values);
+   }
+   
+   @Override
+   public void onItemSelected(int row, int salah, int selection){
+      long ts = -1;
+      
+      // get the row of the selection
+      Object dateObj = mListView.getItemAtPosition(row);
+      if (dateObj == null){ return; }
+      
+      // get the timestamp corresponding to the row
+      Date date = (Date)dateObj;
+      Calendar cal = QamarTime.getTodayCalendar();
+      cal.setTime(date);
+      ts = QamarTime.getGMTTimeFromLocal(cal);
+      
+      if (mWritingTask != null){
+         mWritingTask.cancel(true);
+      }
+      mWritingTask = new WritePrayerDataTask(ts);
+      mWritingTask.execute(row, salah, selection);
+   }
+   
+   private class WritePrayerDataTask extends AsyncTask<Integer, Void, Boolean> {
+      private long mTimestamp = -1;
+      private int mSelectedRow = -1;
+      private int mSalah = -1;
+      private int mSelectionValue = -1;
+
+      public WritePrayerDataTask(long timestamp){
+         mTimestamp = timestamp;
+      }
+      
+      @Override
+      protected Boolean doInBackground(Integer... params) {
+         mSelectedRow = params[0];
+         mSalah = params[1];
+         mSelectionValue = params[2];
+         
+         QamarDeenActivity activity =
+               (QamarDeenActivity)PrayerFragment.this.getActivity();
+         QamarDbAdapter adapter = activity.getDatabaseAdapter();
+         return adapter.writePrayerEntry(mTimestamp / 1000,
+               mSalah, mSelectionValue);
+      }
+      
+      @Override
+      protected void onPostExecute(Boolean result) {
+         if (result != null && result == true){
+            // calculate the local timestamp
+            Calendar gmtCal = QamarTime.getGMTCalendar();
+            gmtCal.setTimeInMillis(mTimestamp);
+            long localTimestamp = QamarTime.getLocalTimeFromGMT(gmtCal);
+
+            // update the list adapter with the data
+            mListAdapter.addOneSalahData(localTimestamp,
+                  mSalah, mSelectionValue);
+            
+            boolean refreshed = false;
+            
+            // attempt to refresh just this one list item
+            int start = mListView.getFirstVisiblePosition();
+            int end = mListView.getLastVisiblePosition();
+            if (mSelectedRow >= start && mSelectedRow <= end){
+               View view = mListView.getChildAt(mSelectedRow - start);
+               if (view != null){
+                  mListAdapter.getView(mSelectedRow, view, mListView);
+                  refreshed = true;
+               }
+            }
+            
+            if (!refreshed){
+               // if we can't, refresh everything
+               mListAdapter.notifyDataSetChanged();
+            }
+         }
+         mWritingTask = null;
+      }
    }
    
    private class PrayerListAdapter extends BaseAdapter implements 
@@ -245,6 +318,15 @@ public class PrayerFragment extends SherlockFragment {
       
       public void addDayData(Map<Long, int[]> data){
          dataMap.putAll(data);
+      }
+      
+      public void addOneSalahData(long when, int salah, int val){
+         int[] data = dataMap.get(when);
+         if (data == null){
+            data = new int[7];
+         }
+         data[salah] = val;
+         dataMap.put(when, data);
       }
       
       public int getCount(){
@@ -343,7 +425,7 @@ public class PrayerFragment extends SherlockFragment {
          holder.boxes.setSalahClickListener(new SalahClickListener(){
             
             @Override
-            public void onSalahClicked(View view, int salah){
+            public void onSalahClicked(View view, final int salah){
                // use this to determine if we have a header here or not
                int section = getSectionForPosition(currentRow);
                int firstRowForSection = getPositionForSection(section);
@@ -367,7 +449,7 @@ public class PrayerFragment extends SherlockFragment {
                view.postDelayed(
                      new Runnable(){
                         public void run(){ 
-                           popupSalahBox(v, currentRow);
+                           popupSalahBox(v, currentRow, salah);
                         } 
                      }, 50);
             }

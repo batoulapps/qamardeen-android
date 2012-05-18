@@ -72,7 +72,7 @@ public class PrayerBoxesLayout extends LinearLayout {
     * salah click listener
     */
    public interface SalahClickListener {
-      public void onSalahClicked(View view, int salah);
+      public void onSalahClicked(View view, final int salah);
    }
    
    /**

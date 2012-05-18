@@ -1,5 +1,6 @@
 package com.batoulapps.QamarDeen.data;
 
+import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.SQLException;
@@ -42,14 +43,29 @@ public class QamarDbAdapter {
     * @param max the maximum timestamp to fetch (in seconds, gmt at 12:00)
     * @param min the minimum timestamp to fetch (in seconds, gmt at 12:00)
     * @return Cursor of the results
-    * @throws SQLException if an issue occurs
     */
-   public Cursor getPrayerEntries(long max, long min) throws SQLException {
+   public Cursor getPrayerEntries(long max, long min) {
       if (mDbHelper == null){ open(); }
       Cursor cursor = mDb.query(PrayersTable.TABLE_NAME,
             null, PrayersTable.TIME + " > " + min + " AND " + 
             PrayersTable.TIME + " <= " + max,
             null, null, null, PrayersTable.TIME + " DESC");
       return cursor;
+   }
+   
+   /**
+    * @param time the timestamp to write (in seconds, gmt at 12:00)
+    * @param salah the salah to write
+    * @param value the value of the entry
+    * @return true if succeeded or false otherwise
+    */
+   public boolean writePrayerEntry(long time, int salah, int value) {
+      if (mDbHelper == null){ open(); }
+      ContentValues values = new ContentValues();
+      values.put(PrayersTable.TIME, time);
+      values.put(PrayersTable.PRAYER, salah);
+      values.put(PrayersTable.STATUS, value);
+      long result = mDb.replace(PrayersTable.TABLE_NAME, null, values);
+      return result != -1;
    }
 }
