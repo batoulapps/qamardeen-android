@@ -17,4 +17,13 @@ public class QamarConstants {
        Prayers.FAJR, Prayers.DHUHR, Prayers.ASR,
        Prayers.MAGHRIB, Prayers.ISHA };
     
+    
+    public static class CharityTypes {
+       public static int MONEY = 0;
+       public static int EFFORT = 1;
+       public static int FOOD = 2;
+       public static int CLOTHES = 3;
+       public static int SMILE = 4;
+       public static int OTHER = 5;
+    }
 }

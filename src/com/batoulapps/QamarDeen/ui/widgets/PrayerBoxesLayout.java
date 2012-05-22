@@ -109,7 +109,7 @@ public class PrayerBoxesLayout extends LinearLayout {
     * @param salah the salah
     * @param type the type to set that prayer to
     */
-   public void togglePrayerSquare(int salah, int type){
+   private void togglePrayerSquare(int salah, int type){
       View salahSquare = findViewWithTag(salah);
       if (salahSquare != null){
          if (type > 0){
