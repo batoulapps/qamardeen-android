@@ -7,6 +7,13 @@
     <string name="sadaqah_tab">Sadaqah</string>
     <string name="fasting_tab">Fasting</string>
     
+    <string name="settings_menu">Settings</string>
+    
+    <string name="done">Done</string>
+    <string name="cancel">Cancel</string>
+        
+    <string name="load_more">Show More</string>
+    
     <string name="fajr">Fajr</string>
     <string name="duha">Duha</string>
     <string name="dhuhr">Dhuhr</string>
@@ -15,17 +22,12 @@
     <string name="isha">Isha</string>
     <string name="qiyyam">Qiyyam</string>
     
-    <string name="done">Done</string>
-    <string name="cancel">Cancel</string>
-    
-    <string name="settings_menu">Settings</string>
-    
-    <string name="load_more">Show More</string>
-    
     <string name="jama_sunnah">Jama\'a + Sunnah</string>
     <string name="jama">Jama\'a</string>
     <string name="alone_sunnah">Alone + Sunnah</string>
     <string name="alone">Alone</string>
     <string name="late">Late</string>
     <string name="not_set">Not Set</string>
+    
+    <string name="charities_given">Charities Given</string>
 </resources>

@@ -9,6 +9,11 @@
         <item name="android:textSize">10sp</item>
     </style>
     
+    <style name="sadaqah_hdr">
+        <item name="android:textSize">12sp</item>
+        <item name="android:textColor">@color/white</item>
+    </style>
+    
     <style name="popup_text_style">
         <item name="android:textSize">14sp</item>
         <item name="android:textColor">@color/white</item>

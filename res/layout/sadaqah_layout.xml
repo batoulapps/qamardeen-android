@@ -4,7 +4,7 @@
     android:layout_height="match_parent"
     android:orientation="vertical" >
 
-    <include layout="@layout/prayer_hdr" />
+    <include layout="@layout/sadaqah_hdr" />
     
     <LinearLayout
         android:layout_width="match_parent"
@@ -13,8 +13,8 @@
 
         <include layout="@layout/table_day" />
 
-        <com.batoulapps.QamarDeen.ui.widgets.PrayerBoxesLayout
-            android:id="@+id/prayer_boxes"
+        <com.batoulapps.QamarDeen.ui.widgets.SadaqahWidget
+            android:id="@+id/sadaqah_widget"
             android:layout_width="match_parent"
             android:layout_height="match_parent" />
     </LinearLayout>
