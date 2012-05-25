@@ -15,6 +15,7 @@ import android.view.ViewGroup;
 import android.widget.AbsListView;
 import android.widget.AbsListView.OnScrollListener;
 import android.widget.BaseAdapter;
+import android.widget.ListView;
 import android.widget.TextView;
 
 import com.batoulapps.QamarDeen.R;
@@ -61,6 +62,13 @@ public abstract class QamarListAdapter extends BaseAdapter implements
 
       // request the data from the database
       requestData(maxDate, minDate);
+   }
+   
+   public void requeryData(){
+      if (mDays == null || mDays.size() < 2){ return; }
+      Date maxDate = mDays.get(0);
+      Date minDate = mDays.get(mDays.size() - 1);
+      requestData(maxDate.getTime(), minDate.getTime());
    }
    
    public abstract void requestData(Long maxDate, Long minDate);
@@ -230,6 +238,28 @@ public abstract class QamarListAdapter extends BaseAdapter implements
 
    @Override
    public void onScrollStateChanged(AbsListView view, int scrollState) {
+   }
+   
+   public void scrollListToPosition(ListView listView,
+         int currentRow, int headerHeight){
+      // use this to determine if we have a header here or not
+      int section = getSectionForPosition(currentRow);
+      int firstRowForSection = getPositionForSection(section);
+      
+      // scroll either to 0 (if we are part of a header) or to
+      // just under the header
+      int scrollHeight =
+            (firstRowForSection == currentRow)? 0 : headerHeight; 
+      
+      if (android.os.Build.VERSION.SDK_INT >= 11){
+         // honeycomb+, we get smooth scrolling
+         listView.smoothScrollToPositionFromTop(currentRow,
+               scrollHeight);
+      }
+      else {
+         // works on older android versions
+         listView.setSelectionFromTop(currentRow, scrollHeight);
+      }
    }
    
    protected abstract class QamarViewHolder {

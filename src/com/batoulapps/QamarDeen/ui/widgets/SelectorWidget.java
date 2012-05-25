@@ -16,6 +16,8 @@ public class SelectorWidget extends LinearLayout {
    private Context mContext = null;
    private List<TextView> mOptionItems = null;
    private ItemSelectListener mItemSelectListener = null;
+   private List<Integer> mSelectedItems = null;
+   private boolean mIsMultipleChoiceMode = false;
    
    public SelectorWidget(Context context){
       super(context);
@@ -42,7 +44,16 @@ public class SelectorWidget extends LinearLayout {
       public void onClick(View v) {
          if (mItemSelectListener != null){
             int item = (Integer)v.getTag();
-            mItemSelectListener.itemSelected(item);
+            if (mIsMultipleChoiceMode){
+               Integer boxedItem = new Integer(item);
+               if (mSelectedItems.contains(boxedItem)){
+                  mSelectedItems.remove(boxedItem);
+               }
+               else { mSelectedItems.add(boxedItem); }
+            }
+            else {
+               mItemSelectListener.itemSelected(item);
+            }
          }
       }
    };
@@ -55,7 +66,14 @@ public class SelectorWidget extends LinearLayout {
       mItemSelectListener = listener;
    }
    
-   public void setSelectionItems(String[] labels, int[] tags, int[] imageIds){
+   public void setMultipleChoiceMode(boolean multipleChoiceMode){
+      mIsMultipleChoiceMode = multipleChoiceMode;
+   }
+   
+   public List<Integer> getSelectedItems(){ return mSelectedItems; }
+   
+   public void setSelectionItems(String[] labels, int[] tags,
+         int[] imageIds, List<Integer> selectedItems){
       removeAllViews();
       
       // left layout
@@ -98,6 +116,12 @@ public class SelectorWidget extends LinearLayout {
       params.weight = 1.0f;
       addView(leftLayout, params);
       addView(rightLayout, params);
+      
+      // set the selected items (useful for multi-mode)
+      mSelectedItems = selectedItems;
+      if (mSelectedItems == null){
+         mSelectedItems = new ArrayList<Integer>();
+      }
       
       // request layout
       requestLayout();

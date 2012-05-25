@@ -1,5 +1,8 @@
 package com.batoulapps.QamarDeen.ui.helpers;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import android.content.Context;
 import android.content.res.Resources;
 import android.graphics.drawable.Drawable;
@@ -19,15 +22,62 @@ public class QamarSelectorHelper implements ItemSelectListener {
    private View mPopupWindowView = null;
    private OnQamarSelectionListener mSelectionListener;
    private int mSelectedRow = -1;
-   private int mSelectedItem = -1;
+   private int mElementId = -1;
    private Context mContext = null;
+   private SelectorWidget mSelectorWidget = null;
+   private View mDoneButton = null;
    
    public QamarSelectorHelper(Context context){
       mContext = context;
    }
    
+   /**
+    * shows the popup when you can only select one item
+    * @param listener the listener
+    * @param anchorView the view to anchor the popup from
+    * @param row the selected row (used for the callback)
+    * @param item an id (only used for the callback)
+    * @param selected the current selected value
+    * @param textArrayId the array id of the strings array
+    * @param valuesId the array id of the values array
+    */
    public void showPopup(OnQamarSelectionListener listener, View anchorView,
-                         int row, int item, int textArrayId, int valuesId){
+                         int row, int item, int selected, int textArrayId,
+                         int valuesId){
+      mElementId = item;
+      List<Integer> selectedItems = new ArrayList<Integer>();
+      selectedItems.add(selected);
+      
+      initializePopup(listener, row, textArrayId, valuesId, selectedItems);
+      mSelectorWidget.setMultipleChoiceMode(false);
+      mDoneButton.setVisibility(View.GONE);
+
+      // show dropdown
+      mPopupWindow.showAsDropDown(anchorView);
+   }
+   
+   /**
+    * used when there are multiple choices in the seelctor
+    * @param listener the listener
+    * @param anchorView anchor view to show the popup from
+    * @param row the row that is clicked (used in callback)
+    * @param selected the items that start off selected
+    * @param textArrayId the array id of the strings array
+    * @param valuesId the array id of the integer array of values
+    */
+   public void showMultipleChoicePopup(OnQamarSelectionListener listener,
+         View anchorView, int row, List<Integer> selected, int textArrayId,
+         int valuesId){
+      initializePopup(listener, row, textArrayId, valuesId, selected);
+      mSelectorWidget.setMultipleChoiceMode(true);
+      mDoneButton.setVisibility(View.VISIBLE);
+
+      // show dropdown
+      mPopupWindow.showAsDropDown(anchorView);
+   }
+   
+   private void initializePopup(OnQamarSelectionListener listener,
+         int row, int textArrayId, int valuesId, List<Integer> selected){
       if (mPopupWindow == null || mPopupWindowView == null){
          LayoutInflater inflater = (LayoutInflater)mContext
                .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
@@ -40,11 +90,13 @@ public class QamarSelectorHelper implements ItemSelectListener {
          
          View button = mPopupWindowView.findViewById(R.id.cancel_button);
          button.setOnClickListener(mButtonClickListener);
+         
+         mDoneButton =  mPopupWindowView.findViewById(R.id.done_button);
+         mDoneButton.setOnClickListener(mButtonClickListener);
       }
       
       // set state variables for callbacks
       mSelectedRow = row;
-      mSelectedItem = item;
       mSelectionListener = listener;
       
       // get the resources that are needed
@@ -53,13 +105,10 @@ public class QamarSelectorHelper implements ItemSelectListener {
       String[] textIds = res.getStringArray(textArrayId);
       
       // initialize selector widget
-      SelectorWidget sw = (SelectorWidget)mPopupWindowView
+      mSelectorWidget = (SelectorWidget)mPopupWindowView
             .findViewById(R.id.selector_widget);      
-      sw.setSelectionItems(textIds, values, null);
-      sw.setItemSelectListener(this);
-      
-      // show dropdown
-      mPopupWindow.showAsDropDown(anchorView);
+      mSelectorWidget.setSelectionItems(textIds, values, null, selected);
+      mSelectorWidget.setItemSelectListener(this);
    }
    
    @Override
@@ -67,12 +116,12 @@ public class QamarSelectorHelper implements ItemSelectListener {
       dismissPopup();
       if (mSelectionListener != null && mSelectedRow >= 0){
          mSelectionListener.onItemSelected(
-               mSelectedRow, mSelectedItem, selection);
+               mSelectedRow, mElementId, selection);
       }
       
       mSelectionListener = null;
       mSelectedRow = -1;
-      mSelectedItem = -1;
+      mElementId = -1;
    }
    
    
@@ -82,12 +131,23 @@ public class QamarSelectorHelper implements ItemSelectListener {
     */
    public interface OnQamarSelectionListener {
       public void onItemSelected(int row, int item, int selection);
+      public void onMultipleItemsSelected(int row, List<Integer> selection);
    };
    
    protected OnClickListener mButtonClickListener = new OnClickListener(){
       @Override
       public void onClick(View v) {
          if (v.getId() == R.id.cancel_button){
+            // just dismiss the popup
+            dismissPopup();
+         }
+         else if (v.getId() == R.id.done_button){
+            // used for "multiple choice" mode
+            List<Integer> selected = mSelectorWidget.getSelectedItems();
+            if (mSelectionListener != null && mSelectedRow >= 0){
+               mSelectionListener.onMultipleItemsSelected(
+                     mSelectedRow, selected);
+            }
             dismissPopup();
          }
       }

@@ -20,4 +20,24 @@
         <item>5</item>  <!-- late -->
         <item>0</item>  <!-- not set -->
     </integer-array>
+       
+    <!-- possible values for sadaqah -->
+    <string-array name="charity_options">
+        <item>@string/money</item>
+        <item>@string/effort</item>
+        <item>@string/food</item>
+        <item>@string/clothes</item>
+        <item>@string/smile</item>
+        <item>@string/other</item>        
+    </string-array>
+    
+    <!-- map "charity_options" to corresponding values -->
+    <integer-array name="charity_values">
+        <item>0</item>  <!-- money -->
+        <item>1</item>  <!-- effort -->
+        <item>2</item>  <!-- food -->
+        <item>3</item>  <!-- clothes -->
+        <item>4</item>  <!-- smile -->
+        <item>5</item>  <!-- other -->
+    </integer-array>
 </resources>

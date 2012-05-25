@@ -1,9 +1,9 @@
 package com.batoulapps.QamarDeen.ui.widgets;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.util.AttributeSet;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -11,9 +11,10 @@ import android.widget.LinearLayout;
 public class SadaqahWidget extends LinearLayout {
 
    private Context mContext = null;
-   private List<ImageView> mImages = null;
-   private List<Integer> mValues = null;
-
+   
+   private int[] mResources = new int[]{ Color.RED, Color.GREEN, Color.BLUE, 
+         Color.CYAN, Color.YELLOW, Color.MAGENTA };
+   
    public SadaqahWidget(Context context){
       super(context);
       init(context);
@@ -31,13 +32,33 @@ public class SadaqahWidget extends LinearLayout {
    
    private void init(Context context){
       mContext = context;
-      mImages = new ArrayList<ImageView>();
-      mValues = new ArrayList<Integer>();
-      
+   }
+   
+   private void addPlaceHolderView(){
       ImageView emptyImage = new ImageView(mContext);
       addView(emptyImage, LayoutParams.WRAP_CONTENT, LayoutParams.MATCH_PARENT);
-      mImages.add(emptyImage);
-      mValues.add(0);
+   }
+   
+   private void addSadaqahView(int sadaqaType){
+      ImageView image = new ImageView(mContext);
+      image.setImageResource(mResources[sadaqaType]);
+      addView(image, LayoutParams.WRAP_CONTENT, LayoutParams.MATCH_PARENT);
+   }
+   
+   /**
+    * set the sadaqat for the widget
+    * @param sadaqat a list of sadaqat, see 9:60
+    */
+   public void setSadaqat(List<Integer> sadaqat){
+      removeAllViews();
+      if (sadaqat == null || sadaqat.size() == 0){
+         addPlaceHolderView();
+         return;
+      }
+      
+      for (Integer sadaqah : sadaqat){
+         addSadaqahView(sadaqah);
+      }
    }
    
 }

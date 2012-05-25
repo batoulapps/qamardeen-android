@@ -5,104 +5,43 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
-import android.app.Activity;
 import android.content.Context;
 import android.database.Cursor;
 import android.os.AsyncTask;
-import android.os.Bundle;
-import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.actionbarsherlock.app.SherlockFragment;
 import com.batoulapps.QamarDeen.QamarDeenActivity;
 import com.batoulapps.QamarDeen.R;
 import com.batoulapps.QamarDeen.data.QamarDbAdapter;
+import com.batoulapps.QamarDeen.ui.helpers.QamarFragment;
 import com.batoulapps.QamarDeen.ui.helpers.QamarListAdapter;
-import com.batoulapps.QamarDeen.ui.helpers.QamarListHelper;
-import com.batoulapps.QamarDeen.ui.helpers.QamarSelectorHelper;
-import com.batoulapps.QamarDeen.ui.helpers.QamarSelectorHelper.OnQamarSelectionListener;
-import com.batoulapps.QamarDeen.ui.widgets.PinnedHeaderListView;
 import com.batoulapps.QamarDeen.ui.widgets.PrayerBoxesHeaderLayout;
 import com.batoulapps.QamarDeen.ui.widgets.PrayerBoxesLayout;
 import com.batoulapps.QamarDeen.ui.widgets.PrayerBoxesLayout.SalahClickListener;
 import com.batoulapps.QamarDeen.utils.QamarTime;
 
-public class PrayerFragment extends SherlockFragment implements OnQamarSelectionListener {
-
-   private PinnedHeaderListView mListView = null;
-   private PrayerListAdapter mListAdapter = null;
-   private AsyncTask<Long, Void, Cursor> mLoadingTask = null;
+public class PrayerFragment extends QamarFragment {
+   
    private AsyncTask<Integer, Void, Boolean> mWritingTask = null;
-   private QamarSelectorHelper mPopupHelper = null;
-   private int mHeaderHeight = 0;
    
    public static PrayerFragment newInstance(){
       return new PrayerFragment();
    }
-   
+
    @Override
-   public void onCreate(Bundle savedInstanceState){
-      super.onCreate(savedInstanceState);
+   public int getHeaderLayout(){
+      return R.layout.prayer_hdr;
    }
    
    @Override
-   public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                            Bundle savedInstanceState){
-      Activity activity = getActivity();
-      View view = inflater.inflate(R.layout.qamar_list, container, false);
-      mListView = (PinnedHeaderListView)view.findViewById(R.id.list);
-      mListAdapter = new PrayerListAdapter(activity);
-      
-      // setup the list and adapter
-      mHeaderHeight = QamarListHelper.setupQamarList(inflater, activity,
-            mListView, mListAdapter, R.layout.prayer_hdr);
-      
-      mPopupHelper = new QamarSelectorHelper(activity);
-      return view;
+   protected QamarListAdapter createAdapter(Context context){
+      return new PrayerListAdapter(context);
    }
    
    @Override
-   public void onPause() {
-      if (mPopupHelper != null){
-         mPopupHelper.dismissPopup();
-      }
-      super.onPause();
-   }
-   
-   /**
-    * gets prayer data for a range of times
-    * @param maxDate the max date to get prayer data for.  may be null.
-    * @param minDate the min date to get prayer data for.  may be null.
-    */
-   private void requestPrayerData(Long maxDate, Long minDate){
-      if (mLoadingTask != null){
-         mLoadingTask.cancel(true);
-      }
-      
-      Calendar calendar = QamarTime.getTodayCalendar();
-      if (maxDate == null){
-         // if no max date, set it to today
-         maxDate = calendar.getTimeInMillis();
-      }
-      else { calendar.setTimeInMillis(maxDate); }
-      
-      // need ts of 12:00:00 on the max day in gmt
-      maxDate = QamarTime.getGMTTimeFromLocal(calendar);
-      
-      if (minDate == null){
-         // if no min date, backup 30 days
-         calendar.add(Calendar.DATE, -1 * 30);
-         minDate = calendar.getTimeInMillis();
-      }
-      else { calendar.setTimeInMillis(minDate); }
-      
-      // need ts 12:00:00 on the min day in gmt
-      minDate = QamarTime.getGMTTimeFromLocal(calendar);
-      
-      // get the data from the database
-      mLoadingTask = new ReadPrayerDataTask();
-      mLoadingTask.execute(maxDate, minDate);
+   protected AsyncTask<Long, Void, Cursor> getDataReadingTask(){
+      return new ReadPrayerDataTask();
    }
    
    /**
@@ -148,18 +87,24 @@ public class PrayerFragment extends SherlockFragment implements OnQamarSelection
                
                if (!data.isEmpty()){
                   // set the data in the adapter
-                  PrayerFragment.this.mListAdapter.addDayData(data);
-                  PrayerFragment.this.mListAdapter.notifyDataSetChanged();
+                  ((PrayerListAdapter)mListAdapter).addDayData(data);
+                  mListAdapter.notifyDataSetChanged();
                }
             }
             cursor.close();
+            mReadData = true;
          }
+         else { mReadData = false; }
+         
          mLoadingTask = null;
       }
    }
    
    private void popupSalahBox(View anchorView, int currentRow, int salah){
-      mPopupHelper.showPopup(this, anchorView, currentRow, salah,
+      int[] elems = ((PrayerListAdapter)mListAdapter).getDataItem(currentRow);
+      int sel = 0;
+      if (elems != null){ sel = elems[salah]; }
+      mPopupHelper.showPopup(this, anchorView, currentRow, salah, sel,
             R.array.prayer_options, R.array.prayer_values);
    }
    
@@ -216,8 +161,8 @@ public class PrayerFragment extends SherlockFragment implements OnQamarSelection
             long localTimestamp = QamarTime.getLocalTimeFromGMT(gmtCal);
 
             // update the list adapter with the data
-            mListAdapter.addOneSalahData(localTimestamp,
-                  mSalah, mSelectionValue);
+            ((PrayerListAdapter)mListAdapter)
+               .addOneSalahData(localTimestamp, mSalah, mSelectionValue);
             
             boolean refreshed = false;
             
@@ -251,7 +196,15 @@ public class PrayerFragment extends SherlockFragment implements OnQamarSelection
       
       @Override
       public void requestData(Long maxDate, Long minDate){
-         requestPrayerData(maxDate, minDate);
+         requestRangeData(maxDate, minDate);
+      }
+      
+      public int[] getDataItem(int position){
+         Date date = (Date)getItem(position);
+         if (date != null){
+            return dataMap.get(date.getTime());
+         }
+         return null;
       }
       
       public void addDayData(Map<Long, int[]> data){
@@ -306,24 +259,7 @@ public class PrayerFragment extends SherlockFragment implements OnQamarSelection
             
             @Override
             public void onSalahClicked(View view, final int salah){
-               // use this to determine if we have a header here or not
-               int section = getSectionForPosition(currentRow);
-               int firstRowForSection = getPositionForSection(section);
-               
-               // scroll either to 0 (if we are part of a header) or to
-               // just under the header
-               int scrollHeight =
-                     (firstRowForSection == currentRow)? 0 : mHeaderHeight; 
-               
-               if (android.os.Build.VERSION.SDK_INT >= 11){
-                  // honeycomb+, we get smooth scrolling
-                  mListView.smoothScrollToPositionFromTop(currentRow,
-                        scrollHeight);
-               }
-               else {
-                  // works on older android versions
-                  mListView.setSelectionFromTop(currentRow, scrollHeight);
-               }
+               scrollListToPosition(mListView, currentRow, mHeaderHeight);
                
                final View v = view;
                view.postDelayed(

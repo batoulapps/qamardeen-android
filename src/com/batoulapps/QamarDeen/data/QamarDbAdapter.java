@@ -55,6 +55,8 @@ public class QamarDbAdapter {
     */
    public Cursor getPrayerEntries(long max, long min) {
       if (mDbHelper == null){ open(); }
+      if (mDb == null){ return null; }
+
       Cursor cursor = mDb.query(PrayersTable.TABLE_NAME,
             null, PrayersTable.TIME + " > " + min + " AND " + 
             PrayersTable.TIME + " <= " + max,
@@ -70,6 +72,8 @@ public class QamarDbAdapter {
     */
    public boolean writePrayerEntry(long time, int salah, int value) {
       if (mDbHelper == null){ open(); }
+      if (mDb == null){ return false; }
+
       ContentValues values = new ContentValues();
       values.put(PrayersTable.TIME, time);
       values.put(PrayersTable.PRAYER, salah);
@@ -86,6 +90,7 @@ public class QamarDbAdapter {
     */
    public Cursor getSadaqahEntries(long max, long min) {
       if (mDbHelper == null){ open(); }
+      if (mDb == null){ return null; }
       Cursor cursor = mDb.query(CharityTable.TABLE_NAME,
             null, CharityTable.TIME + " > " + min + " AND " + 
                   CharityTable.TIME + " <= " + max,
@@ -101,7 +106,8 @@ public class QamarDbAdapter {
     */
    public boolean writeSadaqahEntries(long time, List<Integer> types) {
       if (mDbHelper == null){ open(); }
-      
+      if (mDb == null){ return false; }
+
       // start a transaction
       mDb.beginTransaction();
       // remove old sadaqah entries for that day

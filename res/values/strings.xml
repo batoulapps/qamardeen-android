@@ -30,4 +30,12 @@
     <string name="not_set">Not Set</string>
     
     <string name="charities_given">Charities Given</string>
+    
+    <string name="money">Money</string>
+    <string name="effort">Effort</string>
+    <string name="food">Food</string>
+    <string name="clothes">Clothes</string>
+    <string name="smile">Smile</string>
+    <string name="other">Other</string>
+    
 </resources>
