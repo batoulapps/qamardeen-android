@@ -129,7 +129,7 @@ public class PrayerFragment extends QamarFragment {
       mWritingTask.execute(row, salah, selection);
    }
    
-   private class WritePrayerDataTask extends AsyncTask<Integer, Void, Boolean> {
+   private class WritePrayerDataTask extends AsyncTask<Integer, Void, Boolean>{
       private long mTimestamp = -1;
       private int mSelectedRow = -1;
       private int mSalah = -1;
@@ -188,7 +188,7 @@ public class PrayerFragment extends QamarFragment {
    
    private class PrayerListAdapter extends QamarListAdapter {
       private boolean mIsExtendedMode = false;
-      private Map<Long, int[]> dataMap = new HashMap<Long, int[]>();
+      private Map<Long, int[]> mDataMap = new HashMap<Long, int[]>();
 
       public PrayerListAdapter(Context context){
          super(context);
@@ -202,22 +202,22 @@ public class PrayerFragment extends QamarFragment {
       public int[] getDataItem(int position){
          Date date = (Date)getItem(position);
          if (date != null){
-            return dataMap.get(date.getTime());
+            return mDataMap.get(date.getTime());
          }
          return null;
       }
       
       public void addDayData(Map<Long, int[]> data){
-         dataMap.putAll(data);
+         mDataMap.putAll(data);
       }
       
       public void addOneSalahData(long when, int salah, int val){
-         int[] data = dataMap.get(when);
+         int[] data = mDataMap.get(when);
          if (data == null){
             data = new int[7];
          }
          data[salah] = val;
-         dataMap.put(when, data);
+         mDataMap.put(when, data);
       }
       
       @Override
@@ -248,7 +248,7 @@ public class PrayerFragment extends QamarFragment {
          initializeRow(holder, date, position);
          
          // set the salah data
-         int[] prayerStatus = dataMap.get(date.getTime());
+         int[] prayerStatus = mDataMap.get(date.getTime());
          if (prayerStatus != null){
             holder.boxes.setPrayerSquares(prayerStatus);
          }

@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical" >
+
+    <include layout="@layout/quran_hdr" />
+    
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/list_item_height"
+        android:orientation="horizontal" >
+
+        <include layout="@layout/table_day" />
+
+        <TextView android:id="@+id/daily_readings"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="0.35"
+            android:gravity="center_vertical"
+            android:paddingLeft="10dp"
+            android:textAppearance="@style/qamar_row_text" />
+
+        <TextView android:id="@+id/ayah_count"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="0.35"
+            android:gravity="center_vertical|right"
+            android:textAppearance="@style/quran_ayah_count_text" />
+        
+        <ImageView android:id="@+id/jump_image"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="0.3"
+            android:visibility="invisible"
+            android:scaleType="center"
+            android:contentDescription="@string/open_in_quran_description" />
+        
+        <TextView android:id="@+id/extra_readings"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="center_vertical"
+            android:paddingLeft="10dp"
+            android:visibility="gone"
+            android:maxLines="2"
+            android:textAppearance="@style/quran_extra_sura_text" />
+    </LinearLayout>
+
+    <View android:id="@+id/list_divider"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@color/divider_color" />
+</LinearLayout>

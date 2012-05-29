@@ -20,7 +20,7 @@
             android:layout_height="match_parent"
             android:gravity="center_vertical"
             android:paddingLeft="10dp"
-            android:textAppearance="@style/sadaqah_hdr"
+            android:textAppearance="@style/qamar_hdr"
             android:text="@string/charities_given" />
 
 </LinearLayout>
