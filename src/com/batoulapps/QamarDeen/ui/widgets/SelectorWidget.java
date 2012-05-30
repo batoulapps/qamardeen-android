@@ -5,6 +5,7 @@ import java.util.List;
 
 import android.content.Context;
 import android.util.AttributeSet;
+import android.view.Gravity;
 import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -94,9 +95,12 @@ public class SelectorWidget extends LinearLayout {
          tv.setTextAppearance(mContext, R.style.popup_text_style);
          tv.setText(labels[i]);
          tv.setTag(tags[i]);
+         tv.setGravity(Gravity.CENTER_VERTICAL);
          
          // add images to the textviews
-         //tv.setCompoundDrawablesWithIntrinsicBounds(imageIds[i], 0, 0, 0);
+         if (imageIds != null){
+            tv.setCompoundDrawablesWithIntrinsicBounds(imageIds[i], 0, 0, 0);
+         }
          
          // set button click listener
          tv.setOnClickListener(mOnClickListener);

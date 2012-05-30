@@ -4,9 +4,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import android.content.Context;
-import android.graphics.Color;
-import android.graphics.drawable.ColorDrawable;
-import android.graphics.drawable.Drawable;
 import android.util.AttributeSet;
 import android.view.View;
 import android.widget.ImageView;
@@ -23,6 +20,29 @@ public class PrayerBoxesLayout extends LinearLayout {
    private boolean mIsExtendedMode = false; 
    private SalahClickListener mSalahClickListener = null;
 
+   private int[] mMaleSalahOptions = new int[]{
+         R.drawable.prayer_notset,
+         R.drawable.prayer_alone_m,
+         R.drawable.prayer_alone_with_voluntary_m,
+         R.drawable.prayer_group_m,
+         R.drawable.prayer_group_with_voluntary_m,
+         R.drawable.prayer_late
+   };
+   
+   /*
+   private int[] mFemaleSalahOptions = new int[]{
+         R.drawable.prayer_notset,
+         R.drawable.prayer_alone_m,
+         R.drawable.prayer_alone_with_voluntary_m,
+         R.drawable.prayer_group_m,
+         R.drawable.prayer_group_with_voluntary_m,
+         R.drawable.prayer_late,
+         R.drawable.prayer_excused
+   };
+   */
+   
+   private int[] mSalahOptions = null;
+   
    public PrayerBoxesLayout(Context context){
       super(context);
       init(context);
@@ -41,6 +61,10 @@ public class PrayerBoxesLayout extends LinearLayout {
    private void init(Context context){
       mContext = context;
       mImages = new ArrayList<ImageView>();
+      
+      // TODO: read from shared preferences
+      mSalahOptions = mMaleSalahOptions;
+      
       for (int i=0; i<5; i++){
          ImageView image = getImageView(QamarConstants.PRAYER_LIST[i]);
          addView(image, i);
@@ -113,18 +137,8 @@ public class PrayerBoxesLayout extends LinearLayout {
     */
    private void togglePrayerSquare(int salah, int type){
       ImageView salahSquare = (ImageView)findViewWithTag(salah);
-      if (salahSquare != null){
-         if (type > 0){
-            // set the square to the right resource
-            int[] resources = new int[]{ Color.RED, Color.GREEN, Color.BLUE, 
-                  Color.CYAN, Color.YELLOW, Color.MAGENTA };
-            Drawable d = new ColorDrawable(resources[type-1]);
-            salahSquare.setImageDrawable(d);
-         }
-         else {
-            // type is 0, so we want to reset this square        
-            salahSquare.setImageDrawable(null);
-         }
+      if (salahSquare != null){ 
+         salahSquare.setImageResource(mSalahOptions[type]);
       }
    }
    

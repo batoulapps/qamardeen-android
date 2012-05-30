@@ -104,7 +104,7 @@ public class SadaqahFragment extends QamarFragment {
       List<Integer> sel =
             ((SadaqahListAdapter)mListAdapter).getDataItem(currentRow);
       mPopupHelper.showMultipleChoicePopup(this, anchorView, currentRow,
-            sel, R.array.charity_options, R.array.charity_values);
+            sel, R.array.charity_options, R.array.charity_values, null);
    }
    
    @Override

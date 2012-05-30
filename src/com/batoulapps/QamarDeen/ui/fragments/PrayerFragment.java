@@ -100,12 +100,24 @@ public class PrayerFragment extends QamarFragment {
       }
    }
    
+   private static int[] selectorOptionsMale = new int[]{
+      R.drawable.prayer_group_with_voluntary_m,
+      R.drawable.prayer_group_m,
+      R.drawable.prayer_alone_with_voluntary_m,
+      R.drawable.prayer_alone_m,
+      R.drawable.prayer_late,
+      R.drawable.prayer_notset
+   };
+   
    private void popupSalahBox(View anchorView, int currentRow, int salah){
       int[] elems = ((PrayerListAdapter)mListAdapter).getDataItem(currentRow);
       int sel = 0;
       if (elems != null){ sel = elems[salah]; }
+      
+      // TODO - read from shared prefs
+      int[] imageIds = selectorOptionsMale;
       mPopupHelper.showPopup(this, anchorView, currentRow, salah, sel,
-            R.array.prayer_options, R.array.prayer_values);
+            R.array.prayer_options, R.array.prayer_values, imageIds);
    }
    
    @Override
