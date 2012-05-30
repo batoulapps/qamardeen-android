@@ -74,7 +74,7 @@ public abstract class QamarFragment extends SherlockFragment
       mListView.setOnScrollListener(mListAdapter);
       mListView.setDividerHeight(0);
       
-      mPopupHelper = new QamarSelectorHelper(activity);
+      initializePopup(activity);
       return view;
    }
    
@@ -84,6 +84,10 @@ public abstract class QamarFragment extends SherlockFragment
          mPopupHelper.dismissPopup();
       }
       super.onPause();
+   }
+   
+   protected void initializePopup(Context context){
+      mPopupHelper = new QamarSelectorHelper(context);
    }
    
    public void refreshData(){

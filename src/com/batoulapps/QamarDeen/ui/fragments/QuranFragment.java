@@ -25,11 +25,13 @@ import com.batoulapps.QamarDeen.data.QamarConstants;
 import com.batoulapps.QamarDeen.data.QamarDbAdapter;
 import com.batoulapps.QamarDeen.ui.helpers.QamarFragment;
 import com.batoulapps.QamarDeen.ui.helpers.QamarListAdapter;
+import com.batoulapps.QamarDeen.ui.helpers.QuranSelectorPopupHelper;
 import com.batoulapps.QamarDeen.utils.QamarTime;
 
 public class QuranFragment extends QamarFragment {
 
    private boolean mIsStandardReadingMode = true;
+   private QuranSelectorPopupHelper mQuranSelectorPopupHelper = null;
    
    public static QuranFragment newInstance(){
       return new QuranFragment();
@@ -42,19 +44,42 @@ public class QuranFragment extends QamarFragment {
       mListView.setOnItemClickListener(new OnItemClickListener() {
 
          @Override
-         public void onItemClick(AdapterView<?> parent, View view,
-               int position, long id) {
+         public void onItemClick(AdapterView<?> parent, final View view,
+               final int position, long id) {
             mListAdapter.scrollListToPosition(
                   mListView, position, mHeaderHeight);
             view.postDelayed(
                   new Runnable(){
                      public void run(){ 
-                        //popupQuranBox(v, currentRow);
+                        popupQuranBox(view, position);
                      } 
                   }, 50);
          }
       });
       return view;
+   }
+   
+   @Override
+   public void onPause() {
+      if (mQuranSelectorPopupHelper != null){
+         mQuranSelectorPopupHelper.dismissPopup();
+      }
+      super.onPause();
+   }
+   
+   @Override
+   protected void initializePopup(Context context){
+      mQuranSelectorPopupHelper = new QuranSelectorPopupHelper(context);
+   }
+   
+   private void popupQuranBox(View anchorView, int currentRow){
+      
+      // TODO: selectedSura/Ayah should be based on current/previous row
+      int selectedSura = 1;
+      int selectedAyah = 1;
+      
+      mQuranSelectorPopupHelper.showPopup(anchorView, currentRow,
+            selectedSura, selectedAyah);
    }
    
    @Override

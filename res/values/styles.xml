@@ -20,6 +20,10 @@
         <item name="android:textStyle">bold</item>
     </style>
     
+    <style name="popup_row_style" parent="popup_text_style">
+        <item name="android:textSize">16sp</item>
+    </style>
+    
     <!-- qamar row text -->
     <style name="qamar_row_text">
         <item name="android:textSize">14sp</item>

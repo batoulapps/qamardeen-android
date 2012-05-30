@@ -4,26 +4,6 @@
     android:layout_height="match_parent"
     android:orientation="vertical" >
     
-    <TextView android:id="@+id/prompt"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:text="@string/select_last_read" />
-    
-    <LinearLayout android:id="@+id/spinners_lyt"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:gravity="center"
-        android:orientation="horizontal">
-        
-        <Spinner android:id="@+id/sura_spinner"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
-        <Spinner android:id="@+id/ayah_spinner"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
-    </LinearLayout>
-    
     <LinearLayout android:id="@+id/buttons_lyt"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -44,5 +24,28 @@
             android:layout_height="wrap_content"
             android:text="@string/done" />
     </LinearLayout>
-
+    
+    <TextView android:id="@+id/prompt"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_marginBottom="6dp"
+        android:textAppearance="@style/popup_text_style"
+        android:text="@string/select_last_read" />
+    
+    <LinearLayout android:id="@+id/spinners_lyt"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:orientation="horizontal">
+        
+        <ListView android:id="@+id/sura_list"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="0.7" />
+        <ListView android:id="@+id/ayah_list"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="0.3"  />
+    </LinearLayout>
 </LinearLayout>

@@ -1,0 +1,7 @@
+<TextView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="wrap_content"
+    android:textAppearance="@style/popup_row_style"
+    android:gravity="center_vertical"
+    android:paddingLeft="6dp"
+    android:minHeight="24dp" />
