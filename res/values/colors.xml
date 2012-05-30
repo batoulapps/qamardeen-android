@@ -2,7 +2,8 @@
 <resources>
     <color name="transparent">#00000000</color>
     <color name="white">#ffffffff</color>
-    
+    <color name="black">#ff000000</color>
+        
     <!-- header colors -->
     <color name="hdr_background">#55d6d6d6</color>
     <color name="hdr_month_bg_color">#440b0b</color>
@@ -20,6 +21,9 @@
     
     <!-- shaded column color -->
     <color name="shaded_column_color">#55e2e2e2</color>
+    
+    <!-- divider color -->
+    <color name="divider_color">#ffcbcbcb</color>
     
     <!-- popup -->
     <color name="popup_background">#cc000000</color>

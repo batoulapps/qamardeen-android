@@ -15,6 +15,7 @@ import com.actionbarsherlock.view.MenuInflater;
 import com.actionbarsherlock.view.MenuItem;
 import com.batoulapps.QamarDeen.data.QamarDbAdapter;
 import com.batoulapps.QamarDeen.ui.fragments.PrayerFragment;
+import com.batoulapps.QamarDeen.ui.fragments.QuranFragment;
 import com.batoulapps.QamarDeen.ui.fragments.SadaqahFragment;
 
 public class QamarDeenActivity extends SherlockFragmentActivity implements ActionBar.TabListener {
@@ -96,13 +97,16 @@ public class QamarDeenActivity extends SherlockFragmentActivity implements Actio
       
       @Override
       public int getCount(){
-         return 2;
+         return 3;
       }
       
       @Override
       public Fragment getItem(int position){
          if (position == 0){
             return PrayerFragment.newInstance();
+         }
+         else if (position == 1){
+            return QuranFragment.newInstance();
          }
          return SadaqahFragment.newInstance(); 
       }

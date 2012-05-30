@@ -8,6 +8,8 @@ import android.util.AttributeSet;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 
+import com.batoulapps.QamarDeen.R;
+
 public class SadaqahWidget extends LinearLayout {
 
    private Context mContext = null;
@@ -41,8 +43,14 @@ public class SadaqahWidget extends LinearLayout {
    
    private void addSadaqahView(int sadaqaType){
       ImageView image = new ImageView(mContext);
-      image.setImageResource(mResources[sadaqaType]);
-      addView(image, LayoutParams.WRAP_CONTENT, LayoutParams.MATCH_PARENT);
+      //image.setImageResource(mResources[sadaqaType]);
+      //addView(image, LayoutParams.WRAP_CONTENT, LayoutParams.MATCH_PARENT);
+
+      // when we get images, we remove these 3 lines and restore the top 2
+      image.setBackgroundColor(mResources[sadaqaType]);
+      int size = mContext.getResources().getDimensionPixelSize(
+            R.dimen.list_item_height);
+      addView(image, size, size);
    }
    
    /**

@@ -96,7 +96,7 @@ public class PrayerBoxesHeaderLayout extends LinearLayout {
    
    public void showSalahLabels(){
       int size = mLabels.size();
-      int style = R.style.prayer_hdr;
+      int style = R.style.qamar_hdr;
       if (mIsExtendedMode){ style = R.style.prayer_extended_hdr; }
       int[] resources = mIsExtendedMode? mExtendedPrayerNames : mPrayerNames;
       for (int i=0; i<size; i++){

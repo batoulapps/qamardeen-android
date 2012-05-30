@@ -5,6 +5,8 @@ import java.util.List;
 
 import android.content.Context;
 import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
+import android.graphics.drawable.Drawable;
 import android.util.AttributeSet;
 import android.view.View;
 import android.widget.ImageView;
@@ -110,22 +112,18 @@ public class PrayerBoxesLayout extends LinearLayout {
     * @param type the type to set that prayer to
     */
    private void togglePrayerSquare(int salah, int type){
-      View salahSquare = findViewWithTag(salah);
+      ImageView salahSquare = (ImageView)findViewWithTag(salah);
       if (salahSquare != null){
          if (type > 0){
             // set the square to the right resource
             int[] resources = new int[]{ Color.RED, Color.GREEN, Color.BLUE, 
                   Color.CYAN, Color.YELLOW, Color.MAGENTA };
-            salahSquare.setBackgroundColor(resources[type-1]);
+            Drawable d = new ColorDrawable(resources[type-1]);
+            salahSquare.setImageDrawable(d);
          }
          else {
-            // type is 0, so we want to reset this square
-            int res = R.color.transparent;
-            int salahIndex = mIsExtendedMode? salah :
-               (salah == 0? salah : salah-1);
-            if (salahIndex % 2 != 0){ res = R.color.shaded_column_color; }
-            
-            salahSquare.setBackgroundResource(res);
+            // type is 0, so we want to reset this square        
+            salahSquare.setImageDrawable(null);
          }
       }
    }

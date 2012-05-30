@@ -22,6 +22,19 @@ public class QamarDbHelper extends SQLiteOpenHelper {
          "ts timestamp not null, " +
          "sadaqah_type integer not null, " +
          "unique(ts, sadaqah_type));";
+   
+   private static final String QURAN_TABLE_DEF =
+         "create table readings(" +
+         "_id integer primary key autoincrement, " +
+         "ts timestamp not null, " +
+         "endayah int not null, " +
+         "endsura int not null, " +
+         "startayah int not null, " +
+         "startsura int not null, " +
+         "is_extra int not null);";
+   
+   private static final String QURAN_INDEX =
+         "create index quran_index on readings(ts);";
          
    QamarDbHelper(Context context){
       super(context, DATABASE_NAME, null, DATABASE_VERSION);
@@ -31,6 +44,8 @@ public class QamarDbHelper extends SQLiteOpenHelper {
    public void onCreate(SQLiteDatabase db){
       db.execSQL(PRAYERS_TABLE_DEF);
       db.execSQL(CHARITY_TABLE_DEF);
+      db.execSQL(QURAN_TABLE_DEF);
+      db.execSQL(QURAN_INDEX);
    }
    
    @Override

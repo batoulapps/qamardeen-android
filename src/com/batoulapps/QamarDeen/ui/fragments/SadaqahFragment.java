@@ -25,6 +25,8 @@ import com.batoulapps.QamarDeen.utils.QamarTime;
 
 public class SadaqahFragment extends QamarFragment {
 
+   private AsyncTask<Object, Void, Boolean> mWritingTask = null;
+
    public static SadaqahFragment newInstance(){
       return new SadaqahFragment();
    }
@@ -107,10 +109,87 @@ public class SadaqahFragment extends QamarFragment {
    
    @Override
    public void onMultipleItemsSelected(int row, List<Integer> selection){
+      long ts = -1;
+      
+      // get the row of the selection
+      Object dateObj = mListView.getItemAtPosition(row);
+      if (dateObj == null){ return; }
+      
+      // get the timestamp corresponding to the row
+      Date date = (Date)dateObj;
+      Calendar cal = QamarTime.getTodayCalendar();
+      cal.setTime(date);
+      ts = QamarTime.getGMTTimeFromLocal(cal);
+      
+      if (mWritingTask != null){
+         mWritingTask.cancel(true);
+      }
+      mWritingTask = new WriteSadaqahDataTask(row, ts);
+      mWritingTask.execute(selection.toArray());
+   }
+   
+   private class WriteSadaqahDataTask extends AsyncTask<Object, Void, Boolean> {
+      private long mTimestamp = -1;
+      private int mSelectedRow = -1;
+      private List<Integer> mSadaqat = null;
+      
+      public WriteSadaqahDataTask(int selectedRow, long timestamp){
+         mTimestamp = timestamp;
+         mSelectedRow = selectedRow;
+      }
+      
+      @Override
+      protected Boolean doInBackground(Object... params) {
+         mSadaqat = new ArrayList<Integer>();
+         for (int i = 0; i<params.length; i++){
+            if (params[i] instanceof Integer){
+               mSadaqat.add((Integer)params[i]);
+            }
+         }
+         
+         QamarDeenActivity activity =
+               (QamarDeenActivity)SadaqahFragment.this.getActivity();
+         QamarDbAdapter adapter = activity.getDatabaseAdapter();
+         return adapter.writeSadaqahEntries(mTimestamp / 1000, mSadaqat);
+      }
+      
+      @Override
+      protected void onPostExecute(Boolean result) {
+         if (result != null && result == true){
+            // calculate the local timestamp
+            Calendar gmtCal = QamarTime.getGMTCalendar();
+            gmtCal.setTimeInMillis(mTimestamp);
+            long localTimestamp = QamarTime.getLocalTimeFromGMT(gmtCal);
+
+            // update the list adapter with the data
+            ((SadaqahListAdapter)mListAdapter)
+               .addOneSadaqahData(localTimestamp, mSadaqat);
+            
+            boolean refreshed = false;
+            
+            // attempt to refresh just this one list item
+            int start = mListView.getFirstVisiblePosition();
+            int end = mListView.getLastVisiblePosition();
+            if (mSelectedRow >= start && mSelectedRow <= end){
+               View view = mListView.getChildAt(mSelectedRow - start);
+               if (view != null){
+                  mListAdapter.getView(mSelectedRow, view, mListView);
+                  refreshed = true;
+               }
+            }
+            
+            if (!refreshed){
+               // if we can't, refresh everything
+               mListAdapter.notifyDataSetChanged();
+            }
+         }
+         mWritingTask = null;
+      }
    }
    
    private class SadaqahListAdapter extends QamarListAdapter {
-      private Map<Long, List<Integer>> dataMap = new HashMap<Long, List<Integer>>();
+      private Map<Long, List<Integer>> mDataMap =
+            new HashMap<Long, List<Integer>>();
 
       public SadaqahListAdapter(Context context){
          super(context);
@@ -122,13 +201,17 @@ public class SadaqahFragment extends QamarFragment {
       }
       
       public void addDayData(Map<Long, List<Integer>> data){
-         dataMap.putAll(data);
+         mDataMap.putAll(data);
+      }
+      
+      public void addOneSadaqahData(long when, List<Integer> data){
+         mDataMap.put(when, data);
       }
       
       public List<Integer> getDataItem(int position){
          Date date = (Date)getItem(position);
          if (date != null){
-            return dataMap.get(date.getTime());
+            return mDataMap.get(date.getTime());
          }
          return null;
       }
@@ -152,7 +235,7 @@ public class SadaqahFragment extends QamarFragment {
          
          // initialize generic row stuff (date, header, etc)
          initializeRow(holder, date, position);
-         holder.sadaqahWidget.setSadaqat(dataMap.get(date.getTime()));
+         holder.sadaqahWidget.setSadaqat(mDataMap.get(date.getTime()));
          
          final int currentRow = position;
          holder.sadaqahWidget.setOnClickListener(new OnClickListener(){

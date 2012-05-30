@@ -29,13 +29,26 @@ public class QamarDbAdapter {
       public static final String SADAQAH_TYPE = "sadaqah_type";
    }
    
+   protected static class QuranTable {
+      public static final String TABLE_NAME = "readings";
+      public static final String ID = "_id";
+      public static final String TIME = "ts";
+      public static final String END_AYAH = "endayah";
+      public static final String END_SURA = "endsura";
+      public static final String START_AYAH = "startayah";
+      public static final String START_SURA = "startsura";
+      public static final String IS_EXTRA = "is_extra";
+   }
+   
    public QamarDbAdapter(Context context){
       mContext = context;
    }
    
-   public QamarDbAdapter open() throws SQLException {
-      mDbHelper = new QamarDbHelper(mContext);
-      mDb = mDbHelper.getWritableDatabase();
+   public synchronized QamarDbAdapter open() throws SQLException {
+      if (mDbHelper == null){
+         mDbHelper = new QamarDbHelper(mContext);
+         mDb = mDbHelper.getWritableDatabase();
+      }
       return this;
    }
    
@@ -129,5 +142,21 @@ public class QamarDbAdapter {
       mDb.endTransaction();
       
       return true;
+   }
+   
+   /**
+    * get the quran entries for a specific date range
+    * @param max the maximum date (in seconds, gmt at 12:00)
+    * @param min the minimum date (in seconds, gmt at 12:00)
+    * @return the cursor of the results
+    */
+   public Cursor getQuranEntries(long max, long min) {
+      if (mDbHelper == null){ open(); }
+      if (mDb == null){ return null; }
+      Cursor cursor = mDb.query(QuranTable.TABLE_NAME,
+            null, QuranTable.TIME + " > " + min + " AND " + 
+                  QuranTable.TIME + " <= " + max,
+            null, null, null, QuranTable.TIME + " DESC");
+      return cursor;
    }
 }

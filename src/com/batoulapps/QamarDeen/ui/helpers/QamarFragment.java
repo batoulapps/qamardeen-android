@@ -43,6 +43,7 @@ public abstract class QamarFragment extends SherlockFragment
       Activity activity = getActivity();
       View view = inflater.inflate(R.layout.qamar_list, container, false);
       mListView = (PinnedHeaderListView)view.findViewById(R.id.list);
+      mListView.setDividerHeight(0);
       mListAdapter = createAdapter(activity);
       
       // setup the list and adapter
