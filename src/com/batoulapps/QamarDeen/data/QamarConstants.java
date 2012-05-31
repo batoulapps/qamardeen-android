@@ -1,6 +1,7 @@
 package com.batoulapps.QamarDeen.data;
 
 
+
 public class QamarConstants {
    
    public static class Prayers {
@@ -16,7 +17,6 @@ public class QamarConstants {
     public static int[] PRAYER_LIST = new int[]{ 
        Prayers.FAJR, Prayers.DHUHR, Prayers.ASR,
        Prayers.MAGHRIB, Prayers.ISHA };
-    
     
     public static class CharityTypes {
        public static int MONEY = 0;

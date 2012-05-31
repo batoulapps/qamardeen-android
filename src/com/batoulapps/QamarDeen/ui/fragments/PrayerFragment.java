@@ -23,10 +23,38 @@ import com.batoulapps.QamarDeen.utils.QamarTime;
 
 public class PrayerFragment extends QamarFragment {
    
+   private boolean mIsGenderMale = true;
+   private boolean mIsExtendedMode = false;
    private AsyncTask<Integer, Void, Boolean> mWritingTask = null;
+   
+   public static int[] PRAYER_SELECTOR_IMAGES_M = new int[]{
+      R.drawable.prayer_group_with_voluntary_m,
+      R.drawable.prayer_group_m,
+      R.drawable.prayer_alone_with_voluntary_m,
+      R.drawable.prayer_alone_m,
+      R.drawable.prayer_late,
+      R.drawable.prayer_notset
+   };
+   
+   public static int[] PRAYER_SELECTOR_IMAGES_F = new int[]{
+      R.drawable.prayer_group_with_voluntary_f,
+      R.drawable.prayer_group_f,
+      R.drawable.prayer_alone_with_voluntary_f,
+      R.drawable.prayer_alone_f,
+      R.drawable.prayer_late,
+      R.drawable.prayer_notset,
+      R.drawable.prayer_excused
+   };
    
    public static PrayerFragment newInstance(){
       return new PrayerFragment();
+   }
+   
+   @Override
+   public void onResume() {
+      super.onResume();
+      
+      // TODO set mIsGenderMale and mIsExtendedMode from preferences
    }
 
    @Override
@@ -99,25 +127,19 @@ public class PrayerFragment extends QamarFragment {
          mLoadingTask = null;
       }
    }
-   
-   private static int[] selectorOptionsMale = new int[]{
-      R.drawable.prayer_group_with_voluntary_m,
-      R.drawable.prayer_group_m,
-      R.drawable.prayer_alone_with_voluntary_m,
-      R.drawable.prayer_alone_m,
-      R.drawable.prayer_late,
-      R.drawable.prayer_notset
-   };
-   
+      
    private void popupSalahBox(View anchorView, int currentRow, int salah){
       int[] elems = ((PrayerListAdapter)mListAdapter).getDataItem(currentRow);
       int sel = 0;
       if (elems != null){ sel = elems[salah]; }
       
       // TODO - read from shared prefs
-      int[] imageIds = selectorOptionsMale;
+      int[] imageIds = mIsGenderMale? PRAYER_SELECTOR_IMAGES_M :
+         PRAYER_SELECTOR_IMAGES_F;
+      int options = mIsGenderMale? R.array.prayer_options_m :
+         R.array.prayer_options_f;
       mPopupHelper.showPopup(this, anchorView, currentRow, salah, sel,
-            R.array.prayer_options, R.array.prayer_values, imageIds);
+            options, R.array.prayer_values, imageIds);
    }
    
    @Override
@@ -199,7 +221,6 @@ public class PrayerFragment extends QamarFragment {
    }
    
    private class PrayerListAdapter extends QamarListAdapter {
-      private boolean mIsExtendedMode = false;
       private Map<Long, int[]> mDataMap = new HashMap<Long, int[]>();
 
       public PrayerListAdapter(Context context){
@@ -245,6 +266,7 @@ public class PrayerFragment extends QamarFragment {
             h.boxes = (PrayerBoxesLayout)convertView
                   .findViewById(R.id.prayer_boxes);
             
+            h.boxes.setGenderIsMale(mIsGenderMale);
             h.boxes.setExtendedMode(mIsExtendedMode);
             PrayerBoxesHeaderLayout headerBoxes =
                   (PrayerBoxesHeaderLayout)convertView

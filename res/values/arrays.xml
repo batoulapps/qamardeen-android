@@ -2,7 +2,7 @@
 <resources>
     
     <!-- possible values for prayer -->
-    <string-array name="prayer_options">
+    <string-array name="prayer_options_m">
         <item>@string/jama_sunnah</item>
         <item>@string/jama</item>
         <item>@string/alone_sunnah</item>
@@ -11,7 +11,22 @@
         <item>@string/not_set</item>        
     </string-array>
     
-    <!-- map "prayer_options" to corresponding values -->
+    <string-array name="prayer_options_f">
+        <item>@string/jama_sunnah</item>
+        <item>@string/jama</item>
+        <item>@string/alone_sunnah</item>
+        <item>@string/alone</item>
+        <item>@string/late</item>
+        <item>@string/not_set</item>       
+        <item>@string/excused</item> 
+    </string-array>
+    
+    <!-- map "prayer_options" to corresponding values
+         can use for male and female since the excused
+         option is the last option, so it will be ignored
+         for the male case since the corresponding strings
+         array will contain one element less than the values
+         array -->
     <integer-array name="prayer_values">
         <item>4</item>  <!-- jama3a with sunnah -->
         <item>3</item>  <!-- jama3a -->
@@ -19,6 +34,7 @@
         <item>1</item>  <!-- alone -->
         <item>5</item>  <!-- late -->
         <item>0</item>  <!-- not set -->
+        <item>6</item>  <!-- excused -->
     </integer-array>
        
     <!-- possible values for sadaqah -->

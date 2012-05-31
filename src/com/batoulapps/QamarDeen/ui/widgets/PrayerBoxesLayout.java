@@ -18,6 +18,7 @@ public class PrayerBoxesLayout extends LinearLayout {
    private Context mContext = null;
    private List<ImageView> mImages = null;
    private boolean mIsExtendedMode = false; 
+   private boolean mIsMale = true;
    private SalahClickListener mSalahClickListener = null;
 
    private int[] mMaleSalahOptions = new int[]{
@@ -29,7 +30,6 @@ public class PrayerBoxesLayout extends LinearLayout {
          R.drawable.prayer_late
    };
    
-   /*
    private int[] mFemaleSalahOptions = new int[]{
          R.drawable.prayer_notset,
          R.drawable.prayer_alone_m,
@@ -39,9 +39,8 @@ public class PrayerBoxesLayout extends LinearLayout {
          R.drawable.prayer_late,
          R.drawable.prayer_excused
    };
-   */
    
-   private int[] mSalahOptions = null;
+   private int[] mSalahOptions = mMaleSalahOptions;
    
    public PrayerBoxesLayout(Context context){
       super(context);
@@ -61,9 +60,6 @@ public class PrayerBoxesLayout extends LinearLayout {
    private void init(Context context){
       mContext = context;
       mImages = new ArrayList<ImageView>();
-      
-      // TODO: read from shared preferences
-      mSalahOptions = mMaleSalahOptions;
       
       for (int i=0; i<5; i++){
          ImageView image = getImageView(QamarConstants.PRAYER_LIST[i]);
@@ -140,6 +136,20 @@ public class PrayerBoxesLayout extends LinearLayout {
       if (salahSquare != null){ 
          salahSquare.setImageResource(mSalahOptions[type]);
       }
+   }
+   
+   /**
+    * toggle whether or not the gender is male
+    * @param isMale whether it is a male or not
+    * i wonder if having setMale and setFemale methods is more politically
+    * correct... regardless, i point the reader to 16:97
+    */
+   public void setGenderIsMale(boolean isMale){
+      mIsMale = isMale;
+      if (mIsMale){
+         mSalahOptions = mMaleSalahOptions;
+      }
+      else { mSalahOptions = mFemaleSalahOptions; }
    }
    
    /**

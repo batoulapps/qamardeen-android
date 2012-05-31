@@ -104,7 +104,7 @@ public class QamarSelectorHelper implements ItemSelectListener {
       
       // get the resources that are needed
       Resources res = mContext.getResources();
-      int[] values = res.getIntArray(R.array.prayer_values);
+      int[] values = res.getIntArray(valuesId);
       String[] textIds = res.getStringArray(textArrayId);
       
       // initialize selector widget
