@@ -21,16 +21,19 @@ public class QuranSelectorPopupHelper {
    private PopupWindow mPopupWindow = null;
    private View mPopupWindowView = null;
    private Context mContext = null;
+   private int mCurrentRow = -1;
    private ListView mSuraList = null;
    private ListView mAyahList = null;
    private SuraAdapter mSuraAdapter = null;
    private NumericAdapter mAyahAdapter = null;
-
+   private OnQuranSelectionListener mQuranSelectionListener = null;
+   
    public QuranSelectorPopupHelper(Context context){
       mContext = context;
    }
    
-   public void showPopup(View anchorView, int row,
+   public void showPopup(OnQuranSelectionListener listener,
+         View anchorView, int row,
          int selectedSura, int selectedAyah){
       if (mPopupWindow == null || mPopupWindowView == null){
          LayoutInflater inflater = (LayoutInflater)mContext
@@ -53,6 +56,8 @@ public class QuranSelectorPopupHelper {
          button.setOnClickListener(mButtonClickListener);
       }
       
+      mCurrentRow = row;
+      mQuranSelectionListener = listener;
       if (selectedSura < 1){ selectedSura = 1; }
       if (selectedAyah < 1){ selectedAyah = 1; }
       
@@ -62,12 +67,13 @@ public class QuranSelectorPopupHelper {
       mSuraAdapter = new SuraAdapter(mContext);
       mSuraAdapter.setSelectedRow(null, selectedSura - 1);
       mSuraList.setAdapter(mSuraAdapter);
+      mSuraList.setSelectionFromTop(selectedSura -1, 0);
 
       mAyahList = (ListView)mPopupWindowView
             .findViewById(R.id.ayah_list);
       mAyahAdapter = new NumericAdapter(mContext);
-      updateAyahsForSuraPosition(selectedSura - 1, selectedAyah - 1);   
       mAyahList.setAdapter(mAyahAdapter);
+      updateAyahsForSuraPosition(selectedSura - 1, selectedAyah - 1);   
 
 
       // show dropdown
@@ -84,6 +90,7 @@ public class QuranSelectorPopupHelper {
       mAyahAdapter.setCount(count);
       mAyahAdapter.setSelectedRow(null, ayahPosition);
       mAyahAdapter.notifyDataSetChanged();
+      mAyahList.setSelectionFromTop(ayahPosition, 0);
    }
    
    private abstract class StringAdapter extends BaseAdapter {
@@ -93,6 +100,8 @@ public class QuranSelectorPopupHelper {
       public StringAdapter(Context context){
          mInflater = LayoutInflater.from(context);
       }
+      
+      public int getSelectedRow(){ return mSelectedRow; }
       
       public void setSelectedRow(ListView listview, int row){
          int previousRow = mSelectedRow;
@@ -196,6 +205,15 @@ public class QuranSelectorPopupHelper {
       }
    }
    
+   /**
+    * interface used to communicate to the Fragment or Activity
+    * using this helper class
+    */
+   public interface OnQuranSelectionListener {
+      public void onSuraAyahSelected(int row, int sura, int ayah);
+      public void onNoneSelected(int row);
+   };
+   
    protected OnClickListener mButtonClickListener = new OnClickListener(){
       @Override
       public void onClick(View v) {
@@ -204,9 +222,18 @@ public class QuranSelectorPopupHelper {
             dismissPopup();
          }
          else if (v.getId() == R.id.none_button){
-            
+            if (mQuranSelectionListener != null){
+               mQuranSelectionListener.onNoneSelected(mCurrentRow);
+            }
+            dismissPopup();
          }
          else if (v.getId() == R.id.done_button){
+            if (mQuranSelectionListener != null){
+               mQuranSelectionListener.onSuraAyahSelected(mCurrentRow,
+                     mSuraAdapter.getSelectedRow() + 1,
+                     mAyahAdapter.getSelectedRow() + 1);
+            }
+            dismissPopup();
          }
       }
    };

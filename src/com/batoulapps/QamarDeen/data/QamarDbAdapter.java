@@ -160,4 +160,77 @@ public class QamarDbAdapter {
             null, null, null, QuranTable.TIME + " DESC");
       return cursor;
    }
+   
+   /**
+    * gets the first non-extra entry before a particular date
+    * @param min the minimum date
+    * @return the first entry before the minimum date
+    */
+   public Cursor getEarlierQuranEntry(long min){
+      if (mDbHelper == null){ open(); }
+      if (mDb == null){ return null; }
+      Cursor cursor = mDb.query(QuranTable.TABLE_NAME,
+            null, QuranTable.TIME + " < " + min + " AND " +
+            QuranTable.IS_EXTRA + " = 0",
+            null, null, null, QuranTable.TIME + " DESC limit 1");
+      return cursor;
+   }
+   
+   /**
+    * write or updated standard Quran entry changes
+    * @param changedTime the date for entry that changed (seconds, gmt at 12)
+    * @param data the new data (or null if we should remove this row)
+    * @param affectedTime the date for the row that got affected (or null)
+    * @param affectedData the data for the row that got affected if applicable
+    * @return true if succeeded or false otherwise
+    */
+   public boolean writeQuranEntry(long changedTime, QuranData data,
+         Long affectedTime, QuranData affectedData){
+      if (mDbHelper == null){ open(); }
+      if (mDb == null){ return false; }
+
+      // start a transaction
+      mDb.beginTransaction();
+      
+      /* unfortunately, we can't do replace in this method because given
+       * the current table definition, no conflict would occur. */
+      
+      // delete the entry
+      mDb.delete(QuranTable.TABLE_NAME,
+                 QuranTable.TIME + "= ?", new String[]{ "" + changedTime });
+      
+      if (data != null) {
+         // add updated entry back if it wasn't a delete
+         ContentValues values = new ContentValues();
+         values.put(QuranTable.TIME, changedTime);
+         values.put(QuranTable.START_AYAH, data.getStartAyah());
+         values.put(QuranTable.START_SURA, data.getStartSura());
+         values.put(QuranTable.END_AYAH, data.getEndAyah());
+         values.put(QuranTable.END_SURA, data.getEndSura());
+         values.put(QuranTable.IS_EXTRA, 0);
+         mDb.insert(QuranTable.TABLE_NAME, null, values);
+      }
+      
+      if (affectedTime != null && affectedData != null){
+         // remove the old entry
+         mDb.delete(QuranTable.TABLE_NAME,
+               QuranTable.TIME + "= ?", new String[]{ "" + affectedTime });
+         
+         // add new entry
+         ContentValues values = new ContentValues();
+         values.put(QuranTable.TIME, affectedTime);
+         values.put(QuranTable.START_AYAH, affectedData.getStartAyah());
+         values.put(QuranTable.START_SURA, affectedData.getStartSura());
+         values.put(QuranTable.END_AYAH, affectedData.getEndAyah());
+         values.put(QuranTable.END_SURA, affectedData.getEndSura());
+         values.put(QuranTable.IS_EXTRA, 0);
+         mDb.insert(QuranTable.TABLE_NAME, null, values);
+      }
+      
+      // commit the transaction
+      mDb.setTransactionSuccessful();
+      mDb.endTransaction();
+      
+      return true;
+   }
 }

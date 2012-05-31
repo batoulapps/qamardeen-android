@@ -23,16 +23,20 @@ import com.batoulapps.QamarDeen.QamarDeenActivity;
 import com.batoulapps.QamarDeen.R;
 import com.batoulapps.QamarDeen.data.QamarConstants;
 import com.batoulapps.QamarDeen.data.QamarDbAdapter;
+import com.batoulapps.QamarDeen.data.QuranData;
 import com.batoulapps.QamarDeen.ui.helpers.QamarFragment;
 import com.batoulapps.QamarDeen.ui.helpers.QamarListAdapter;
 import com.batoulapps.QamarDeen.ui.helpers.QuranSelectorPopupHelper;
+import com.batoulapps.QamarDeen.ui.helpers.QuranSelectorPopupHelper.OnQuranSelectionListener;
 import com.batoulapps.QamarDeen.utils.QamarTime;
 
-public class QuranFragment extends QamarFragment {
+public class QuranFragment extends QamarFragment
+   implements OnQuranSelectionListener {
 
    private boolean mIsStandardReadingMode = true;
    private QuranSelectorPopupHelper mQuranSelectorPopupHelper = null;
-   
+   private AsyncTask<Object, Void, Boolean> mWritingTask = null;
+
    public static QuranFragment newInstance(){
       return new QuranFragment();
    }
@@ -72,14 +76,196 @@ public class QuranFragment extends QamarFragment {
       mQuranSelectorPopupHelper = new QuranSelectorPopupHelper(context);
    }
    
-   private void popupQuranBox(View anchorView, int currentRow){
-      
-      // TODO: selectedSura/Ayah should be based on current/previous row
+   private void popupQuranBox(View anchorView, int currentRow){      
       int selectedSura = 1;
-      int selectedAyah = 1;
+      int selectedAyah = 0;
       
-      mQuranSelectorPopupHelper.showPopup(anchorView, currentRow,
+      QuranData startData = null;
+      Date date = (Date)mListAdapter.getItem(currentRow);
+      startData = ((QuranListAdapter)mListAdapter).mDayData
+            .get(date.getTime());
+      
+      if (startData == null){
+         startData = ((QuranListAdapter)mListAdapter)
+               .getEarlierEntry(currentRow);
+      }
+      
+      selectedSura = startData.getEndSura();
+      selectedAyah = startData.getEndAyah();
+      
+      mQuranSelectorPopupHelper.showPopup(this, anchorView, currentRow,
             selectedSura, selectedAyah);
+   }
+   
+   @Override
+   public void onSuraAyahSelected(int row, int sura, int ayah) {
+      if (mWritingTask != null){
+         mWritingTask.cancel(true);
+      }
+            
+      // get or initialize the current quran entry
+      Date currentDate = (Date)mListAdapter.getItem(row);
+      QuranData currentEntry = ((QuranListAdapter)mListAdapter)
+            .mDayData.get(currentDate.getTime());
+      if (currentEntry == null){
+         // this is a new entry, so use an earlier entry as a template
+         QuranData earlierEntry =
+               ((QuranListAdapter)mListAdapter).getEarlierEntry(row);
+         currentEntry = new QuranData();
+         
+         // our starting point is the previous entry's ending point
+         currentEntry.setStartAyah(earlierEntry.getEndAyah());
+         currentEntry.setStartSura(earlierEntry.getEndSura());
+      }
+      
+      // set the end sura and ayah based on the user's selection
+      currentEntry.setEndAyah(ayah);
+      currentEntry.setEndSura(sura);
+      
+      long currentTimestamp = QamarTime.getGMTTimeFromLocalDate(currentDate);
+      
+      /* see if we have affected a row that came after us, and if so, get the
+       * row and update its data based on the new values the user selected */
+      
+      Long affectedTimestamp = null;
+      QuranData affectedRowData = null;
+      Integer affectedRowNumber =
+            ((QuranListAdapter)mListAdapter).getLaterEntryRow(row);
+      if (affectedRowNumber != null){
+         // get details about the affected row
+         Date affectedDate = (Date)mListAdapter.getItem(affectedRowNumber);
+         affectedTimestamp = QamarTime.getGMTTimeFromLocalDate(affectedDate);
+         affectedRowData = ((QuranListAdapter)mListAdapter)
+               .mDayData.get(affectedDate.getTime());
+         affectedRowData.setStartAyah(ayah);
+         affectedRowData.setStartSura(sura);
+      }
+      
+      mWritingTask = new WriteQuranDataTask(
+            row, currentTimestamp, currentEntry,
+            affectedRowNumber, affectedTimestamp, affectedRowData);
+      mWritingTask.execute();
+   }
+   
+   @Override
+   public void onNoneSelected(int row) {
+      if (mWritingTask != null){
+         mWritingTask.cancel(true);
+      }
+      
+      Date currentDate = (Date)mListAdapter.getItem(row);
+      long currentTimestamp = QamarTime.getGMTTimeFromLocalDate(currentDate);
+      
+      /* see if we have affected a row that came after us, and if so, get the
+       * row and update its data based on the data point prior to this one. */
+      
+      Long affectedTimestamp = null;
+      QuranData affectedRowData = null;
+      Integer affectedRowNumber =
+            ((QuranListAdapter)mListAdapter).getLaterEntryRow(row);
+      if (affectedRowNumber != null){
+         // get details about the affected row
+         Date affectedDate = (Date)mListAdapter.getItem(affectedRowNumber);
+         affectedTimestamp = QamarTime.getGMTTimeFromLocalDate(affectedDate);
+         affectedRowData = ((QuranListAdapter)mListAdapter)
+               .mDayData.get(affectedDate.getTime());
+         
+         // update the start sura/ayah to point to the earlier datapoint
+         QuranData earlierEntry =
+               ((QuranListAdapter)mListAdapter).getEarlierEntry(row);
+         affectedRowData.setStartAyah(earlierEntry.getEndAyah());
+         affectedRowData.setStartSura(earlierEntry.getEndSura());
+      }
+      
+      mWritingTask = new WriteQuranDataTask(row, currentTimestamp, null,
+            affectedRowNumber, affectedTimestamp, affectedRowData);
+      mWritingTask.execute();
+   }
+   
+   private class WriteQuranDataTask extends AsyncTask<Object, Void, Boolean> {
+      private int mSelectedRow = -1;
+      private long mChangedTimestamp = -1;
+      private QuranData mChangedData = null;
+      private Integer mAffectedRowNumber = null;
+      private Long mAffectedTimestamp = null;
+      private QuranData mAffectedData = null;
+      
+      public WriteQuranDataTask(int changedRow, long changedTimestamp,
+            QuranData changedData, Integer affectedRowNumber,
+            Long affectedTimestamp,
+            QuranData affectedData){
+         mSelectedRow = changedRow;
+         mChangedTimestamp = changedTimestamp;
+         mChangedData = changedData;
+         mAffectedTimestamp = affectedTimestamp;
+         mAffectedData = affectedData;
+         mAffectedRowNumber = affectedRowNumber;
+      }
+      
+      @Override
+      protected Boolean doInBackground(Object... params) {
+         QamarDeenActivity activity =
+               (QamarDeenActivity)QuranFragment.this.getActivity();
+         QamarDbAdapter adapter = activity.getDatabaseAdapter();
+         
+         Long affectedTime = null;
+         if (mAffectedTimestamp != null){
+            affectedTime = mAffectedTimestamp / 1000;
+         }
+         
+         return adapter.writeQuranEntry(mChangedTimestamp / 1000,
+               mChangedData, affectedTime, mAffectedData);
+      }
+      
+      @Override
+      protected void onPostExecute(Boolean result) {
+         if (result != null && result == true){
+            // calculate the local timestamp
+            Calendar gmtCal = QamarTime.getGMTCalendar();
+            gmtCal.setTimeInMillis(mChangedTimestamp);
+            long localTimestamp = QamarTime.getLocalTimeFromGMT(gmtCal);
+
+            // update the list adapter with the data
+            ((QuranListAdapter)mListAdapter)
+               .updateQuranDataRow(localTimestamp, mChangedData);
+            if (mAffectedTimestamp != null){
+               gmtCal = QamarTime.getGMTCalendar();
+               gmtCal.setTimeInMillis(mAffectedTimestamp);
+               long affectedTimestamp = QamarTime.getLocalTimeFromGMT(gmtCal);
+               
+               ((QuranListAdapter)mListAdapter)
+                  .updateQuranDataRow(affectedTimestamp, mAffectedData);
+            }
+            
+            boolean refreshed = false;
+            
+            // attempt to refresh just this one list item
+            int start = mListView.getFirstVisiblePosition();
+            int end = mListView.getLastVisiblePosition();
+            if (mSelectedRow >= start && mSelectedRow <= end){
+               View view = mListView.getChildAt(mSelectedRow - start);
+               if (view != null){
+                  mListAdapter.getView(mSelectedRow, view, mListView);
+                  refreshed = true;
+               }
+            }
+            
+            // attempt to refresh the affected element if it exists
+            if (mAffectedRowNumber != null && mAffectedRowNumber >= start &&
+                  mAffectedRowNumber <= end){
+               View view = mListView.getChildAt(mAffectedRowNumber - start);
+               if (view != null){
+                  mListAdapter.getView(mAffectedRowNumber, view, mListView);
+               }
+            }
+            
+            if (!refreshed){
+               // if we can't, refresh everything
+               mListAdapter.notifyDataSetChanged();
+            }
+         }
+         mWritingTask = null;
+      }
    }
    
    @Override
@@ -98,6 +284,7 @@ public class QuranFragment extends QamarFragment {
    }
    
    private class ReadQuranDataTask extends AsyncTask<Long, Void, Cursor> {
+      private QuranData mEarlierData = null;
       
       @Override
       protected Cursor doInBackground(Long... params){
@@ -107,6 +294,19 @@ public class QuranFragment extends QamarFragment {
          QamarDeenActivity activity =
                (QamarDeenActivity)QuranFragment.this.getActivity();
          QamarDbAdapter adapter = activity.getDatabaseAdapter();
+         Cursor earlierCursor = adapter.getEarlierQuranEntry(minDate / 1000);
+         if (earlierCursor != null){
+            if (earlierCursor.moveToFirst()){
+               QuranData d = new QuranData();
+               d.setEndAyah(earlierCursor.getInt(2));
+               d.setEndSura(earlierCursor.getInt(3));
+               d.setStartAyah(earlierCursor.getInt(4));
+               d.setStartSura(earlierCursor.getInt(5));
+               mEarlierData = d;
+            }
+            earlierCursor.close();
+         }
+         
          return adapter.getQuranEntries(maxDate / 1000, minDate / 1000);
       }
       
@@ -139,11 +339,8 @@ public class QuranFragment extends QamarFragment {
                      extraData.put(localTimestamp, suras);
                   }
                   else {
-                     QuranData qd = new QuranData();
-                     qd.endAyah = endAyah;
-                     qd.endSura = endSura;
-                     qd.startAyah = startAyah;
-                     qd.startSura = startSura;
+                     QuranData qd = new QuranData(
+                           startAyah, startSura, endAyah, endSura);
                      dayData.put(localTimestamp, qd);
                   }
                }
@@ -165,20 +362,14 @@ public class QuranFragment extends QamarFragment {
                   mListAdapter.notifyDataSetChanged();
                }
             }
+            
+            ((QuranListAdapter)mListAdapter).setEarlierEntryData(mEarlierData);
             cursor.close();
             mReadData = true;
          }
-         else { mReadData = false; }
-         
+         else { mReadData = false; }         
          mLoadingTask = null;
       }
-   }
-   
-   public static class QuranData {
-      public int startAyah;
-      public int startSura;
-      public int endAyah;
-      public int endSura;
    }
    
    /**
@@ -187,32 +378,43 @@ public class QuranFragment extends QamarFragment {
     * @return the number of ayahs read
     */
    public int getAyahCount(QuranData data){
-      if (data.startSura > data.endSura){ return 0; }
-      else if ((data.startSura == data.endSura) &&
-               (data.startAyah > data.endAyah)){ return 0; }
-      int ayahs = QamarConstants.SURA_NUM_AYAHS[data.startSura-1];
-      ayahs = ayahs - data.startAyah;
-      for (int i = data.startSura + 1; i < data.endSura; i++){
+      if (data.getStartSura() > data.getEndSura()){ return 0; }
+      else if ((data.getStartSura() == data.getEndSura()) &&
+               (data.getStartAyah() > data.getEndAyah())){ return 0; }
+      else if (data.getStartSura() == data.getEndSura()){
+         return data.getEndAyah() - data.getStartAyah();
+      }
+      
+      int ayahs = QamarConstants.SURA_NUM_AYAHS[data.getStartSura()-1];
+      ayahs = ayahs - data.getStartAyah();
+      for (int i = data.getStartSura() + 1; i < data.getEndSura(); i++){
          ayahs += QamarConstants.SURA_NUM_AYAHS[i-1];
       }
-      ayahs += data.endAyah;
+      ayahs += data.getEndAyah();
       return ayahs;
    }
    
    private class QuranListAdapter extends QamarListAdapter {
-      Map<Long, QuranData> mDayData = new HashMap<Long, QuranData>();
-      Map<Long, List<Integer>> mExtraData =
+      private Map<Long, QuranData> mDayData = new HashMap<Long, QuranData>();
+      private Map<Long, List<Integer>> mExtraData =
             new HashMap<Long, List<Integer>>();
-      String[] mSuras = null;
+      private String[] mSuras = null;
+      
+      // this is used to store the first entry not on the screen
+      private QuranData mEarlierEntryData = null;
       
       public QuranListAdapter(Context context){
          super(context);
-         mSuras =context.getResources().getStringArray(R.array.sura_names);
+         mSuras = context.getResources().getStringArray(R.array.sura_names);
       }
       
       @Override
       public void requestData(Long maxDate, Long minDate){
          requestRangeData(maxDate, minDate);
+      }
+      
+      public void updateQuranDataRow(long timestamp, QuranData data){
+         mDayData.put(timestamp, data);
       }
       
       public void addDayData(Map<Long, QuranData> data){
@@ -221,6 +423,65 @@ public class QuranFragment extends QamarFragment {
       
       public void addExtraData(Map<Long, List<Integer>> data){
          mExtraData.putAll(data);
+      }
+      
+      public void setEarlierEntryData(QuranData earlierData){
+         mEarlierEntryData = earlierData;
+      }
+      
+      /**
+       * gets an earlier QuranData object based on this row
+       * @param row the current row
+       * @return QuranData representing the first row before
+       * this row with data, or a default QuranData structure
+       */
+      public QuranData getEarlierEntry(int row){
+         QuranData result = null;
+         Integer earlierRow = getEarlierEntryRow(row);
+         if (earlierRow != null){
+            Date d = (Date)getItem(earlierRow);
+            result = mDayData.get(d.getTime());
+         }
+         
+         if (result == null){ result = mEarlierEntryData; }
+         if (result == null){ result = new QuranData(); }
+         return result;
+      }
+      
+      /**
+       * gets the row number of the first entry who is older
+       * than the current row and has data
+       * @param row the current row
+       * @return the row number or null if none
+       */
+      public Integer getEarlierEntryRow(int row){
+         Integer result = null;
+         for (int i=row + 1; i < getCount(); i++){
+            Date d = (Date)getItem(i);
+            if (mDayData.containsKey(d.getTime())){
+               result = i;
+               break;
+            }
+         }
+         return result;
+      }
+      
+      /**
+       * gets the row number of the first entry who is newer
+       * than the current row and has data
+       * @param row the current row
+       * @return the row number or null if none
+       */
+      public Integer getLaterEntryRow(int row){
+         Integer result = null;
+         for (int i=row - 1; i >= 0; i--){
+            Date d = (Date)getItem(i);
+            if (mDayData.containsKey(d.getTime())){
+               result = i;
+               break;
+            }
+         }
+         return result;
       }
       
       @Override
@@ -261,7 +522,7 @@ public class QuranFragment extends QamarFragment {
             QuranData data = mDayData.get(date.getTime());
             if (data != null){
                // set the sura name and ayah count
-               holder.dailyReadings.setText(mSuras[data.endSura-1]);
+               holder.dailyReadings.setText(mSuras[data.getEndSura()-1]);
                int readAyahs = getAyahCount(data);
                holder.ayahCount.setText("" + readAyahs);
                

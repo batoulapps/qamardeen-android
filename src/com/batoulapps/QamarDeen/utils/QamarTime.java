@@ -1,6 +1,7 @@
 package com.batoulapps.QamarDeen.utils;
 
 import java.util.Calendar;
+import java.util.Date;
 import java.util.TimeZone;
 
 public class QamarTime {
@@ -50,5 +51,17 @@ public class QamarTime {
             localCal.get(Calendar.MONTH),
             localCal.get(Calendar.DATE));
       return gmtTime.getTimeInMillis();
+   }
+   
+   /**
+    * given a local date at 12:00:00, returns the timestamp of a gmt
+    * calendar set at the same date as the local date at 12:00:00 gmt
+    * @param localCal a local calendar
+    * @return timestamp of 12:00:00 on the same day in gmt
+    */
+   public static long getGMTTimeFromLocalDate(Date localDate){
+      Calendar cal = QamarTime.getTodayCalendar();
+      cal.setTime(localDate);
+      return QamarTime.getGMTTimeFromLocal(cal);
    }
 }

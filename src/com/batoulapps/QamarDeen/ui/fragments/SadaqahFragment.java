@@ -119,9 +119,7 @@ public class SadaqahFragment extends QamarFragment {
       
       // get the timestamp corresponding to the row
       Date date = (Date)dateObj;
-      Calendar cal = QamarTime.getTodayCalendar();
-      cal.setTime(date);
-      ts = QamarTime.getGMTTimeFromLocal(cal);
+      ts = QamarTime.getGMTTimeFromLocalDate(date);
       
       if (mWritingTask != null){
          mWritingTask.cancel(true);
