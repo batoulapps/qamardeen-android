@@ -6,6 +6,7 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.ViewPager;
+import android.support.v4.view.ViewPager.OnPageChangeListener;
 
 import com.actionbarsherlock.app.ActionBar;
 import com.actionbarsherlock.app.ActionBar.Tab;
@@ -18,10 +19,11 @@ import com.batoulapps.QamarDeen.ui.fragments.PrayerFragment;
 import com.batoulapps.QamarDeen.ui.fragments.QuranFragment;
 import com.batoulapps.QamarDeen.ui.fragments.SadaqahFragment;
 
-public class QamarDeenActivity extends SherlockFragmentActivity implements ActionBar.TabListener {
+public class QamarDeenActivity extends SherlockFragmentActivity 
+   implements ActionBar.TabListener {
 
    private ViewPager mQamarPager;
-   private TabsAdapter mTabsAdapter;
+   private PagerAdapter mPagerAdapter;
    private int[] mTabs = new int[]{ R.string.prayers_tab,
          R.string.quran_tab, R.string.sadaqah_tab, R.string.fasting_tab };
    private QamarDbAdapter mDatabaseAdapter;
@@ -37,8 +39,9 @@ public class QamarDeenActivity extends SherlockFragmentActivity implements Actio
         mDatabaseAdapter = new QamarDbAdapter(this);
         
         mQamarPager = (ViewPager)findViewById(R.id.qamar_pager);
-        mTabsAdapter = new TabsAdapter(getSupportFragmentManager());
-        mQamarPager.setAdapter(mTabsAdapter);
+        mPagerAdapter = new PagerAdapter(getSupportFragmentManager());
+        mQamarPager.setAdapter(mPagerAdapter);
+        mQamarPager.setOnPageChangeListener(mOnPageChangeListener);
         
         ActionBar actionbar = getSupportActionBar();
         actionbar.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
@@ -46,6 +49,7 @@ public class QamarDeenActivity extends SherlockFragmentActivity implements Actio
         for (int i=0; i<mTabs.length; i++){
            ActionBar.Tab tab = actionbar.newTab();
            tab.setText(mTabs[i]);
+           tab.setTag(i);
            tab.setTabListener(this);
            actionbar.addTab(tab);
         }
@@ -78,8 +82,30 @@ public class QamarDeenActivity extends SherlockFragmentActivity implements Actio
       return super.onOptionsItemSelected(item);
    }
    
+   OnPageChangeListener mOnPageChangeListener = new OnPageChangeListener(){
+
+      @Override
+      public void onPageScrollStateChanged(int state) {
+      }
+
+      @Override
+      public void onPageScrolled(int position,
+            float positionOffset, int positionOffsetPixels) {
+      }
+
+      @Override
+      public void onPageSelected(int position) {
+         ActionBar actionbar = getSherlock().getActionBar();
+         Tab tab = actionbar.getTabAt(position);
+         actionbar.selectTab(tab);
+      }
+      
+   };
+   
    @Override
-   public void onTabSelected(Tab tab, FragmentTransaction transaction){   
+   public void onTabSelected(Tab tab, FragmentTransaction transaction){
+      Integer tag = (Integer)tab.getTag();
+      mQamarPager.setCurrentItem(tag);
    }
    
    @Override
@@ -90,14 +116,14 @@ public class QamarDeenActivity extends SherlockFragmentActivity implements Actio
    public void onTabUnselected(Tab tab, FragmentTransaction transaction){
    }
    
-   public static class TabsAdapter extends FragmentPagerAdapter {
-      public TabsAdapter(FragmentManager fm){
+   public static class PagerAdapter extends FragmentPagerAdapter {
+      public PagerAdapter(FragmentManager fm){
          super(fm);
       }
       
       @Override
       public int getCount(){
-         return 3;
+         return 4;
       }
       
       @Override
