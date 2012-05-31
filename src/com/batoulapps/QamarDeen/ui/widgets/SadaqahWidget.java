@@ -3,9 +3,9 @@ package com.batoulapps.QamarDeen.ui.widgets;
 import java.util.List;
 
 import android.content.Context;
-import android.graphics.Color;
 import android.util.AttributeSet;
 import android.widget.ImageView;
+import android.widget.ImageView.ScaleType;
 import android.widget.LinearLayout;
 
 import com.batoulapps.QamarDeen.R;
@@ -14,8 +14,11 @@ public class SadaqahWidget extends LinearLayout {
 
    private Context mContext = null;
    
-   private int[] mResources = new int[]{ Color.RED, Color.GREEN, Color.BLUE, 
-         Color.CYAN, Color.YELLOW, Color.MAGENTA };
+   public static int[] SADAQAH_SELECTOR_IMAGES = new int[]{
+      R.drawable.sadaqah_icon_money, R.drawable.sadaqah_icon_effort,
+      R.drawable.sadaqah_icon_food, R.drawable.sadaqah_icon_clothes,
+      R.drawable.sadaqah_icon_smile, R.drawable.sadaqah_icon_other
+   };
    
    public SadaqahWidget(Context context){
       super(context);
@@ -43,14 +46,9 @@ public class SadaqahWidget extends LinearLayout {
    
    private void addSadaqahView(int sadaqaType){
       ImageView image = new ImageView(mContext);
-      //image.setImageResource(mResources[sadaqaType]);
-      //addView(image, LayoutParams.WRAP_CONTENT, LayoutParams.MATCH_PARENT);
-
-      // when we get images, we remove these 3 lines and restore the top 2
-      image.setBackgroundColor(mResources[sadaqaType]);
-      int size = mContext.getResources().getDimensionPixelSize(
-            R.dimen.list_item_height);
-      addView(image, size, size);
+      image.setScaleType(ScaleType.CENTER);
+      image.setImageResource(SADAQAH_SELECTOR_IMAGES[sadaqaType]);
+      addView(image, LayoutParams.WRAP_CONTENT, LayoutParams.MATCH_PARENT);
    }
    
    /**

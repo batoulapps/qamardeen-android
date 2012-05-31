@@ -107,7 +107,8 @@ public class QamarDbAdapter {
       Cursor cursor = mDb.query(CharityTable.TABLE_NAME,
             null, CharityTable.TIME + " > " + min + " AND " + 
                   CharityTable.TIME + " <= " + max,
-            null, null, null, CharityTable.TIME + " DESC");
+            null, null, null, CharityTable.TIME + " DESC, " + 
+                  CharityTable.SADAQAH_TYPE + " ASC");
       return cursor;
    }
    

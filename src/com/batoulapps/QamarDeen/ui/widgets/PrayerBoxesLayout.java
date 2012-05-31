@@ -21,7 +21,11 @@ public class PrayerBoxesLayout extends LinearLayout {
    private boolean mIsMale = true;
    private SalahClickListener mSalahClickListener = null;
 
-   private int[] mMaleSalahOptions = new int[]{
+   
+   /**
+    * salah resources that should be rendered
+    */
+   public static int[] SALAH_IMAGE_VALUES_M = new int[]{
          R.drawable.prayer_notset,
          R.drawable.prayer_alone_m,
          R.drawable.prayer_alone_with_voluntary_m,
@@ -30,17 +34,17 @@ public class PrayerBoxesLayout extends LinearLayout {
          R.drawable.prayer_late
    };
    
-   private int[] mFemaleSalahOptions = new int[]{
+   public static int[] SALAH_IMAGE_VALUES_F = new int[]{
          R.drawable.prayer_notset,
-         R.drawable.prayer_alone_m,
-         R.drawable.prayer_alone_with_voluntary_m,
-         R.drawable.prayer_group_m,
-         R.drawable.prayer_group_with_voluntary_m,
+         R.drawable.prayer_alone_f,
+         R.drawable.prayer_alone_with_voluntary_f,
+         R.drawable.prayer_group_f,
+         R.drawable.prayer_group_with_voluntary_f,
          R.drawable.prayer_late,
          R.drawable.prayer_excused
    };
    
-   private int[] mSalahOptions = mMaleSalahOptions;
+   private int[] mSalahValues = SALAH_IMAGE_VALUES_M;
    
    public PrayerBoxesLayout(Context context){
       super(context);
@@ -134,7 +138,7 @@ public class PrayerBoxesLayout extends LinearLayout {
    private void togglePrayerSquare(int salah, int type){
       ImageView salahSquare = (ImageView)findViewWithTag(salah);
       if (salahSquare != null){ 
-         salahSquare.setImageResource(mSalahOptions[type]);
+         salahSquare.setImageResource(mSalahValues[type]);
       }
    }
    
@@ -147,9 +151,9 @@ public class PrayerBoxesLayout extends LinearLayout {
    public void setGenderIsMale(boolean isMale){
       mIsMale = isMale;
       if (mIsMale){
-         mSalahOptions = mMaleSalahOptions;
+         mSalahValues = SALAH_IMAGE_VALUES_M;
       }
-      else { mSalahOptions = mFemaleSalahOptions; }
+      else { mSalahValues = SALAH_IMAGE_VALUES_F; }
    }
    
    /**

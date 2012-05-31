@@ -27,6 +27,11 @@ public class PrayerFragment extends QamarFragment {
    private boolean mIsExtendedMode = false;
    private AsyncTask<Integer, Void, Boolean> mWritingTask = null;
    
+   /**
+    * these are strictly used for the selector (which uses a different
+    * order than the corresponding values order).  as a result, we do
+    * not use PrayerBoxesLayout.SALAH_IMAGE_VALUES_X here.
+    */
    public static int[] PRAYER_SELECTOR_IMAGES_M = new int[]{
       R.drawable.prayer_group_with_voluntary_m,
       R.drawable.prayer_group_m,

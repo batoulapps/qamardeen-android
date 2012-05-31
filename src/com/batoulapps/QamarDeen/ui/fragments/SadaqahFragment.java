@@ -2,6 +2,7 @@ package com.batoulapps.QamarDeen.ui.fragments;
 
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -26,7 +27,7 @@ import com.batoulapps.QamarDeen.utils.QamarTime;
 public class SadaqahFragment extends QamarFragment {
 
    private AsyncTask<Object, Void, Boolean> mWritingTask = null;
-
+   
    public static SadaqahFragment newInstance(){
       return new SadaqahFragment();
    }
@@ -104,7 +105,8 @@ public class SadaqahFragment extends QamarFragment {
       List<Integer> sel =
             ((SadaqahListAdapter)mListAdapter).getDataItem(currentRow);
       mPopupHelper.showMultipleChoicePopup(this, anchorView, currentRow,
-            sel, R.array.charity_options, R.array.charity_values, null);
+            sel, R.array.charity_options, R.array.charity_values,
+            SadaqahWidget.SADAQAH_SELECTOR_IMAGES);
    }
    
    @Override
@@ -124,6 +126,8 @@ public class SadaqahFragment extends QamarFragment {
       if (mWritingTask != null){
          mWritingTask.cancel(true);
       }
+      
+      Collections.sort(selection);
       mWritingTask = new WriteSadaqahDataTask(row, ts);
       mWritingTask.execute(selection.toArray());
    }
