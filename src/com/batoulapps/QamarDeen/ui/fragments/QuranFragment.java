@@ -501,7 +501,9 @@ public class QuranFragment extends QamarFragment
                   (ImageView)convertView.findViewById(R.id.jump_image);
             h.extraReadings =
                   (TextView)convertView.findViewById(R.id.extra_readings);
-
+            h.ayahArea = convertView.findViewById(R.id.ayah_area);
+            h.ayahNumber = (TextView)h.ayahArea.findViewById(R.id.ayah_number);
+            h.ayahImage = (ImageView)h.ayahArea.findViewById(R.id.ayah_image);
             holder = h;
             convertView.setTag(holder);
          }
@@ -518,6 +520,7 @@ public class QuranFragment extends QamarFragment
             holder.dailyReadings.setVisibility(View.VISIBLE);
             holder.ayahCount.setVisibility(View.VISIBLE);
             holder.jumpImage.setVisibility(View.VISIBLE);
+            holder.ayahArea.setVisibility(View.VISIBLE);
             
             QuranData data = mDayData.get(date.getTime());
             if (data != null){
@@ -525,8 +528,8 @@ public class QuranFragment extends QamarFragment
                holder.dailyReadings.setText(mSuras[data.getEndSura()-1]);
                int readAyahs = getAyahCount(data);
                holder.ayahCount.setText("" + readAyahs);
-               
-               // TODO set ayah number as left drawable
+               holder.ayahImage.setImageResource(R.drawable.quran_ayah);
+               holder.ayahNumber.setText("" + data.getEndAyah());
             }
             else {
                // nothing is in this row, so just hide stuff
@@ -534,11 +537,13 @@ public class QuranFragment extends QamarFragment
                holder.ayahCount.setText("");
                holder.jumpImage.setVisibility(View.INVISIBLE);
                
-               // TODO set placeholder as left drawable
+               holder.ayahImage.setImageResource(R.drawable.prayer_notset);
+               holder.ayahNumber.setText("");
             }
          }
          else {
             holder.extraReadings.setVisibility(View.VISIBLE);
+            holder.ayahArea.setVisibility(View.GONE);
             holder.dailyReadings.setVisibility(View.GONE);
             holder.ayahCount.setVisibility(View.GONE);
             holder.jumpImage.setVisibility(View.GONE);
@@ -585,10 +590,13 @@ public class QuranFragment extends QamarFragment
       }
       
       class ViewHolder extends QamarViewHolder {
+         View ayahArea;
          TextView ayahCount;
+         TextView ayahNumber;
          TextView dailyReadings;
          TextView extraReadings;
          ImageView jumpImage;
+         ImageView ayahImage;
       }
    }
 }

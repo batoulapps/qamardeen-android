@@ -48,4 +48,5 @@
     
     <!-- content description -->
     <string name="open_in_quran_description">Open in Quran</string>
+    <string name="ayah_description">Ayah</string>
 </resources>

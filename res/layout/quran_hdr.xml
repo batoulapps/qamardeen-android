@@ -18,7 +18,7 @@
             android:background="@color/hdr_background"
             android:layout_width="0dp"
             android:layout_height="match_parent"
-            android:layout_weight="0.35"
+            android:layout_weight="0.5"
             android:gravity="center_vertical"
             android:paddingLeft="10dp"
             android:textAppearance="@style/qamar_hdr"
@@ -28,7 +28,7 @@
             android:background="@color/hdr_background"
             android:layout_width="0dp"
             android:layout_height="match_parent"
-            android:layout_weight="0.35"
+            android:layout_weight="0.25"
             android:gravity="center_vertical|right"
             android:textAppearance="@style/qamar_hdr"
             android:text="@string/ayah_count" />
@@ -37,7 +37,7 @@
             android:background="@color/hdr_background"
             android:layout_width="0dp"
             android:layout_height="match_parent"
-            android:layout_weight="0.70"
+            android:layout_weight="0.75"
             android:gravity="center_vertical"
             android:textAppearance="@style/qamar_hdr"
             android:visibility="gone"
@@ -47,5 +47,5 @@
         android:background="@color/hdr_background"
         android:layout_width="0dp"
         android:layout_height="match_parent"
-        android:layout_weight="0.3" />
+        android:layout_weight="0.25" />
 </LinearLayout>

@@ -31,9 +31,15 @@
         <item name="android:textStyle">bold</item>
     </style>
     
+    <!-- ayah image text (for quran) -->
+    <style name="qamar_ayah_image_text" parent="qamar_row_text">
+        <item name="android:textSize">10sp</item>
+    </style>
+    
     <!-- count text (for quran) -->
     <style name="quran_ayah_count_text" parent="qamar_row_text">
         <item name="android:textStyle">normal</item>
+        <item name="android:textSize">12sp</item>
         <item name="android:textColor">@color/pinned_hdr_background</item>
     </style>
     
