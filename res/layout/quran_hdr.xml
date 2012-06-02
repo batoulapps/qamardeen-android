@@ -15,7 +15,6 @@
         android:background="@color/hdr_month_bg_color" />
     
     <TextView android:id="@+id/quran_hdr_daily_readings"
-            android:background="@color/hdr_background"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="0.5"
@@ -25,7 +24,6 @@
             android:text="@string/daily_readings" />
 
     <TextView android:id="@+id/quran_hdr_ayah_count"
-            android:background="@color/hdr_background"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="0.25"
@@ -34,17 +32,16 @@
             android:text="@string/ayah_count" />
     
     <TextView android:id="@+id/quran_hdr_extra_readings"
-            android:background="@color/hdr_background"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="0.75"
             android:gravity="center_vertical"
+            android:paddingLeft="10dp"
             android:textAppearance="@style/qamar_hdr"
             android:visibility="gone"
             android:text="@string/extra_readings" />
         
     <View android:id="@+id/quran_jump_view"
-        android:background="@color/hdr_background"
         android:layout_width="0dp"
         android:layout_height="match_parent"
         android:layout_weight="0.25" />

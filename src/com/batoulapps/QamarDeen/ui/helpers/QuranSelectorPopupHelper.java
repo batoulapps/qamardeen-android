@@ -75,8 +75,8 @@ public class QuranSelectorPopupHelper {
       mAyahList.setAdapter(mAyahAdapter);
       updateAyahsForSuraPosition(selectedSura - 1, selectedAyah - 1);   
 
-
       // show dropdown
+      mPopupWindow.setFocusable(true);
       mPopupWindow.showAsDropDown(anchorView);
    }
    

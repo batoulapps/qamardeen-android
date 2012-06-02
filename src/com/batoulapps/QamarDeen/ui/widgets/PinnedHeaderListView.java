@@ -101,6 +101,10 @@ public class PinnedHeaderListView extends ListView {
         }
         requestLayout();
     }
+    
+    public View getPinnedHeaderView(){
+       return mHeaderView;
+    }
 
     @Override
     public void setAdapter(ListAdapter adapter) {

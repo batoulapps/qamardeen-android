@@ -13,9 +13,11 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -33,12 +35,19 @@ import com.batoulapps.QamarDeen.utils.QamarTime;
 public class QuranFragment extends QamarFragment
    implements OnQuranSelectionListener {
 
+   private Button mDailyButton = null;
+   private Button mExtraButton = null;
    private boolean mIsStandardReadingMode = true;
    private QuranSelectorPopupHelper mQuranSelectorPopupHelper = null;
    private AsyncTask<Object, Void, Boolean> mWritingTask = null;
 
    public static QuranFragment newInstance(){
       return new QuranFragment();
+   }
+   
+   @Override
+   protected int getLayout(){
+      return R.layout.quran_view;
    }
    
    @Override
@@ -52,6 +61,10 @@ public class QuranFragment extends QamarFragment
                final int position, long id) {
             mListAdapter.scrollListToPosition(
                   mListView, position, mHeaderHeight);
+            if (!mIsStandardReadingMode){
+               return;
+            }
+            
             view.postDelayed(
                   new Runnable(){
                      public void run(){ 
@@ -60,8 +73,59 @@ public class QuranFragment extends QamarFragment
                   }, 50);
          }
       });
+      
+      mDailyButton = (Button)view.findViewById(R.id.daily_button);
+      mExtraButton = (Button)view.findViewById(R.id.extra_button);
+      mDailyButton.setOnClickListener(mOnButtonClickListener);
+      mExtraButton.setOnClickListener(mOnButtonClickListener);
+      mDailyButton.setEnabled(false);
+      mExtraButton.setEnabled(true);
       return view;
    }
+   
+   OnClickListener mOnButtonClickListener = new OnClickListener(){
+      @Override
+      public void onClick(View v) {
+         if (v.getId() == R.id.daily_button){
+            if (!mIsStandardReadingMode){
+               mDailyButton.setEnabled(false);
+               mExtraButton.setEnabled(true);
+               
+               View hdr = mListView.getPinnedHeaderView();
+               TextView hdrText =
+                     (TextView)hdr.findViewById(R.id.quran_hdr_daily_readings);
+               hdrText.setVisibility(View.VISIBLE);
+               hdrText = (TextView)hdr.findViewById(R.id.quran_hdr_ayah_count);
+               hdrText.setVisibility(View.VISIBLE);
+               hdrText = (TextView)hdr.findViewById(R.id.quran_hdr_extra_readings);
+               hdrText.setVisibility(View.GONE);
+               hdr.invalidate();
+               
+               mIsStandardReadingMode = true;
+               mListAdapter.notifyDataSetChanged();
+            }
+         }
+         else if (v.getId() == R.id.extra_button){            
+            if (mIsStandardReadingMode){
+               mDailyButton.setEnabled(true);
+               mExtraButton.setEnabled(false);
+               
+               View hdr = mListView.getPinnedHeaderView();
+               TextView hdrText =
+                     (TextView)hdr.findViewById(R.id.quran_hdr_daily_readings);
+               hdrText.setVisibility(View.GONE);
+               hdrText = (TextView)hdr.findViewById(R.id.quran_hdr_ayah_count);
+               hdrText.setVisibility(View.GONE);
+               hdrText = (TextView)hdr.findViewById(R.id.quran_hdr_extra_readings);
+               hdrText.setVisibility(View.VISIBLE);
+               hdr.invalidate();
+
+               mIsStandardReadingMode = false;
+               mListAdapter.notifyDataSetChanged();
+            }
+         }
+      }
+   };
    
    @Override
    public void onPause() {
@@ -69,6 +133,12 @@ public class QuranFragment extends QamarFragment
          mQuranSelectorPopupHelper.dismissPopup();
       }
       super.onPause();
+   }
+   
+   @Override
+   public void onResume() {
+      super.onResume();
+      refreshData();
    }
    
    @Override
@@ -504,6 +574,7 @@ public class QuranFragment extends QamarFragment
             h.ayahArea = convertView.findViewById(R.id.ayah_area);
             h.ayahNumber = (TextView)h.ayahArea.findViewById(R.id.ayah_number);
             h.ayahImage = (ImageView)h.ayahArea.findViewById(R.id.ayah_image);
+            
             holder = h;
             convertView.setTag(holder);
          }
@@ -576,16 +647,7 @@ public class QuranFragment extends QamarFragment
       public void configurePinnedHeader(View v, int position, int alpha) {
          super.configurePinnedHeader(v, position, alpha);
          if (alpha == 255){
-            TextView hdr =
-                  (TextView)v.findViewById(R.id.quran_hdr_daily_readings);
-            hdr.setBackgroundResource(R.color.pinned_hdr_background);
-            hdr = (TextView)v.findViewById(R.id.quran_hdr_ayah_count);
-            hdr.setBackgroundResource(R.color.pinned_hdr_background);
-            hdr = (TextView)v.findViewById(R.id.quran_hdr_extra_readings);
-            hdr.setBackgroundResource(R.color.pinned_hdr_background);
-
-            View jumpArea = (View)v.findViewById(R.id.quran_jump_view);
-            jumpArea.setBackgroundResource(R.color.pinned_hdr_background);
+            v.setBackgroundResource(R.color.pinned_hdr_background);
          }
       }
       

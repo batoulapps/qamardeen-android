@@ -42,10 +42,12 @@
         <ListView android:id="@+id/sura_list"
             android:layout_width="0dp"
             android:layout_height="match_parent"
-            android:layout_weight="0.7" />
+            android:layout_weight="0.7"
+            android:cacheColorHint="@color/transparent" />
         <ListView android:id="@+id/ayah_list"
             android:layout_width="0dp"
             android:layout_height="match_parent"
-            android:layout_weight="0.3"  />
+            android:layout_weight="0.3"
+            android:cacheColorHint="@color/transparent"  />
     </LinearLayout>
 </LinearLayout>

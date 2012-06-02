@@ -42,6 +42,8 @@
     <string name="daily_readings">Daily Readings</string>
     <string name="ayah_count">Ayah Count</string>
     <string name="extra_readings">Extra Readings</string>
+    <string name="daily_button">Daily</string>
+    <string name="extra_button">Extra</string>
     
     <string name="select_last_read">Select the last surah and ayah read</string>
     <string name="none">None</string>

@@ -41,7 +41,7 @@ public abstract class QamarFragment extends SherlockFragment
    public View onCreateView(LayoutInflater inflater, ViewGroup container,
                             Bundle savedInstanceState){
       Activity activity = getActivity();
-      View view = inflater.inflate(R.layout.qamar_list, container, false);
+      View view = inflater.inflate(getLayout(), container, false);
       mListView = (PinnedHeaderListView)view.findViewById(R.id.list);
       mListView.setDividerHeight(0);
       mListAdapter = createAdapter(activity);
@@ -85,6 +85,8 @@ public abstract class QamarFragment extends SherlockFragment
       }
       super.onPause();
    }
+   
+   protected int getLayout(){ return R.layout.qamar_list; }
    
    protected void initializePopup(Context context){
       mPopupHelper = new QamarSelectorHelper(context);
