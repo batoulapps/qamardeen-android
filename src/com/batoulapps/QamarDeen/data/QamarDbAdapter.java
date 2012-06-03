@@ -197,7 +197,8 @@ public class QamarDbAdapter {
       
       // delete the entry
       mDb.delete(QuranTable.TABLE_NAME,
-                 QuranTable.TIME + "= ?", new String[]{ "" + changedTime });
+                 QuranTable.TIME + "= ? AND " + QuranTable.IS_EXTRA + " = ?",
+                 new String[]{ "" + changedTime, "0" });
       
       if (data != null) {
          // add updated entry back if it wasn't a delete
@@ -225,6 +226,44 @@ public class QamarDbAdapter {
          values.put(QuranTable.END_SURA, affectedData.getEndSura());
          values.put(QuranTable.IS_EXTRA, 0);
          mDb.insert(QuranTable.TABLE_NAME, null, values);
+      }
+      
+      // commit the transaction
+      mDb.setTransactionSuccessful();
+      mDb.endTransaction();
+      
+      return true;
+   }
+   
+   /**
+    * write or updated extra Quran entry changes
+    * @param when the date for entry that changed (seconds, gmt at 12)
+    * @param data the new data
+    * @return true if succeeded or false otherwise
+    */
+   public boolean writeExtraQuranEntries(long when, List<QuranData> suras){
+      if (mDbHelper == null){ open(); }
+      if (mDb == null){ return false; }
+
+      // start a transaction
+      mDb.beginTransaction();
+      
+      // delete the old entries for this day
+      mDb.delete(QuranTable.TABLE_NAME,
+                 QuranTable.TIME + "= ? AND " + QuranTable.IS_EXTRA + " = ?",
+                 new String[]{ "" + when, "1" });
+      
+      if (suras != null) {
+         for (QuranData data : suras){
+            ContentValues values = new ContentValues();
+            values.put(QuranTable.TIME, when);
+            values.put(QuranTable.START_AYAH, data.getStartAyah());
+            values.put(QuranTable.START_SURA, data.getStartSura());
+            values.put(QuranTable.END_AYAH, data.getEndAyah());
+            values.put(QuranTable.END_SURA, data.getEndSura());
+            values.put(QuranTable.IS_EXTRA, 1);
+            mDb.insert(QuranTable.TABLE_NAME, null, values);
+         }
       }
       
       // commit the transaction

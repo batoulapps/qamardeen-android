@@ -48,6 +48,14 @@
     <string name="select_last_read">Select the last surah and ayah read</string>
     <string name="none">None</string>
     
+    <string name="save">Save</string>
+    <string name="cancel">Cancel</string>
+
+    <plurals name="surasSelected">
+        <item quantity="one">1 sura read</item>
+        <item quantity="other">%d suras read</item>
+    </plurals>
+    
     <!-- content description -->
     <string name="open_in_quran_description">Open in Quran</string>
     <string name="ayah_description">Ayah</string>

@@ -8,6 +8,7 @@ import java.util.List;
 import java.util.Map;
 
 import android.content.Context;
+import android.content.Intent;
 import android.database.Cursor;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -23,6 +24,7 @@ import android.widget.TextView;
 
 import com.batoulapps.QamarDeen.QamarDeenActivity;
 import com.batoulapps.QamarDeen.R;
+import com.batoulapps.QamarDeen.SuraSelectorActivity;
 import com.batoulapps.QamarDeen.data.QamarConstants;
 import com.batoulapps.QamarDeen.data.QamarDbAdapter;
 import com.batoulapps.QamarDeen.data.QuranData;
@@ -35,9 +37,13 @@ import com.batoulapps.QamarDeen.utils.QamarTime;
 public class QuranFragment extends QamarFragment
    implements OnQuranSelectionListener {
 
+   public static final String EXTRA_DATE = "date";
+   public static final String EXTRA_READ = "read";
+   
    private Button mDailyButton = null;
    private Button mExtraButton = null;
    private boolean mIsStandardReadingMode = true;
+   private int mLeftPadding = 0;
    private QuranSelectorPopupHelper mQuranSelectorPopupHelper = null;
    private AsyncTask<Object, Void, Boolean> mWritingTask = null;
 
@@ -61,7 +67,21 @@ public class QuranFragment extends QamarFragment
                final int position, long id) {
             mListAdapter.scrollListToPosition(
                   mListView, position, mHeaderHeight);
-            if (!mIsStandardReadingMode){
+            if (!mIsStandardReadingMode){               
+               // launch the selector activity
+               Intent intent = new Intent(getActivity(),
+                     SuraSelectorActivity.class);
+               intent.putExtra(EXTRA_DATE,
+                     ((Date)mListAdapter.getItem(position)).getTime());
+               intent.putExtra(EXTRA_READ, ((QuranListAdapter)mListAdapter)
+                     .getExtraReadSuras(position));
+               
+               // force refresh in onResume
+               mReadData = false;
+               // clear data to avoid conflicts when we return
+               ((QuranListAdapter)mListAdapter).clearData();
+               
+               startActivity(intent);
                return;
             }
             
@@ -80,6 +100,9 @@ public class QuranFragment extends QamarFragment
       mExtraButton.setOnClickListener(mOnButtonClickListener);
       mDailyButton.setEnabled(false);
       mExtraButton.setEnabled(true);
+      
+      mLeftPadding = getResources()
+            .getDimensionPixelSize(R.dimen.extra_reading_padding);
       return view;
    }
    
@@ -499,6 +522,27 @@ public class QuranFragment extends QamarFragment
          mEarlierEntryData = earlierData;
       }
       
+      public void clearData(){
+         mExtraData.clear();
+         mDayData.clear();
+         mEarlierEntryData = null;
+      }
+      
+      public String getExtraReadSuras(int position){
+         StringBuilder result = new StringBuilder();
+         long date = ((Date)getItem(position)).getTime();
+         List<Integer> data = mExtraData.get(date);
+         if (data != null){
+            boolean firstItem = true;
+            for (Integer item : data){
+               if (firstItem){ firstItem = false; }
+               else { result.append(","); }
+               result.append(item);
+            }
+         }
+         return result.toString();
+      }
+      
       /**
        * gets an earlier QuranData object based on this row
        * @param row the current row
@@ -632,11 +676,13 @@ public class QuranFragment extends QamarFragment
                holder.extraReadings.setText(suraString);
                holder.extraReadings.setCompoundDrawablesWithIntrinsicBounds(
                      0, 0, 0, 0);
+               holder.extraReadings.setPadding(mLeftPadding, 0, 0, 0);
             }
             else {
                holder.extraReadings.setText("");
-               
-               // TODO set placeholder as left drawable
+               holder.extraReadings.setPadding(0, 0, 0, 0);
+               holder.extraReadings.setCompoundDrawablesWithIntrinsicBounds(
+                     R.drawable.prayer_notset, 0, 0, 0);
             }
          }
          

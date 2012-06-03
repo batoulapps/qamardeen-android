@@ -93,7 +93,7 @@ public abstract class QamarFragment extends SherlockFragment
    }
    
    public void refreshData(){
-      if (mReadData == false && mListAdapter != null){
+      if (mReadData == false && mListAdapter != null && mLoadingTask == null){
          mListAdapter.requeryData();
       }
    }
