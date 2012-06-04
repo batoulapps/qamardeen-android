@@ -40,6 +40,13 @@ public class QamarDbAdapter {
       public static final String IS_EXTRA = "is_extra";
    }
    
+   protected static class FastingTable {
+      public static final String TABLE_NAME = "fasting";
+      public static final String ID = "_id";
+      public static final String TIME = "ts";
+      public static final String FASTING_TYPE = "fasting_type";
+   }
+   
    public QamarDbAdapter(Context context){
       mContext = context;
    }
@@ -271,5 +278,38 @@ public class QamarDbAdapter {
       mDb.endTransaction();
       
       return true;
+   }
+   
+   /**
+    * gets the fasting entries for a specific time range
+    * @param max the maximum timestamp to fetch (in seconds, gmt at 12:00)
+    * @param min the minimum timestamp to fetch (in seconds, gmt at 12:00)
+    * @return Cursor of the results
+    */
+   public Cursor getFastingEntries(long max, long min) {
+      if (mDbHelper == null){ open(); }
+      if (mDb == null){ return null; }
+      Cursor cursor = mDb.query(FastingTable.TABLE_NAME,
+            null, FastingTable.TIME + " > " + min + " AND " + 
+                  FastingTable.TIME + " <= " + max,
+            null, null, null, FastingTable.TIME + " DESC");
+      return cursor;
+   }
+   
+   /**
+    * write the fasting data for a specific day
+    * @param time the timestamp to write (in seconds, gmt at 12:00)
+    * @param types an arraylist of sadaqah types for that day
+    * @return true if succeeded or false otherwise
+    */
+   public boolean writeFastingEntry(long time, Integer type) {
+      if (mDbHelper == null){ open(); }
+      if (mDb == null){ return false; }
+      
+      ContentValues values = new ContentValues();
+      values.put(FastingTable.TIME, time);
+      values.put(FastingTable.FASTING_TYPE, type);
+      long result = mDb.replace(FastingTable.TABLE_NAME, null, values);
+      return result != -1;
    }
 }

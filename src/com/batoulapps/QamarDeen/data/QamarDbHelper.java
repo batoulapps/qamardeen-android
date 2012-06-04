@@ -35,7 +35,14 @@ public class QamarDbHelper extends SQLiteOpenHelper {
    
    private static final String QURAN_INDEX =
          "create index quran_index on readings(ts);";
-         
+   
+   private static final String FASTING_TABLE_DEF =
+         "create table fasting(" +
+         "_id integer primary key autoincrement, " +
+         "ts timestamp not null, " +
+         "fasting_type integer not null, " +
+         "unique(ts, fasting_type));";
+   
    QamarDbHelper(Context context){
       super(context, DATABASE_NAME, null, DATABASE_VERSION);
    }
@@ -46,6 +53,7 @@ public class QamarDbHelper extends SQLiteOpenHelper {
       db.execSQL(CHARITY_TABLE_DEF);
       db.execSQL(QURAN_TABLE_DEF);
       db.execSQL(QURAN_INDEX);
+      db.execSQL(FASTING_TABLE_DEF);
    }
    
    @Override

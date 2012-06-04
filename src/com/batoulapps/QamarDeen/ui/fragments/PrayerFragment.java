@@ -135,7 +135,7 @@ public class PrayerFragment extends QamarFragment {
       
    private void popupSalahBox(View anchorView, int currentRow, int salah){
       int[] elems = ((PrayerListAdapter)mListAdapter).getDataItem(currentRow);
-      int sel = 0;
+      Integer sel = null;
       if (elems != null){ sel = elems[salah]; }
       
       // TODO - read from shared prefs

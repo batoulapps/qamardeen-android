@@ -57,6 +57,42 @@
         <item>5</item>  <!-- other -->
     </integer-array>
     
+    <!-- possible values for fasting -->
+    <string-array name="fasting_options">
+        <item>@string/fareedah</item>
+        <item>@string/sunnah</item>
+        <item>@string/qada</item>
+        <item>@string/kaffarah</item>
+        <item>@string/nazr</item>
+        <item>@string/none</item>
+    </string-array>
+    
+    <!-- map "fasting_options" to corresponding values -->
+    <integer-array name="fasting_values">
+        <item>1</item>  <!-- fareeda -->
+        <item>2</item>  <!-- sunnah -->
+        <item>3</item>  <!-- qada' -->
+        <item>4</item>  <!-- kaffara -->
+        <item>5</item>  <!-- nazr -->
+        <item>0</item>  <!-- none -->
+    </integer-array>
+    
+    <!-- islamic months -->
+    <string-array name="islamic_months">
+        <item>Muharram</item>
+        <item>Safar</item>
+        <item>Rabee\' I</item>
+        <item>Rabee\' II</item>
+        <item>Jumada I</item>
+        <item>Jumada II</item>
+        <item>Rajab</item>
+        <item>Sha\'ban</item>
+        <item>Ramadan</item>
+        <item>Shawwal</item>
+        <item>Dhul Qi\'da</item>
+        <item>Dhul Hijja</item>
+    </string-array>
+    
     <!-- quran sura names -->
     <string-array name="sura_names">
         <item>Al-Fatiha</item>

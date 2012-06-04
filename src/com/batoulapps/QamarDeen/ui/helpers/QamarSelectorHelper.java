@@ -42,11 +42,13 @@ public class QamarSelectorHelper implements ItemSelectListener {
     * @param valuesId the array id of the values array
     */
    public void showPopup(OnQamarSelectionListener listener, View anchorView,
-                         int row, int item, int selected, int textArrayId,
+                         int row, int item, Integer selected, int textArrayId,
                          int valuesId, int[] imageIds){
       mElementId = item;
       List<Integer> selectedItems = new ArrayList<Integer>();
-      selectedItems.add(selected);
+      if (selected != null){
+         selectedItems.add(selected);
+      }
       
       initializePopup(listener, row, textArrayId, valuesId,
             imageIds, selectedItems);
@@ -58,7 +60,7 @@ public class QamarSelectorHelper implements ItemSelectListener {
    }
    
    /**
-    * used when there are multiple choices in the seelctor
+    * used when there are multiple choices in the selector
     * @param listener the listener
     * @param anchorView anchor view to show the popup from
     * @param row the row that is clicked (used in callback)
@@ -118,6 +120,7 @@ public class QamarSelectorHelper implements ItemSelectListener {
    public void itemSelected(int selection){
       dismissPopup();
       if (mSelectionListener != null && mSelectedRow >= 0){
+         android.util.Log.d("are", "got: " + selection);
          mSelectionListener.onItemSelected(
                mSelectedRow, mElementId, selection);
       }

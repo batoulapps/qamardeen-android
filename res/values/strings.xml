@@ -56,6 +56,15 @@
         <item quantity="other">%d suras read</item>
     </plurals>
     
+    <string name="hijri_date">Hijri Date</string>
+    <string name="fast_type">Fast Type</string>
+    
+    <string name="fareedah">Fareedah</string>
+    <string name="sunnah">Sunnah</string>
+    <string name="qada">Qada\'</string>
+    <string name="kaffarah">Kaffarah</string>
+    <string name="nazr">Nazr</string>
+    
     <!-- content description -->
     <string name="open_in_quran_description">Open in Quran</string>
     <string name="ayah_description">Ayah</string>

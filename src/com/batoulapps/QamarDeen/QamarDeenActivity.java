@@ -15,6 +15,7 @@ import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuInflater;
 import com.actionbarsherlock.view.MenuItem;
 import com.batoulapps.QamarDeen.data.QamarDbAdapter;
+import com.batoulapps.QamarDeen.ui.fragments.FastingFragment;
 import com.batoulapps.QamarDeen.ui.fragments.PrayerFragment;
 import com.batoulapps.QamarDeen.ui.fragments.QuranFragment;
 import com.batoulapps.QamarDeen.ui.fragments.SadaqahFragment;
@@ -128,13 +129,17 @@ public class QamarDeenActivity extends SherlockFragmentActivity
       
       @Override
       public Fragment getItem(int position){
-         if (position == 0){
+         switch (position){
+         case 0:
             return PrayerFragment.newInstance();
-         }
-         else if (position == 1){
+         case 1:
             return QuranFragment.newInstance();
+         case 2:
+            return SadaqahFragment.newInstance();
+         case 3:
+         default:
+            return FastingFragment.newInstance();
          }
-         return SadaqahFragment.newInstance(); 
       }
    }
 }
