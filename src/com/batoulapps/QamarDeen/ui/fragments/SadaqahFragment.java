@@ -26,6 +26,12 @@ import com.batoulapps.QamarDeen.utils.QamarTime;
 
 public class SadaqahFragment extends QamarFragment {
 
+   public static int[] SADAQAH_SELECTOR_IMAGES_OFF = new int[]{
+      R.drawable.sadaqah_money_t, R.drawable.sadaqah_effort_t,
+      R.drawable.sadaqah_food_t, R.drawable.sadaqah_cloth_t,
+      R.drawable.sadaqah_smile_t, R.drawable.sadaqah_other_t
+   };
+   
    private AsyncTask<Object, Void, Boolean> mWritingTask = null;
    
    public static SadaqahFragment newInstance(){
@@ -106,6 +112,7 @@ public class SadaqahFragment extends QamarFragment {
             ((SadaqahListAdapter)mListAdapter).getDataItem(currentRow);
       mPopupHelper.showMultipleChoicePopup(this, anchorView, currentRow,
             sel, R.array.charity_options, R.array.charity_values,
+            SADAQAH_SELECTOR_IMAGES_OFF,
             SadaqahWidget.SADAQAH_SELECTOR_IMAGES);
    }
    

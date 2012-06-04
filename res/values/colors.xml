@@ -25,6 +25,8 @@
     <!-- divider color -->
     <color name="divider_color">#ffcbcbcb</color>
     
+    <color name="selected_color">#aa555555</color>
+    
     <!-- popup -->
     <color name="popup_background">#cc000000</color>
 </resources>

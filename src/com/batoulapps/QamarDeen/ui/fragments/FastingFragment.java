@@ -253,7 +253,7 @@ public class FastingFragment extends QamarFragment {
             h.hijriMonth =
                   (TextView)convertView.findViewById(R.id.fasting_hijri_month);
             h.fastingType =
-                  (TextView)convertView.findViewById(R.id.fasting_hijri_type);
+                  (TextView)convertView.findViewById(R.id.fasting_type);
             h.fastingArea = convertView.findViewById(R.id.fasting_area);
             
             holder = h;

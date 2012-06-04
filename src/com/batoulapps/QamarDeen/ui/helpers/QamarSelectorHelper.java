@@ -51,7 +51,7 @@ public class QamarSelectorHelper implements ItemSelectListener {
       }
       
       initializePopup(listener, row, textArrayId, valuesId,
-            imageIds, selectedItems);
+            imageIds, selectedItems, null);
       mSelectorWidget.setMultipleChoiceMode(false);
       mDoneButton.setVisibility(View.GONE);
 
@@ -70,9 +70,9 @@ public class QamarSelectorHelper implements ItemSelectListener {
     */
    public void showMultipleChoicePopup(OnQamarSelectionListener listener,
          View anchorView, int row, List<Integer> selected, int textArrayId,
-         int valuesId, int[] imageIds){
+         int valuesId, int[] imageIds, int[] selectStateImageIds){
       initializePopup(listener, row, textArrayId, valuesId,
-            imageIds, selected);
+            imageIds, selected, selectStateImageIds);
       mSelectorWidget.setMultipleChoiceMode(true);
       mDoneButton.setVisibility(View.VISIBLE);
 
@@ -82,7 +82,7 @@ public class QamarSelectorHelper implements ItemSelectListener {
    
    private void initializePopup(OnQamarSelectionListener listener,
          int row, int textArrayId, int valuesId, int[] imageIds,
-         List<Integer> selected){
+         List<Integer> selected, int[] selectStateImageIds){
       if (mPopupWindow == null || mPopupWindowView == null){
          LayoutInflater inflater = (LayoutInflater)mContext
                .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
@@ -112,7 +112,8 @@ public class QamarSelectorHelper implements ItemSelectListener {
       // initialize selector widget
       mSelectorWidget = (SelectorWidget)mPopupWindowView
             .findViewById(R.id.selector_widget);      
-      mSelectorWidget.setSelectionItems(textIds, values, imageIds, selected);
+      mSelectorWidget.setSelectionItems(textIds, values, imageIds,
+            selected, selectStateImageIds);
       mSelectorWidget.setItemSelectListener(this);
    }
    

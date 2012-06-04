@@ -20,6 +20,11 @@ public class SelectorWidget extends LinearLayout {
    private List<Integer> mSelectedItems = null;
    private boolean mIsMultipleChoiceMode = false;
    
+   private int[] mTags = null;
+   private int[] mImageIds = null;
+   private int[] mSelectedStateImageIds = null;
+   private boolean mUseCustomImageIdsOnSelect = false;
+   
    public SelectorWidget(Context context){
       super(context);
       init(context);
@@ -49,8 +54,28 @@ public class SelectorWidget extends LinearLayout {
                Integer boxedItem = new Integer(item);
                if (mSelectedItems.contains(boxedItem)){
                   mSelectedItems.remove(boxedItem);
+                  if (mUseCustomImageIdsOnSelect){
+                     int i = getItemIndexFromTag(item);
+                     
+                     if (i < mTags.length){
+                        // update the drawable
+                        ((TextView)v).setCompoundDrawablesWithIntrinsicBounds(
+                              mImageIds[i], 0, 0, 0);
+                     }
+                  }
                }
-               else { mSelectedItems.add(boxedItem); }
+               else {
+                  mSelectedItems.add(boxedItem);
+                  if (mUseCustomImageIdsOnSelect){
+                     int i = getItemIndexFromTag(item);
+                     
+                     if (i < mTags.length){
+                        // update the drawable
+                        ((TextView)v).setCompoundDrawablesWithIntrinsicBounds(
+                              mSelectedStateImageIds[i], 0, 0, 0);
+                     }
+                  }
+               }
             }
             else {
                mItemSelectListener.itemSelected(item);
@@ -73,10 +98,24 @@ public class SelectorWidget extends LinearLayout {
    
    public List<Integer> getSelectedItems(){ return mSelectedItems; }
    
+   /**
+    * get the index of a view based on its tag
+    * @param tag the tag
+    * @return the index of the items for drawable lookup purposes
+    */
+   private int getItemIndexFromTag(int tag){
+      int i = 0;
+      for (i = 0; i<mTags.length; i++){
+         if (mTags[i] == tag){ break; }
+      }
+      return i;
+   }
+   
    public void setSelectionItems(String[] labels, int[] tags,
-         int[] imageIds, List<Integer> selectedItems){
+         int[] imageIds, List<Integer> selectedItems,
+         int[] selectedStateImageIds){
       removeAllViews();
-      
+            
       // left layout
       LinearLayout leftLayout = new LinearLayout(mContext);
       leftLayout.setOrientation(VERTICAL);
@@ -97,9 +136,23 @@ public class SelectorWidget extends LinearLayout {
          tv.setTag(tags[i]);
          tv.setGravity(Gravity.CENTER_VERTICAL);
          
+         if (selectedStateImageIds == null){
+            // set default background
+            tv.setBackgroundResource(R.drawable.popup_selector_bg);
+         }
+         
+         int imageId = imageIds[i];
+         if (selectedItems != null && selectedItems.contains(tags[i])){
+            // this item should be selected
+            tv.setSelected(true);
+            if (selectedStateImageIds != null){
+               imageId = selectedStateImageIds[i];
+            }
+         }
+         
          // add images to the textviews
          if (imageIds != null){
-            tv.setCompoundDrawablesWithIntrinsicBounds(imageIds[i], 0, 0, 0);
+            tv.setCompoundDrawablesWithIntrinsicBounds(imageId, 0, 0, 0);
          }
          
          // set button click listener
@@ -125,6 +178,15 @@ public class SelectorWidget extends LinearLayout {
       mSelectedItems = selectedItems;
       if (mSelectedItems == null){
          mSelectedItems = new ArrayList<Integer>();
+      }
+      
+      // save resource information
+      mTags = tags;
+      mImageIds = imageIds;
+      mUseCustomImageIdsOnSelect = false;
+      mSelectedStateImageIds = selectedStateImageIds;
+      if (selectedStateImageIds != null){
+         mUseCustomImageIdsOnSelect = true;
       }
       
       // request layout

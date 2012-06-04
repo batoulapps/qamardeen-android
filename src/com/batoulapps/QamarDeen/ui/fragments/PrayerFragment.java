@@ -38,7 +38,7 @@ public class PrayerFragment extends QamarFragment {
       R.drawable.prayer_alone_with_voluntary_m,
       R.drawable.prayer_alone_m,
       R.drawable.prayer_late,
-      R.drawable.prayer_notset
+      R.drawable.fasting_hud_not
    };
    
    public static int[] PRAYER_SELECTOR_IMAGES_F = new int[]{
@@ -48,7 +48,7 @@ public class PrayerFragment extends QamarFragment {
       R.drawable.prayer_alone_f,
       R.drawable.prayer_late,
       R.drawable.prayer_notset,
-      R.drawable.prayer_excused
+      R.drawable.fasting_hud_not
    };
    
    public static PrayerFragment newInstance(){
@@ -135,7 +135,7 @@ public class PrayerFragment extends QamarFragment {
       
    private void popupSalahBox(View anchorView, int currentRow, int salah){
       int[] elems = ((PrayerListAdapter)mListAdapter).getDataItem(currentRow);
-      Integer sel = null;
+      Integer sel = 0;
       if (elems != null){ sel = elems[salah]; }
       
       // TODO - read from shared prefs
