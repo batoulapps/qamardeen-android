@@ -6,13 +6,16 @@ import java.util.HashMap;
 import java.util.Map;
 
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.os.AsyncTask;
+import android.preference.PreferenceManager;
 import android.view.View;
 import android.view.ViewGroup;
 
 import com.batoulapps.QamarDeen.QamarDeenActivity;
 import com.batoulapps.QamarDeen.R;
+import com.batoulapps.QamarDeen.data.QamarConstants.PreferenceKeys;
 import com.batoulapps.QamarDeen.data.QamarDbAdapter;
 import com.batoulapps.QamarDeen.ui.helpers.QamarFragment;
 import com.batoulapps.QamarDeen.ui.helpers.QamarListAdapter;
@@ -47,8 +50,8 @@ public class PrayerFragment extends QamarFragment {
       R.drawable.prayer_alone_with_voluntary_f,
       R.drawable.prayer_alone_f,
       R.drawable.prayer_late,
-      R.drawable.prayer_notset,
-      R.drawable.fasting_hud_not
+      R.drawable.fasting_hud_not,
+      R.drawable.prayer_excused
    };
    
    public static PrayerFragment newInstance(){
@@ -58,8 +61,35 @@ public class PrayerFragment extends QamarFragment {
    @Override
    public void onResume() {
       super.onResume();
-      
-      // TODO set mIsGenderMale and mIsExtendedMode from preferences
+
+      SharedPreferences prefs =
+            PreferenceManager.getDefaultSharedPreferences(getActivity());
+
+      boolean currentlyIsMale = true;
+      String gender = prefs.getString(PreferenceKeys.GENDER_PREF, "");
+      if ("female".equals(gender)){ currentlyIsMale = false; }
+      else { currentlyIsMale = true; }
+
+      boolean currentlyIsExtendedMode =
+            prefs.getBoolean(PreferenceKeys.SHOW_EXTRA_PRAYERS, false);
+
+      if (currentlyIsMale != mIsGenderMale ||
+            currentlyIsExtendedMode != mIsExtendedMode){
+         mIsGenderMale = currentlyIsMale;
+         mIsExtendedMode = currentlyIsExtendedMode;
+         if (mListAdapter != null){
+            // refresh the list
+            mListAdapter.notifyDataSetChanged();
+         }
+         
+         // update the header
+         View headerView = mListView.getPinnedHeaderView();
+         PrayerBoxesHeaderLayout boxes = (PrayerBoxesHeaderLayout)headerView
+               .findViewById(R.id.prayer_header_boxes);
+         if (boxes != null){
+            boxes.setExtendedMode(mIsExtendedMode);
+         }
+      }
    }
 
    @Override
@@ -268,13 +298,10 @@ public class PrayerFragment extends QamarFragment {
             
             h.boxes = (PrayerBoxesLayout)convertView
                   .findViewById(R.id.prayer_boxes);
-            
-            h.boxes.setGenderIsMale(mIsGenderMale);
-            h.boxes.setExtendedMode(mIsExtendedMode);
-            PrayerBoxesHeaderLayout headerBoxes =
+
+            h.headerBoxes =
                   (PrayerBoxesHeaderLayout)convertView
                   .findViewById(R.id.prayer_header_boxes);
-            headerBoxes.setExtendedMode(mIsExtendedMode);
             
             holder = h;
             convertView.setTag(holder);
@@ -283,6 +310,11 @@ public class PrayerFragment extends QamarFragment {
          
          // initialize generic row stuff (date, header, etc)
          initializeRow(holder, date, position);
+         
+         // set the gender and extended modes
+         holder.boxes.setGenderIsMale(mIsGenderMale);
+         holder.boxes.setExtendedMode(mIsExtendedMode);
+         holder.headerBoxes.setExtendedMode(mIsExtendedMode);
          
          // set the salah data
          int[] prayerStatus = mDataMap.get(date.getTime());
@@ -326,6 +358,7 @@ public class PrayerFragment extends QamarFragment {
       
       class ViewHolder extends QamarViewHolder {
          PrayerBoxesLayout boxes;
+         PrayerBoxesHeaderLayout headerBoxes;
       }
    }
 }

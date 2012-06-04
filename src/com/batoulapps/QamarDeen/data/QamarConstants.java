@@ -4,6 +4,11 @@ package com.batoulapps.QamarDeen.data;
 
 public class QamarConstants {
    
+   public static class PreferenceKeys {
+     public static final String GENDER_PREF = "user_gender"; 
+     public static final String SHOW_EXTRA_PRAYERS = "show_extra_prayers";
+   };
+   
    public static class Prayers {
       public static int FAJR = 0;
       public static int DUHA = 1;

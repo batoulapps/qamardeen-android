@@ -65,6 +65,14 @@
     <string name="kaffarah">Kaffarah</string>
     <string name="nazr">Nazr</string>
     
+    <string name="qamar_preferences">QamarDeen Preferences</string>
+    <string name="pref_show_extra_prayers">Show Extra Prayers</string>
+    <string name="pref_show_extra_prayers_desc">Show Duha and Qiyyam Prayers</string>
+    <string name="pref_gender">Gender</string>
+    <string name="dialog_choose_gender_title">Choose Gender</string>
+    <string name="pref_gender_male">Gender is currently set to male</string>
+    <string name="pref_gender_female">Gender is currently set to female</string>
+    
     <!-- content description -->
     <string name="open_in_quran_description">Open in Quran</string>
     <string name="ayah_description">Ayah</string>

@@ -210,4 +210,16 @@
         <item>Al-Falaq</item>
         <item>An-Nas</item>
     </string-array>
+    
+    <!-- gender preference -->
+    <string-array name="gender_preference">
+        <item>Male</item>
+        <item>Female</item>
+    </string-array>
+    
+    <!-- gender values - do not translate -->
+    <string-array name="gender_preference_values">
+        <item>male</item>
+        <item>female</item>
+    </string-array>
 </resources>

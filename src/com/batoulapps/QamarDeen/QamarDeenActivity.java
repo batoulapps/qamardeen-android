@@ -1,5 +1,6 @@
 package com.batoulapps.QamarDeen;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -77,6 +78,8 @@ public class QamarDeenActivity extends SherlockFragmentActivity
    @Override
    public boolean onOptionsItemSelected(MenuItem item){
       if (item.getItemId() == R.id.settings){
+         Intent intent = new Intent(this, QamarPreferencesActivity.class);
+         startActivity(intent);
          return true;
       }
       
