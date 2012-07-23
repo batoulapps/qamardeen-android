@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.util.AttributeSet;
 import android.view.Gravity;
 import android.view.View;
@@ -113,7 +114,7 @@ public class SelectorWidget extends LinearLayout {
    
    public void setSelectionItems(String[] labels, int[] tags,
          int[] imageIds, List<Integer> selectedItems,
-         int[] selectedStateImageIds){
+         int[] selectedStateImageIds, boolean[] enabledStates){
       removeAllViews();
             
       // left layout
@@ -153,6 +154,14 @@ public class SelectorWidget extends LinearLayout {
          // add images to the textviews
          if (imageIds != null){
             tv.setCompoundDrawablesWithIntrinsicBounds(imageId, 0, 0, 0);
+         }
+
+         if (enabledStates != null){
+            if (enabledStates[i]){ tv.setEnabled(true); }
+            else {
+               tv.setEnabled(false);
+               tv.setTextColor(Color.GRAY);
+            }
          }
          
          // set button click listener

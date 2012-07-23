@@ -12,7 +12,7 @@ public class QamarTime {
       c.set(Calendar.MINUTE, 0);
       c.set(Calendar.SECOND, 0);
       c.set(Calendar.MILLISECOND, 0);
-      
+      c.set(Calendar.AM_PM, Calendar.PM);
       return c;
    }
    
@@ -22,6 +22,7 @@ public class QamarTime {
       c.set(Calendar.MINUTE, 0);
       c.set(Calendar.SECOND, 0);
       c.set(Calendar.MILLISECOND, 0);
+      c.set(Calendar.AM_PM, Calendar.PM);
       return c;
    }
    
@@ -56,7 +57,7 @@ public class QamarTime {
    /**
     * given a local date at 12:00:00, returns the timestamp of a gmt
     * calendar set at the same date as the local date at 12:00:00 gmt
-    * @param localCal a local calendar
+    * @param localDate a local date
     * @return timestamp of 12:00:00 on the same day in gmt
     */
    public static long getGMTTimeFromLocalDate(Date localDate){

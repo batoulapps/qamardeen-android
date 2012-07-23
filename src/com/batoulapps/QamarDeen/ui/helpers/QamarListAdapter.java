@@ -145,7 +145,7 @@ public abstract class QamarListAdapter extends BaseAdapter implements
       if (getPositionForSection(section) == position) {
          // show header
          holder.headerMonth.setText(
-               new SimpleDateFormat("LLL").format(date));
+               new SimpleDateFormat("MMM").format(date));
          holder.headerView.setVisibility(View.VISIBLE);
          holder.dividerView.setVisibility(View.GONE);
       }
@@ -223,7 +223,7 @@ public abstract class QamarListAdapter extends BaseAdapter implements
          TextView monthArea =
                (TextView)v.findViewById(R.id.section_month_index);
          Date date = (Date)getItem(position);
-         monthArea.setText(new SimpleDateFormat("LLL").format(date));
+         monthArea.setText(new SimpleDateFormat("MMM").format(date));
          monthArea.setBackgroundResource(R.color.pinned_hdr_month_bg_color);
       }
    }

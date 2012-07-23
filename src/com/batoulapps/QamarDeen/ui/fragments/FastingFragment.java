@@ -203,9 +203,30 @@ public class FastingFragment extends QamarFragment {
    
    private void popupFastingBox(View anchorView, int currentRow){
       Integer sel = ((FastingListAdapter)mListAdapter).getDayData(currentRow);
+
+      boolean isRamadan = false;
+      Date date = (Date)((FastingListAdapter)mListAdapter).getItem(currentRow);
+      Calendar cal = Calendar.getInstance();
+      cal.setTime(date);
+      HijriDate hijriDate = HijriUtils.getHijriDate(cal);
+      if (hijriDate.month == 9){ isRamadan = true; }
+
+
+      boolean[] enabledStatus = new boolean[6];
+      for (int i=0; i<=5; i++){
+         if (isRamadan && i==0){
+            enabledStatus[i] = true;
+         }
+         else if (!isRamadan && i != 0){
+            enabledStatus[i] = true;
+         }
+         else { enabledStatus[i] = false; }
+      }
+      enabledStatus[5] = true;
+
       mPopupHelper.showPopup(this, anchorView, currentRow,
             currentRow, sel, R.array.fasting_options, R.array.fasting_values,
-            FASTING_POPUP_IMAGES);
+            FASTING_POPUP_IMAGES, enabledStatus);
    }
    
    private class FastingListAdapter extends QamarListAdapter {

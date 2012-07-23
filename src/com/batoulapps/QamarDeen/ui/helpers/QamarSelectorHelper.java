@@ -43,7 +43,8 @@ public class QamarSelectorHelper implements ItemSelectListener {
     */
    public void showPopup(OnQamarSelectionListener listener, View anchorView,
                          int row, int item, Integer selected, int textArrayId,
-                         int valuesId, int[] imageIds){
+                         int valuesId, int[] imageIds,
+                         boolean[] enabledStatus){
       mElementId = item;
       List<Integer> selectedItems = new ArrayList<Integer>();
       if (selected != null){
@@ -51,7 +52,7 @@ public class QamarSelectorHelper implements ItemSelectListener {
       }
       
       initializePopup(listener, row, textArrayId, valuesId,
-            imageIds, selectedItems, null);
+            imageIds, selectedItems, null, enabledStatus);
       mSelectorWidget.setMultipleChoiceMode(false);
       mDoneButton.setVisibility(View.GONE);
 
@@ -72,7 +73,7 @@ public class QamarSelectorHelper implements ItemSelectListener {
          View anchorView, int row, List<Integer> selected, int textArrayId,
          int valuesId, int[] imageIds, int[] selectStateImageIds){
       initializePopup(listener, row, textArrayId, valuesId,
-            imageIds, selected, selectStateImageIds);
+            imageIds, selected, selectStateImageIds, null);
       mSelectorWidget.setMultipleChoiceMode(true);
       mDoneButton.setVisibility(View.VISIBLE);
 
@@ -82,7 +83,8 @@ public class QamarSelectorHelper implements ItemSelectListener {
    
    private void initializePopup(OnQamarSelectionListener listener,
          int row, int textArrayId, int valuesId, int[] imageIds,
-         List<Integer> selected, int[] selectStateImageIds){
+         List<Integer> selected, int[] selectStateImageIds,
+         boolean[] enabledStates){
       if (mPopupWindow == null || mPopupWindowView == null){
          LayoutInflater inflater = (LayoutInflater)mContext
                .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
@@ -113,7 +115,7 @@ public class QamarSelectorHelper implements ItemSelectListener {
       mSelectorWidget = (SelectorWidget)mPopupWindowView
             .findViewById(R.id.selector_widget);      
       mSelectorWidget.setSelectionItems(textIds, values, imageIds,
-            selected, selectStateImageIds);
+            selected, selectStateImageIds, enabledStates);
       mSelectorWidget.setItemSelectListener(this);
    }
    

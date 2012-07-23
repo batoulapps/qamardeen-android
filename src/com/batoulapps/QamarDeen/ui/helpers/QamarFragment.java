@@ -109,11 +109,9 @@ public abstract class QamarFragment extends SherlockFragment
       }
 
       Calendar calendar = QamarTime.getTodayCalendar();
-      if (maxDate == null){
-         // if no max date, set it to today
-         maxDate = calendar.getTimeInMillis();
+      if (maxDate != null){
+         calendar.setTimeInMillis(maxDate);
       }
-      else { calendar.setTimeInMillis(maxDate); }
       
       // need ts of 12:00:00 on the max day in gmt
       maxDate = QamarTime.getGMTTimeFromLocal(calendar);

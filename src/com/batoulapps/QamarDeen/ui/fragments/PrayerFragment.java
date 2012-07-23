@@ -174,7 +174,7 @@ public class PrayerFragment extends QamarFragment {
       int options = mIsGenderMale? R.array.prayer_options_m :
          R.array.prayer_options_f;
       mPopupHelper.showPopup(this, anchorView, currentRow, salah, sel,
-            options, R.array.prayer_values, imageIds);
+            options, R.array.prayer_values, imageIds, null);
    }
    
    @Override
