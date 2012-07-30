@@ -245,7 +245,7 @@ public class QamarDbAdapter {
    /**
     * write or updated extra Quran entry changes
     * @param when the date for entry that changed (seconds, gmt at 12)
-    * @param data the new data
+    * @param suras the new data
     * @return true if succeeded or false otherwise
     */
    public boolean writeExtraQuranEntries(long when, List<QuranData> suras){
@@ -299,7 +299,7 @@ public class QamarDbAdapter {
    /**
     * write the fasting data for a specific day
     * @param time the timestamp to write (in seconds, gmt at 12:00)
-    * @param types an arraylist of sadaqah types for that day
+    * @param type the fasting type for that day
     * @return true if succeeded or false otherwise
     */
    public boolean writeFastingEntry(long time, Integer type) {

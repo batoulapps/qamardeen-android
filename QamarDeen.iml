@@ -47,6 +47,15 @@
       </library>
     </orderEntry>
     <orderEntry type="module" module-name="ActionBarSherlock" />
+    <orderEntry type="module-library">
+      <library>
+        <CLASSES>
+          <root url="jar://$MODULE_DIR$/../achartengine/lib/achartengine-1.0.0.jar!/" />
+        </CLASSES>
+        <JAVADOC />
+        <SOURCES />
+      </library>
+    </orderEntry>
   </component>
 </module>
 

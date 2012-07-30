@@ -29,4 +29,8 @@
     
     <!-- popup -->
     <color name="popup_background">#cc000000</color>
+
+    <!-- statistics -->
+    <color name="stats_color">#ffa67c53</color>
+    <color name="stats_selected_date">#ff0069ec</color>
 </resources>

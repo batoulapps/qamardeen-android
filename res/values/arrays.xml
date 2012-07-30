@@ -76,7 +76,18 @@
         <item>5</item>  <!-- nazr -->
         <item>0</item>  <!-- none -->
     </integer-array>
-    
+
+    <string-array name="graph_durations">
+        <item>1w</item>
+        <item>2w</item>
+        <item>1m</item>
+        <item>2m</item>
+        <item>3m</item>
+        <item>6m</item>
+        <item>1y</item>
+        <item>All</item>
+    </string-array>
+
     <!-- islamic months -->
     <string-array name="islamic_months">
         <item>Muharram</item>

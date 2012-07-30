@@ -31,7 +31,7 @@ public class QamarDeenActivity extends SherlockFragmentActivity
    private QamarDbAdapter mDatabaseAdapter;
    
    @Override
-    public void onCreate(Bundle savedInstanceState) {
+   public void onCreate(Bundle savedInstanceState) {
         setTheme(R.style.Theme_Sherlock_Light);
         super.onCreate(savedInstanceState);
         setContentView(R.layout.main);
@@ -55,7 +55,7 @@ public class QamarDeenActivity extends SherlockFragmentActivity
            tab.setTabListener(this);
            actionbar.addTab(tab);
         }
-    }
+   }
    
    @Override
    protected void onDestroy(){
@@ -79,6 +79,11 @@ public class QamarDeenActivity extends SherlockFragmentActivity
    public boolean onOptionsItemSelected(MenuItem item){
       if (item.getItemId() == R.id.settings){
          Intent intent = new Intent(this, QamarPreferencesActivity.class);
+         startActivity(intent);
+         return true;
+      }
+      else if (item.getItemId() == R.id.graphs) {
+         Intent intent = new Intent(this, QamarGraphActivity.class);
          startActivity(intent);
          return true;
       }

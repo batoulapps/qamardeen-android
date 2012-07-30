@@ -47,4 +47,14 @@
     <style name="quran_extra_sura_text" parent="qamar_row_text">
         <item name="android:textStyle">normal</item>
     </style>
+
+    <!-- dates (for graph/stats view) -->
+    <style name="graph_stats_date_text">
+        <item name="android:textStyle">bold</item>
+        <item name="android:textSize">14sp</item>
+    </style>
+
+    <style name="graph_stats_datepick_text" parent="graph_stats_date_text">
+        <item name="android:textColor">@color/white</item>
+    </style>
 </resources>

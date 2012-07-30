@@ -3,25 +3,37 @@ package com.batoulapps.QamarDeen.data;
 
 
 public class QamarConstants {
-   
+
+   public static final int MS_PER_DAY = 24 * 60 * 60 * 1000;
+
    public static class PreferenceKeys {
      public static final String GENDER_PREF = "user_gender"; 
      public static final String SHOW_EXTRA_PRAYERS = "show_extra_prayers";
    };
    
    public static class Prayers {
-      public static int FAJR = 0;
-      public static int DUHA = 1;
-      public static int DHUHR = 2;
-      public static int ASR = 3;
-      public static int MAGHRIB = 4;
-      public static int ISHA = 5;
-      public static int QIYYAM = 6;
+      public static final int FAJR = 0;
+      public static final int DUHA = 1;
+      public static final int DHUHR = 2;
+      public static final int ASR = 3;
+      public static final int MAGHRIB = 4;
+      public static final int ISHA = 5;
+      public static final int QIYYAM = 6;
     };
     
     public static int[] PRAYER_LIST = new int[]{ 
        Prayers.FAJR, Prayers.DHUHR, Prayers.ASR,
        Prayers.MAGHRIB, Prayers.ISHA };
+
+   public static class PrayerType {
+      public static final int GROUP_WITH_VOLUNTARY = 4;
+      public static final int GROUP = 3;
+      public static final int ALONE_WITH_VOLUNTARY = 2;
+      public static final int ALONE = 1;
+      public static final int LATE = 5;
+      public static final int NOT_SET = 0;
+      public static final int EXCUSED = 6;
+   }
     
     public static class CharityTypes {
        public static int MONEY = 0;
