@@ -45,6 +45,7 @@
     <string name="extra_readings">Extra Readings</string>
     <string name="daily_button">Daily</string>
     <string name="extra_button">Extra</string>
+    <string name="avg_ayahs_per_day">Average Ayahs Read Per Day</string>
     
     <string name="select_last_read">Select the last surah and ayah read</string>
     <string name="none">None</string>

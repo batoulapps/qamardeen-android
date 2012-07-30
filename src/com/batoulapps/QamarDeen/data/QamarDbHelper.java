@@ -41,7 +41,7 @@ public class QamarDbHelper extends SQLiteOpenHelper {
          "_id integer primary key autoincrement, " +
          "ts timestamp not null, " +
          "fasting_type integer not null, " +
-         "unique(ts, fasting_type));";
+         "unique(ts));";
    
    QamarDbHelper(Context context){
       super(context, DATABASE_NAME, null, DATABASE_VERSION);

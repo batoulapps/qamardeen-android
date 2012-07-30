@@ -5,6 +5,8 @@ package com.batoulapps.QamarDeen.data;
 public class QamarConstants {
 
    public static final int MS_PER_DAY = 24 * 60 * 60 * 1000;
+   public static final int TOTAL_AYAHS_READ = 998;
+   public static final int TOTAL_ACTIVE_DAYS = 999;
 
    public static class PreferenceKeys {
      public static final String GENDER_PREF = "user_gender"; 
@@ -36,12 +38,21 @@ public class QamarConstants {
    }
     
     public static class CharityTypes {
-       public static int MONEY = 0;
-       public static int EFFORT = 1;
-       public static int FOOD = 2;
-       public static int CLOTHES = 3;
-       public static int SMILE = 4;
-       public static int OTHER = 5;
+       public static final int MONEY = 0;
+       public static final int EFFORT = 1;
+       public static final int FOOD = 2;
+       public static final int CLOTHES = 3;
+       public static final int SMILE = 4;
+       public static final int OTHER = 5;
+    }
+
+    public static class FastingTypes {
+       public static final int FAREEDAH = 1;
+       public static final int SUNNAH = 2;
+       public static final int QADA2 = 3;
+       public static final int KAFFARA = 4;
+       public static final int NAZR = 5;
+       public static final int NONE = 0;
     }
     
     public static int[] SURA_NUM_AYAHS = {

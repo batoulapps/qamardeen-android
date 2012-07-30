@@ -1,12 +1,5 @@
 package com.batoulapps.QamarDeen.ui.fragments;
 
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
 import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
@@ -21,11 +14,9 @@ import android.widget.AdapterView.OnItemClickListener;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
-
 import com.batoulapps.QamarDeen.QamarDeenActivity;
 import com.batoulapps.QamarDeen.R;
 import com.batoulapps.QamarDeen.SuraSelectorActivity;
-import com.batoulapps.QamarDeen.data.QamarConstants;
 import com.batoulapps.QamarDeen.data.QamarDbAdapter;
 import com.batoulapps.QamarDeen.data.QuranData;
 import com.batoulapps.QamarDeen.ui.helpers.QamarFragment;
@@ -33,6 +24,8 @@ import com.batoulapps.QamarDeen.ui.helpers.QamarListAdapter;
 import com.batoulapps.QamarDeen.ui.helpers.QuranSelectorPopupHelper;
 import com.batoulapps.QamarDeen.ui.helpers.QuranSelectorPopupHelper.OnQuranSelectionListener;
 import com.batoulapps.QamarDeen.utils.QamarTime;
+
+import java.util.*;
 
 public class QuranFragment extends QamarFragment
    implements OnQuranSelectionListener {
@@ -465,28 +458,6 @@ public class QuranFragment extends QamarFragment
       }
    }
    
-   /**
-    * get the number of ayahs read for a QuranData object
-    * @param data a QuranData object with read info
-    * @return the number of ayahs read
-    */
-   public int getAyahCount(QuranData data){
-      if (data.getStartSura() > data.getEndSura()){ return 0; }
-      else if ((data.getStartSura() == data.getEndSura()) &&
-               (data.getStartAyah() > data.getEndAyah())){ return 0; }
-      else if (data.getStartSura() == data.getEndSura()){
-         return data.getEndAyah() - data.getStartAyah();
-      }
-      
-      int ayahs = QamarConstants.SURA_NUM_AYAHS[data.getStartSura()-1];
-      ayahs = ayahs - data.getStartAyah();
-      for (int i = data.getStartSura() + 1; i < data.getEndSura(); i++){
-         ayahs += QamarConstants.SURA_NUM_AYAHS[i-1];
-      }
-      ayahs += data.getEndAyah();
-      return ayahs;
-   }
-   
    private class QuranListAdapter extends QamarListAdapter {
       private Map<Long, QuranData> mDayData = new HashMap<Long, QuranData>();
       private Map<Long, List<Integer>> mExtraData =
@@ -641,7 +612,7 @@ public class QuranFragment extends QamarFragment
             if (data != null){
                // set the sura name and ayah count
                holder.dailyReadings.setText(mSuras[data.getEndSura()-1]);
-               int readAyahs = getAyahCount(data);
+               int readAyahs = data.getAyahCount();
                holder.ayahCount.setText("" + readAyahs);
                holder.ayahImage.setImageResource(R.drawable.quran_ayah);
                holder.ayahNumber.setText("" + data.getEndAyah());

@@ -33,6 +33,9 @@ public class QamarGraphActivity extends SherlockActivity
                    TimeSelectorWidget.TimeSelectedListener {
 
    public static final int GRAPH_PRAYER_TAB = 0;
+   public static final int GRAPH_QURAN_TAB = 1;
+   public static final int GRAPH_SADAQAH_TAB = 2;
+   public static final int GRAPH_FASTING_TAB = 3;
 
    private int mCurrentTab = 0;
    private int mDateOption = 1;
@@ -93,6 +96,10 @@ public class QamarGraphActivity extends SherlockActivity
    @Override
    public void timeSelected(int position){
       mDateOption = position;
+      refreshData();
+   }
+
+   public void refreshData(){
       mGraphWidget.showProgressView();
       mStatisticsWidget.showProgressView();
       drawGraph();
@@ -125,6 +132,18 @@ public class QamarGraphActivity extends SherlockActivity
             return ScoresHelper.getPrayerScores(mDatabaseAdapter,
                     maxDate, minDate);
          }
+         else if (mCurrentTab == GRAPH_QURAN_TAB){
+            return ScoresHelper.getQuranScores(mDatabaseAdapter,
+                    maxDate, minDate);
+         }
+         else if (mCurrentTab == GRAPH_SADAQAH_TAB){
+            return ScoresHelper.getSadaqahScores(mDatabaseAdapter,
+                    maxDate, minDate);
+         }
+         else if (mCurrentTab == GRAPH_FASTING_TAB){
+            return ScoresHelper.getFastingScores(mDatabaseAdapter,
+                    maxDate, minDate);
+         }
          return null;
       }
 
@@ -132,13 +151,19 @@ public class QamarGraphActivity extends SherlockActivity
       protected void onPostExecute(ScoreResult result){
          if (result != null && mGraphWidget != null){
             mGraphWidget.renderGraph(result.scores);
-            mStatisticsWidget.showStats(mCurrentTab, result.statistics);
+            mStatisticsWidget.showStats(mCurrentTab, result.statistics,
+                    result.scores.size());
          }
       }
    }
 
    @Override
    public void onTabSelected(Tab tab, FragmentTransaction transaction) {
+      Integer tag = (Integer)tab.getTag();
+      if (tag != null && tag != mCurrentTab){
+         mCurrentTab = tag;
+         refreshData();
+      }
    }
 
    @Override
