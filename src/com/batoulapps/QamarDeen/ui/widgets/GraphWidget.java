@@ -7,7 +7,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
-import com.batoulapps.QamarDeen.data.QamarConstants;
 import org.achartengine.ChartFactory;
 import org.achartengine.chart.PointStyle;
 import org.achartengine.model.TimeSeries;
@@ -20,6 +19,7 @@ import java.util.*;
 public class GraphWidget extends RelativeLayout {
 
    private Context mContext;
+   private long mMinimumDate;
 
    public GraphWidget(Context context){
       super(context);
@@ -52,6 +52,14 @@ public class GraphWidget extends RelativeLayout {
       addView(progressBar, lp);
    }
 
+   /**
+    * convenience method to return the minimum date shown by this graph
+    * @return the minimum date (or 0 if there isn't one)
+    */
+   public long getMinimumDate(){
+      return mMinimumDate;
+   }
+
    public void renderGraph(Map<Long, Integer> scores){
       removeAllViews();
       String[] titles = new String[] { "" };
@@ -68,6 +76,9 @@ public class GraphWidget extends RelativeLayout {
          int score = scores.get(when);
          if (score > maxScore){ maxScore = score; }
          scoreValues[i--] = score;
+
+         // store the last minimum date for later use by QamarGraphActivity
+         mMinimumDate = when;
       }
 
       dates.add(dateValues);
@@ -77,8 +88,7 @@ public class GraphWidget extends RelativeLayout {
       PointStyle[] styles = new PointStyle[] { PointStyle.POINT };
       XYMultipleSeriesRenderer renderer = buildRenderer(colors, styles);
       setChartSettings(renderer, dateValues[0].getTime(),
-              dateValues[dateValues.length - 1].getTime() +
-                      QamarConstants.MS_PER_DAY,
+              dateValues[dateValues.length - 1].getTime(),
               0, maxScore + 100, Color.DKGRAY);
       renderer.setYLabels(10);
       View view = ChartFactory.getTimeChartView(mContext,

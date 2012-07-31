@@ -16,6 +16,7 @@ import android.view.ViewGroup;
 import android.view.ViewGroup.LayoutParams;
 import android.widget.AbsListView;
 
+import android.widget.Button;
 import com.actionbarsherlock.app.SherlockFragment;
 import com.batoulapps.QamarDeen.R;
 import com.batoulapps.QamarDeen.ui.helpers.QamarSelectorHelper.OnQamarSelectionListener;
@@ -30,6 +31,7 @@ public abstract class QamarFragment extends SherlockFragment
    protected QamarSelectorHelper mPopupHelper = null;
    protected int mHeaderHeight = 0;
    protected boolean mReadData = false;
+   protected Button mLoadMoreButton = null;
    protected AsyncTask<Long, Void, Cursor> mLoadingTask = null;
 
    @Override
@@ -60,6 +62,16 @@ public abstract class QamarFragment extends SherlockFragment
       int footerHeight = metrics.heightPixels -
             ((2 * abHeight) + itemHeight + mHeaderHeight);
       View footer = inflater.inflate(R.layout.list_footer, null, false);
+      mLoadMoreButton = (Button)footer.findViewById(R.id.load_more_button);
+      mLoadMoreButton.setOnClickListener(new View.OnClickListener() {
+         @Override
+         public void onClick(View view) {
+            if (mListAdapter != null){
+               mListAdapter.addDays(30);
+            }
+         }
+      });
+
       AbsListView.LayoutParams ll = new AbsListView.LayoutParams(
             LayoutParams.MATCH_PARENT, footerHeight);
       footer.setLayoutParams(ll);

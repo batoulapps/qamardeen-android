@@ -151,10 +151,10 @@ public class PrayerFragment extends QamarFragment {
                if (!data.isEmpty()){
                   // set the data in the adapter
                   ((PrayerListAdapter)mListAdapter).addDayData(data);
-                  mListAdapter.notifyDataSetChanged();
                }
             }
             cursor.close();
+            mListAdapter.notifyDataSetChanged();
             mReadData = true;
          }
          else { mReadData = false; }

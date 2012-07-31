@@ -432,23 +432,17 @@ public class QuranFragment extends QamarFragment
                }
                while (cursor.moveToNext());
                
-               boolean changed = false;
                if (!dayData.isEmpty()){
                   // set the data in the adapter
-                  changed = true;
                   ((QuranListAdapter)mListAdapter).addDayData(dayData);
                }
                
                if (!extraData.isEmpty()){
-                  changed = true;
                   ((QuranListAdapter)mListAdapter).addExtraData(extraData);
                }
-               
-               if (changed){
-                  mListAdapter.notifyDataSetChanged();
-               }
             }
-            
+
+            mListAdapter.notifyDataSetChanged();
             ((QuranListAdapter)mListAdapter).setEarlierEntryData(mEarlierData);
             cursor.close();
             mReadData = true;

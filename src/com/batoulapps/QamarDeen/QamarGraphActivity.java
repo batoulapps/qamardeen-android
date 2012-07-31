@@ -1,19 +1,15 @@
 package com.batoulapps.QamarDeen;
 
-import android.database.Cursor;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentPagerAdapter;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
-import com.actionbarsherlock.app.ActionBar.Tab;
-import android.support.v4.app.FragmentTransaction;
 import com.actionbarsherlock.app.ActionBar;
+import com.actionbarsherlock.app.ActionBar.Tab;
 import com.actionbarsherlock.app.SherlockActivity;
 import com.batoulapps.QamarDeen.data.QamarDbAdapter;
 import com.batoulapps.QamarDeen.data.ScoresHelper;
@@ -25,8 +21,6 @@ import com.batoulapps.QamarDeen.utils.QamarTime;
 
 import java.text.DateFormat;
 import java.util.Calendar;
-import java.util.Date;
-import java.util.Map;
 
 public class QamarGraphActivity extends SherlockActivity
         implements ActionBar.TabListener,
@@ -153,6 +147,14 @@ public class QamarGraphActivity extends SherlockActivity
             mGraphWidget.renderGraph(result.scores);
             mStatisticsWidget.showStats(mCurrentTab, result.statistics,
                     result.scores.size());
+
+            /* at the last date optoin, we don't know the last date until
+             * after the query.  we cache it when we render the graph and
+             * thus ask the graph widget for it */
+            if (mDateOption == (mDateOffsets.length - 1)){
+               long lastDate = mGraphWidget.getMinimumDate();
+               mMinDate.setText(mDateFormat.format(lastDate));
+            }
          }
       }
    }

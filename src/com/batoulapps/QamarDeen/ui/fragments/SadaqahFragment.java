@@ -96,9 +96,9 @@ public class SadaqahFragment extends QamarFragment {
                if (!data.isEmpty()){
                   // set the data in the adapter
                   ((SadaqahListAdapter)mListAdapter).addDayData(data);
-                  mListAdapter.notifyDataSetChanged();
                }
             }
+            mListAdapter.notifyDataSetChanged();
             cursor.close();
             mReadData = true;
          }

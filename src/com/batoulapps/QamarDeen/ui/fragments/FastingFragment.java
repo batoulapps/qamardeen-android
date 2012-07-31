@@ -117,10 +117,10 @@ public class FastingFragment extends QamarFragment {
                if (!data.isEmpty()){
                   // set the data in the adapter
                   ((FastingListAdapter)mListAdapter).addDayData(data);
-                  mListAdapter.notifyDataSetChanged();
                }
             }
             cursor.close();
+            mListAdapter.notifyDataSetChanged();
             mReadData = true;
          }
          else { mReadData = false; }
