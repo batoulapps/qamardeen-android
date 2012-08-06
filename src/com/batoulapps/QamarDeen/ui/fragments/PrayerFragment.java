@@ -154,7 +154,6 @@ public class PrayerFragment extends QamarFragment {
                }
             }
             cursor.close();
-            android.util.Log.d("are", "prayer notify data set changed");
             mListAdapter.notifyDataSetChanged();
             mReadData = true;
          }

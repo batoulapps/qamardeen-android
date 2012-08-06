@@ -8,6 +8,7 @@ import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ViewTreeObserver;
 import android.widget.TextView;
 import com.actionbarsherlock.app.ActionBar;
 import com.actionbarsherlock.app.ActionBar.Tab;
@@ -89,13 +90,32 @@ public class QamarGraphActivity extends SherlockActivity
       Calendar today = QamarTime.getTodayCalendar();
       mMaxDate.setText(mDateFormat.format(today.getTime()));
       drawGraph();
+
+      ViewTreeObserver observer = mGraphPager.getViewTreeObserver();
+      observer.addOnGlobalLayoutListener(mLayoutListener);
    }
 
    @Override
    protected void onDestroy(){
       mDatabaseAdapter.close();
+      mGraphPager.getViewTreeObserver()
+              .removeGlobalOnLayoutListener(mLayoutListener);
       super.onDestroy();
    }
+
+   ViewTreeObserver.OnGlobalLayoutListener mLayoutListener =
+           new ViewTreeObserver.OnGlobalLayoutListener() {
+      @Override
+      public void onGlobalLayout() {
+         ActionBar actionbar = getSupportActionBar();
+         int barHeight = actionbar.getHeight();
+         int defaultHeight = getResources().getDimensionPixelSize(
+                 R.dimen.abs__action_bar_default_height);
+         if (barHeight == defaultHeight) {
+            actionbar.setDisplayShowTitleEnabled(false);
+         }
+      }
+   };
 
    @Override
    public void timeSelected(int position){

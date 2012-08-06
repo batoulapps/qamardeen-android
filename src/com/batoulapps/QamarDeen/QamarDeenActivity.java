@@ -1,7 +1,6 @@
 package com.batoulapps.QamarDeen;
 
 import android.content.Intent;
-import android.content.res.Configuration;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -10,6 +9,7 @@ import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.ViewPager;
 import android.support.v4.view.ViewPager.OnPageChangeListener;
 
+import android.view.ViewTreeObserver;
 import com.actionbarsherlock.app.ActionBar;
 import com.actionbarsherlock.app.ActionBar.Tab;
 import com.actionbarsherlock.app.SherlockFragmentActivity;
@@ -47,11 +47,6 @@ public class QamarDeenActivity extends SherlockFragmentActivity
         mQamarPager.setOnPageChangeListener(mOnPageChangeListener);
         
         ActionBar actionbar = getSupportActionBar();
-        if (getResources().getConfiguration().orientation ==
-                Configuration.ORIENTATION_LANDSCAPE){
-           actionbar.setTitle("");
-        }
-
         actionbar.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
 
         for (int i=0; i<mTabs.length; i++){
@@ -61,13 +56,32 @@ public class QamarDeenActivity extends SherlockFragmentActivity
            tab.setTabListener(this);
            actionbar.addTab(tab);
         }
+
+        ViewTreeObserver observer = mQamarPager.getViewTreeObserver();
+        observer.addOnGlobalLayoutListener(mLayoutListener);
    }
    
    @Override
    protected void onDestroy(){
       mDatabaseAdapter.close();
+      mQamarPager.getViewTreeObserver()
+              .removeGlobalOnLayoutListener(mLayoutListener);
       super.onDestroy();
    }
+
+   ViewTreeObserver.OnGlobalLayoutListener mLayoutListener =
+           new ViewTreeObserver.OnGlobalLayoutListener() {
+      @Override
+      public void onGlobalLayout() {
+         ActionBar actionbar = getSupportActionBar();
+         int barHeight = actionbar.getHeight();
+         int defaultHeight = getResources().getDimensionPixelSize(
+                 R.dimen.abs__action_bar_default_height);
+         if (barHeight == defaultHeight){
+            actionbar.setDisplayShowTitleEnabled(false);
+         }
+      }
+   };
    
    public QamarDbAdapter getDatabaseAdapter(){
       return mDatabaseAdapter;

@@ -437,7 +437,6 @@ public class QuranFragment extends QamarFragment
                }
             }
 
-            Log.d("are", "here and setting notifyDataSetChanged");
             mListAdapter.notifyDataSetChanged();
             ((QuranListAdapter)mListAdapter).setEarlierEntryData(mEarlierData);
             cursor.close();
