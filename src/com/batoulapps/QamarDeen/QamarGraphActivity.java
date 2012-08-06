@@ -1,5 +1,6 @@
 package com.batoulapps.QamarDeen;
 
+import android.content.res.Configuration;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.FragmentTransaction;
@@ -11,6 +12,7 @@ import android.widget.TextView;
 import com.actionbarsherlock.app.ActionBar;
 import com.actionbarsherlock.app.ActionBar.Tab;
 import com.actionbarsherlock.app.SherlockActivity;
+import com.actionbarsherlock.view.MenuItem;
 import com.batoulapps.QamarDeen.data.QamarDbAdapter;
 import com.batoulapps.QamarDeen.data.ScoresHelper;
 import com.batoulapps.QamarDeen.data.ScoresHelper.ScoreResult;
@@ -30,12 +32,13 @@ public class QamarGraphActivity extends SherlockActivity
    public static final int GRAPH_QURAN_TAB = 1;
    public static final int GRAPH_SADAQAH_TAB = 2;
    public static final int GRAPH_FASTING_TAB = 3;
+   public static final int GRAPH_OVERVIEW_TAB = 4;
 
    private int mCurrentTab = 0;
    private int mDateOption = 1;
    private int[] mDateOffsets = new int[]{ 7, 14, 30, 60, 90, 180, 365, -1 };
-   private int[] mTabs = new int[]{R.string.prayers_tab,
-           R.string.quran_tab, R.string.sadaqah_tab, R.string.fasting_tab};
+   private int[] mTabs = new int[]{R.string.prayers_tab, R.string.quran_tab,
+           R.string.sadaqah_tab, R.string.fasting_tab, R.string.overview_tab};
 
    private QamarDbAdapter mDatabaseAdapter;
 
@@ -66,6 +69,13 @@ public class QamarGraphActivity extends SherlockActivity
       timeSelectorWidget.setTimeSelectedListener(this);
 
       ActionBar actionbar = getSupportActionBar();
+      actionbar.setDisplayShowHomeEnabled(true);
+      actionbar.setDisplayHomeAsUpEnabled(true);
+      if (getResources().getConfiguration().orientation ==
+              Configuration.ORIENTATION_LANDSCAPE){
+         actionbar.setTitle("");
+      }
+
       actionbar.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
 
       for (int i = 0; i < mTabs.length; i++) {
@@ -91,6 +101,16 @@ public class QamarGraphActivity extends SherlockActivity
    public void timeSelected(int position){
       mDateOption = position;
       refreshData();
+   }
+
+   @Override
+   public boolean onOptionsItemSelected(MenuItem item) {
+      if (item.getItemId() == android.R.id.home){
+         finish();
+         return true;
+      }
+
+      return super.onOptionsItemSelected(item);
    }
 
    public void refreshData(){
@@ -138,6 +158,10 @@ public class QamarGraphActivity extends SherlockActivity
             return ScoresHelper.getFastingScores(mDatabaseAdapter,
                     maxDate, minDate);
          }
+         else if (mCurrentTab == GRAPH_OVERVIEW_TAB){
+            return ScoresHelper.getOverallScores(mDatabaseAdapter,
+                    maxDate, minDate);
+         }
          return null;
       }
 
@@ -148,7 +172,7 @@ public class QamarGraphActivity extends SherlockActivity
             mStatisticsWidget.showStats(mCurrentTab, result.statistics,
                     result.scores.size());
 
-            /* at the last date optoin, we don't know the last date until
+            /* at the last date option, we don't know the last date until
              * after the query.  we cache it when we render the graph and
              * thus ask the graph widget for it */
             if (mDateOption == (mDateOffsets.length - 1)){

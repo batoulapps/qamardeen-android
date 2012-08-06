@@ -1,6 +1,7 @@
 package com.batoulapps.QamarDeen;
 
 import android.content.Intent;
+import android.content.res.Configuration;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -46,8 +47,13 @@ public class QamarDeenActivity extends SherlockFragmentActivity
         mQamarPager.setOnPageChangeListener(mOnPageChangeListener);
         
         ActionBar actionbar = getSupportActionBar();
+        if (getResources().getConfiguration().orientation ==
+                Configuration.ORIENTATION_LANDSCAPE){
+           actionbar.setTitle("");
+        }
+
         actionbar.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
-        
+
         for (int i=0; i<mTabs.length; i++){
            ActionBar.Tab tab = actionbar.newTab();
            tab.setText(mTabs[i]);

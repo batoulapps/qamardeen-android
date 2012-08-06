@@ -5,8 +5,8 @@ package com.batoulapps.QamarDeen.data;
 public class QamarConstants {
 
    public static final int MS_PER_DAY = 24 * 60 * 60 * 1000;
-   public static final int TOTAL_AYAHS_READ = 998;
-   public static final int TOTAL_ACTIVE_DAYS = 999;
+   public static final int TOTAL_ACTIONS_DONE = 998; // # of ayahs, prayers
+   public static final int TOTAL_ACTIVE_DAYS = 999;  // # of unique days
 
    public static class PreferenceKeys {
      public static final String GENDER_PREF = "user_gender"; 

@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.database.Cursor;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -149,12 +150,6 @@ public class QuranFragment extends QamarFragment
          mQuranSelectorPopupHelper.dismissPopup();
       }
       super.onPause();
-   }
-   
-   @Override
-   public void onResume() {
-      super.onResume();
-      refreshData();
    }
    
    @Override
@@ -442,6 +437,7 @@ public class QuranFragment extends QamarFragment
                }
             }
 
+            Log.d("are", "here and setting notifyDataSetChanged");
             mListAdapter.notifyDataSetChanged();
             ((QuranListAdapter)mListAdapter).setEarlierEntryData(mEarlierData);
             cursor.close();

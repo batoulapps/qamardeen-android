@@ -29,11 +29,13 @@ public class StatisticsWidget extends RelativeLayout {
    private int mCountColor = 0;
    private int mStatsMargin = 0;
    private int[] mLabelStrings = new int[]{ R.array.prayer_options_m,
-           0, R.array.charity_options, R.array.fasting_options };
+           0, R.array.charity_options, R.array.fasting_options,
+           R.array.overview_options };
    private int[] mLabelValues = new int[]{ R.array.prayer_values,
-           0, R.array.charity_values, R.array.fasting_values };
+           0, R.array.charity_values, R.array.fasting_values,
+           R.array.overview_values };
    private int[] mSummaryStrings = new int[]{ 0, R.array.quran_summary,
-           R.array.sadaqah_summary, R.array.fasting_summary };
+           R.array.sadaqah_summary, R.array.fasting_summary, 0 };
 
    public StatisticsWidget(Context context){
       super(context);
@@ -96,16 +98,20 @@ public class StatisticsWidget extends RelativeLayout {
          }
       }
 
+      boolean showPercentage = (tab != QamarGraphActivity.GRAPH_OVERVIEW_TAB);
+
       List<TextView> textViews = new ArrayList<TextView>();
       if (summaries != null){
          int key = QamarConstants.TOTAL_ACTIVE_DAYS;
          int days = statistics.get(key, 0);
          int percent =  (int)(100.0 * days / totalDays);
-         TextView textView = makeTextView(summaries[0], days, percent);
+         TextView textView = makeTextView(summaries[0], days,
+                                          percent, showPercentage);
          textViews.add(textView);
 
          percent =  (int)(100.0 * (totalDays - days) / totalDays);
-         textView = makeTextView(summaries[1], totalDays - days, percent);
+         textView = makeTextView(summaries[1], totalDays - days, percent,
+                                 showPercentage);
          textViews.add(textView);
       }
 
@@ -114,14 +120,15 @@ public class StatisticsWidget extends RelativeLayout {
             int key = options[i];
             int days = statistics.get(key, 0);
             int percent =  (int)(100.0 * days / total);
-            TextView textView = makeTextView(labels[i], days, percent);
+            TextView textView = makeTextView(labels[i], days, percent,
+                    showPercentage);
             textViews.add(textView);
          }
       }
 
       if (tab == QamarGraphActivity.GRAPH_QURAN_TAB){
          DecimalFormat df = new DecimalFormat("###.00");
-         int ayahsRead = statistics.get(QamarConstants.TOTAL_AYAHS_READ, 0);
+         int ayahsRead = statistics.get(QamarConstants.TOTAL_ACTIONS_DONE, 0);
          String average = "" + df.format(1.0 * ayahsRead / totalDays);
 
          String label = mContext.getString(R.string.avg_ayahs_per_day);
@@ -175,7 +182,8 @@ public class StatisticsWidget extends RelativeLayout {
       addView(container, lp);
    }
 
-   private TextView makeTextView(String label, int days, int percent){
+   private TextView makeTextView(String label, int days, int percent,
+                                 boolean showPercentage){
       SpannableStringBuilder builder = new SpannableStringBuilder();
       builder.append(label);
       builder.append(" ");
@@ -186,12 +194,14 @@ public class StatisticsWidget extends RelativeLayout {
               start, builder.length(), 0);
       builder.setSpan(new StyleSpan(Typeface.BOLD), 0, builder.length(), 0);
 
-      builder.append(" ");
+      if (showPercentage){
+         builder.append(" ");
 
-      start = builder.length();
-      builder.append(percent + "%");
-      builder.setSpan(new ForegroundColorSpan(Color.LTGRAY),
-              start, builder.length(), 0);
+         start = builder.length();
+         builder.append(percent + "%");
+         builder.setSpan(new ForegroundColorSpan(Color.LTGRAY),
+                 start, builder.length(), 0);
+      }
 
       TextView textView = new TextView(mContext);
       textView.setText(builder);

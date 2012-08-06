@@ -6,6 +6,7 @@
     <string name="quran_tab">Quran</string>
     <string name="sadaqah_tab">Sadaqah</string>
     <string name="fasting_tab">Fasting</string>
+    <string name="overview_tab">Overview</string>
     
     <string name="settings_menu">Settings</string>
     <string name="graphs">Graphs</string>

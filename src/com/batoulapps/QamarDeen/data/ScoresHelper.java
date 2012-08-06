@@ -7,6 +7,7 @@ import com.batoulapps.QamarDeen.utils.QamarTime;
 import java.util.Calendar;
 import java.util.LinkedHashMap;
 import java.util.Map;
+import java.util.Set;
 
 public class ScoresHelper {
 
@@ -47,6 +48,7 @@ public class ScoresHelper {
       Map<Long, Integer> scores = null;
       Cursor cursor = dbAdapter.getPrayerEntries(maxDate, minDate);
 
+      int totalPrayers = 0;
       SparseArray<Integer> stats = new SparseArray<Integer>();
       if (cursor != null){
          scores = initializeEntries(cursor, maxDate, minDate);
@@ -77,9 +79,11 @@ public class ScoresHelper {
             }
             while (cursor.moveToNext());
          }
+         totalPrayers = cursor.getCount();
          cursor.close();
       }
 
+      stats.put(QamarConstants.TOTAL_ACTIONS_DONE, totalPrayers);
       ScoreResult result = new ScoreResult();
       result.scores = scores;
       result.statistics = stats;
@@ -194,7 +198,7 @@ public class ScoresHelper {
                int endSura = cursor.getInt(3);
                int startAyah = cursor.getInt(4);
                int startSura = cursor.getInt(5);
-               int isExtraReading = cursor.getInt(6);
+               //int isExtraReading = cursor.getInt(6);
                QuranData qd = new QuranData(
                        startAyah, startSura, endAyah, endSura);
                int ayahsRead = qd.getAyahCount();
@@ -220,12 +224,87 @@ public class ScoresHelper {
 
       SparseArray<Integer> stats = new SparseArray<Integer>();
       stats.put(QamarConstants.TOTAL_ACTIVE_DAYS, uniqueDays);
-      stats.put(QamarConstants.TOTAL_AYAHS_READ, numberOfAyahs);
+      stats.put(QamarConstants.TOTAL_ACTIONS_DONE, numberOfAyahs);
 
       ScoreResult result = new ScoreResult();
       result.scores = scores;
       result.statistics = stats;
       return result;
+   }
+
+   public static ScoreResult getOverallScores(QamarDbAdapter dbAdapter,
+                                              long minDate, long maxDate){
+      // total prayers, total charitable days, total ayahs read, days fasted
+
+      Map<Long, Integer> scores = null;
+      SparseArray<Integer> stats = new SparseArray<Integer>();
+
+      ScoreResult prayerResults = getPrayerScores(dbAdapter, minDate, maxDate);
+      scores = prayerResults.scores;
+      int totalPrayers = prayerResults.statistics.get(
+              QamarConstants.TOTAL_ACTIONS_DONE, 0);
+      stats.put(1, totalPrayers);
+      prayerResults = null;
+
+      ScoreResult quranResults =
+              getQuranScores(dbAdapter, minDate, maxDate);
+      scores = updateScoreTotals(scores, quranResults.scores);
+      int ayatRead = quranResults.statistics.get(
+              QamarConstants.TOTAL_ACTIONS_DONE, 0);
+      stats.put(2, ayatRead);
+      quranResults = null;
+
+      ScoreResult sadaqaResults =
+              getSadaqahScores(dbAdapter, minDate, maxDate);
+      scores = updateScoreTotals(scores, sadaqaResults.scores);
+      int totalSadaqaDays = sadaqaResults.statistics.get(
+              QamarConstants.TOTAL_ACTIVE_DAYS, 0);
+      stats.put(3, totalSadaqaDays);
+      sadaqaResults = null;
+
+      ScoreResult fastingResults =
+              getFastingScores(dbAdapter, minDate, maxDate);
+      scores = updateScoreTotals(scores, fastingResults.scores);
+      int totalFastingDays = fastingResults.statistics.get(
+              QamarConstants.TOTAL_ACTIVE_DAYS, 0);
+      stats.put(4, totalFastingDays);
+      fastingResults = null;
+
+      ScoreResult result = new ScoreResult();
+      result.scores = scores;
+      result.statistics = stats;
+      return result;
+   }
+
+   private static Map<Long, Integer> updateScoreTotals(
+           Map<Long, Integer> overall, Map<Long, Integer> additional){
+      Map<Long, Integer> current = null;
+      Map<Long, Integer> toAdd = null;
+
+      if (additional.size() > overall.size()){
+         current = additional;
+         toAdd = overall;
+      }
+      else {
+         current = overall;
+         toAdd = additional;
+      }
+
+
+      Set<Long> keys = toAdd.keySet();
+      for (Long key : keys){
+         Integer value = current.get(key);
+
+         /* shouldn't happen because maxDates should match,
+          * so larger hash size means more minDates, and
+          * unused ones should be set to 0 in initializeEntries */
+         if (value == null){ value = 0; }
+
+         value += toAdd.get(key);
+         current.put(key, value);
+      }
+
+      return current;
    }
 
    private static int getPrayerScore(int prayer, int status){

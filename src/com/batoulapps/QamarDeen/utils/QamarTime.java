@@ -65,4 +65,16 @@ public class QamarTime {
       cal.setTime(localDate);
       return QamarTime.getGMTTimeFromLocal(cal);
    }
+
+   public static long getMidnightMillis(){
+      Calendar midnight = Calendar.getInstance();
+      midnight.set(Calendar.HOUR, 0);
+      midnight.set(Calendar.MINUTE, 0);
+      midnight.set(Calendar.SECOND, 0);
+      midnight.set(Calendar.MILLISECOND, 0);
+      midnight.set(Calendar.AM_PM, Calendar.AM);
+      midnight.add(Calendar.DATE, 1);
+
+      return midnight.getTimeInMillis();
+   }
 }

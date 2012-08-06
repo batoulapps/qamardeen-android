@@ -95,6 +95,22 @@
         <item>Days Not Fasted</item>
     </string-array>
 
+    <!-- overview summary (for stats) -->
+    <string-array name="overview_options">
+        <item>Total Prayers</item>
+        <item>Total Ayahs Read</item>
+        <item>Total Charitable Days</item>
+        <item>Total Days Fasted</item>
+    </string-array>
+
+    <!-- overview overall values (for stats) -->
+    <integer-array name="overview_values">
+        <item>1</item>  <!-- prayer -->
+        <item>2</item>  <!-- quran -->
+        <item>3</item>  <!-- sadaqa -->
+        <item>4</item>  <!-- fasting -->
+    </integer-array>
+
     <string-array name="graph_durations">
         <item>1w</item>
         <item>2w</item>

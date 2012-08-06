@@ -9,7 +9,10 @@ import android.content.res.Resources;
 import android.database.Cursor;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.util.DisplayMetrics;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -26,6 +29,8 @@ import com.batoulapps.QamarDeen.utils.QamarTime;
 public abstract class QamarFragment extends SherlockFragment
    implements OnQamarSelectionListener {
 
+   public static final int REFRESH_MSG = 1;
+
    protected PinnedHeaderListView mListView = null;
    protected QamarListAdapter mListAdapter = null;
    protected QamarSelectorHelper mPopupHelper = null;
@@ -33,6 +38,17 @@ public abstract class QamarFragment extends SherlockFragment
    protected boolean mReadData = false;
    protected Button mLoadMoreButton = null;
    protected AsyncTask<Long, Void, Cursor> mLoadingTask = null;
+   protected boolean mJustInitialized = false;
+
+
+   protected Handler mHandler = new Handler(){
+      @Override
+      public void handleMessage(Message msg) {
+         if (msg.what == REFRESH_MSG){
+            refreshData();
+         }
+      }
+   };
 
    @Override
    public void onCreate(Bundle savedInstanceState){
@@ -87,26 +103,49 @@ public abstract class QamarFragment extends SherlockFragment
       mListView.setDividerHeight(0);
       
       initializePopup(activity);
+      mJustInitialized = true;
       return view;
    }
    
    @Override
    public void onPause() {
+      mHandler.removeMessages(REFRESH_MSG);
       if (mPopupHelper != null){
          mPopupHelper.dismissPopup();
       }
       super.onPause();
    }
-   
+
+   @Override
+   public void onResume() {
+      super.onResume();
+
+      long midnight = QamarTime.getMidnightMillis();
+      long now = Calendar.getInstance().getTimeInMillis();
+
+      long delay = midnight - now;
+      mHandler.sendEmptyMessageDelayed(REFRESH_MSG, delay);
+
+      if (!mJustInitialized){
+         refreshData();
+      }
+      mJustInitialized = false;
+   }
+
    protected int getLayout(){ return R.layout.qamar_list; }
    
    protected void initializePopup(Context context){
       mPopupHelper = new QamarSelectorHelper(context);
    }
-   
+
    public void refreshData(){
-      if (mReadData == false && mListAdapter != null && mLoadingTask == null){
+      if (mListAdapter != null){
+         if (mLoadingTask != null){
+            mLoadingTask.cancel(true);
+            mLoadingTask = null;
+         }
          mListAdapter.requeryData();
+         return;
       }
    }
    

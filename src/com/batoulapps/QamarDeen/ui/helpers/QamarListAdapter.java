@@ -66,8 +66,16 @@ public abstract class QamarListAdapter extends BaseAdapter implements
    
    public void requeryData(){
       if (mDays == null || mDays.size() < 2){ return; }
+      Calendar endCalendar = QamarTime.getTodayCalendar();
+      Date actualDate = endCalendar.getTime();
+
       Date maxDate = mDays.get(0);
       Date minDate = mDays.get(mDays.size() - 1);
+      if (!maxDate.equals(actualDate)){
+         maxDate = actualDate;
+         mDays.add(0, maxDate);
+      }
+
       requestData(maxDate.getTime(), minDate.getTime());
    }
    
