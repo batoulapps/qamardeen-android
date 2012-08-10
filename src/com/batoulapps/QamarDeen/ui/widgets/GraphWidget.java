@@ -69,6 +69,7 @@ public class GraphWidget extends RelativeLayout {
       int maxScore = 100;
       Set<Long> keys = scores.keySet();
       int i = keys.size() - 1;
+      if (0 > i){ return; }
       Date[] dateValues = new Date[keys.size()];
       double[] scoreValues = new double[keys.size()];
       for (Long when : keys){
@@ -91,6 +92,8 @@ public class GraphWidget extends RelativeLayout {
               dateValues[dateValues.length - 1].getTime(),
               0, maxScore + 100, Color.DKGRAY);
       renderer.setYLabels(10);
+      renderer.setPanEnabled(false, false);
+      renderer.setZoomEnabled(false, false);
       View view = ChartFactory.getTimeChartView(mContext,
               buildDateDataset(titles, dates, values),
               renderer, "MMM yyyy");

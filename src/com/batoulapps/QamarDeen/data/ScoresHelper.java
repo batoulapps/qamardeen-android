@@ -48,7 +48,10 @@ public class ScoresHelper {
       Map<Long, Integer> scores = null;
       Cursor cursor = dbAdapter.getPrayerEntries(maxDate, minDate);
 
+      int notSet = 0;
       int totalPrayers = 0;
+      int totalFara2id = 0;
+
       SparseArray<Integer> stats = new SparseArray<Integer>();
       if (cursor != null){
          scores = initializeEntries(cursor, maxDate, minDate);
@@ -75,15 +78,27 @@ public class ScoresHelper {
                if (score == null){ score = 0; }
                score += getPrayerScore(prayer, status);
 
+               if (status != QamarConstants.PrayerType.NOT_SET){
+                  if (prayer != QamarConstants.Prayers.DUHA &&
+                       prayer != QamarConstants.Prayers.QIYYAM){
+                     totalFara2id++;
+                  }
+                  totalPrayers++;
+               }
+
                scores.put(localTimestamp, score);
             }
             while (cursor.moveToNext());
          }
-         totalPrayers = cursor.getCount();
          cursor.close();
       }
 
       stats.put(QamarConstants.TOTAL_ACTIONS_DONE, totalPrayers);
+
+      notSet = ((scores.size() - 1) * 5) - totalFara2id;
+      if (notSet < 0){ notSet = 0; }
+      stats.put(QamarConstants.PrayerType.NOT_SET, notSet);
+
       ScoreResult result = new ScoreResult();
       result.scores = scores;
       result.statistics = stats;
@@ -198,10 +213,10 @@ public class ScoresHelper {
                int endSura = cursor.getInt(3);
                int startAyah = cursor.getInt(4);
                int startSura = cursor.getInt(5);
-               //int isExtraReading = cursor.getInt(6);
+               int isExtraReading = cursor.getInt(6);
                QuranData qd = new QuranData(
                        startAyah, startSura, endAyah, endSura);
-               int ayahsRead = qd.getAyahCount();
+               int ayahsRead = qd.getAyahCount() + isExtraReading;
                numberOfAyahs += ayahsRead;
 
                // time calculations
