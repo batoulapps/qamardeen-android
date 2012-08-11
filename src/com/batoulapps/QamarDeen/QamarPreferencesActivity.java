@@ -2,11 +2,13 @@ package com.batoulapps.QamarDeen;
 
 
 import android.content.SharedPreferences;
+import android.content.pm.PackageInfo;
 import android.os.Bundle;
 import android.preference.Preference;
 import android.preference.Preference.OnPreferenceChangeListener;
 import android.preference.PreferenceManager;
 
+import android.preference.PreferenceScreen;
 import com.actionbarsherlock.app.SherlockPreferenceActivity;
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuItem;
@@ -46,6 +48,19 @@ public class QamarPreferencesActivity extends SherlockPreferenceActivity
       if (mGenderPreference != null){
          mGenderPreference.setOnPreferenceChangeListener(this);
          updateGenderPreference();
+      }
+
+      PreferenceScreen about = (PreferenceScreen)findPreference("about");
+      if (about != null){
+         String title = getString(R.string.qamar_about_title);
+         try {
+            PackageInfo info = getPackageManager()
+                    .getPackageInfo(getPackageName(), 0);
+            title = String.format(title, info.versionName);
+            about.setTitle(title);
+         }
+         catch (Exception e){
+         }
       }
    }
    

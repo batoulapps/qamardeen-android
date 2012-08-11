@@ -35,4 +35,14 @@
                 android:dialogTitle="@string/dialog_choose_gender_title" />
 
     </PreferenceCategory>
+
+    <PreferenceCategory
+            android:title="@string/qamar_preferences_about">
+        <PreferenceScreen android:key="about"
+                android:title="@string/qamar_about_title"
+                android:summary="@string/qamar_about_summary">
+            <intent android:action="android.intent.action.VIEW"
+                    android:data="http://batoulapps.com" />
+        </PreferenceScreen>
+    </PreferenceCategory>
 </PreferenceScreen>

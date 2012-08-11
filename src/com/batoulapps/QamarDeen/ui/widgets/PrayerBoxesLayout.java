@@ -137,8 +137,10 @@ public class PrayerBoxesLayout extends LinearLayout {
     */
    private void togglePrayerSquare(int salah, int type){
       ImageView salahSquare = (ImageView)findViewWithTag(salah);
-      if (salahSquare != null){ 
-         salahSquare.setImageResource(mSalahValues[type]);
+      if (salahSquare != null){
+         if (type < mSalahValues.length){
+            salahSquare.setImageResource(mSalahValues[type]);
+         }
       }
    }
    
