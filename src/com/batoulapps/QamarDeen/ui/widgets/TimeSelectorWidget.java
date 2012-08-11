@@ -1,18 +1,18 @@
 package com.batoulapps.QamarDeen.ui.widgets;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import android.content.Context;
 import android.content.res.Resources;
-import android.graphics.Typeface;
 import android.util.AttributeSet;
 import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import com.batoulapps.QamarDeen.R;
 
-import java.util.ArrayList;
-import java.util.List;
+import com.batoulapps.QamarDeen.R;
 
 public class TimeSelectorWidget extends LinearLayout {
 

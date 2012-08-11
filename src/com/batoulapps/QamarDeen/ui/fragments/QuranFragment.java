@@ -1,11 +1,17 @@
 package com.batoulapps.QamarDeen.ui.fragments;
 
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
 import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -15,6 +21,7 @@ import android.widget.AdapterView.OnItemClickListener;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
+
 import com.batoulapps.QamarDeen.QamarDeenActivity;
 import com.batoulapps.QamarDeen.R;
 import com.batoulapps.QamarDeen.SuraSelectorActivity;
@@ -25,8 +32,6 @@ import com.batoulapps.QamarDeen.ui.helpers.QamarListAdapter;
 import com.batoulapps.QamarDeen.ui.helpers.QuranSelectorPopupHelper;
 import com.batoulapps.QamarDeen.ui.helpers.QuranSelectorPopupHelper.OnQuranSelectionListener;
 import com.batoulapps.QamarDeen.utils.QamarTime;
-
-import java.util.*;
 
 public class QuranFragment extends QamarFragment
    implements OnQuranSelectionListener {
