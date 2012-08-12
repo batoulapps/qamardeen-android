@@ -10,6 +10,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -55,7 +56,7 @@ public class SuraSelectorActivity extends SherlockActivity {
       
       String mSelectedSuras = currentIntent
             .getStringExtra(QuranFragment.EXTRA_READ);
-      if (mSelectedSuras != null && !mSelectedSuras.isEmpty()){
+      if (!TextUtils.isEmpty(mSelectedSuras)){
          String[] suras = mSelectedSuras.split(",");
          for (String suraStr : suras){
             try {
