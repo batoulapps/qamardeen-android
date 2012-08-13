@@ -120,7 +120,7 @@ public class QamarDeenActivity extends SherlockFragmentActivity
           * if not, it leaves the app like it used to.
           */
          int item = mQamarPager.getCurrentItem();
-         String fragmentTag = mPagerAdapter.getFragmentTag(
+         String fragmentTag = PagerAdapter.getFragmentTag(
                  R.id.qamar_pager, item);
          FragmentManager fm = getSupportFragmentManager();
          Fragment f = fm.findFragmentByTag(fragmentTag);

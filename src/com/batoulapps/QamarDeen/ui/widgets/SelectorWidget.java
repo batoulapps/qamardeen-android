@@ -52,7 +52,7 @@ public class SelectorWidget extends LinearLayout {
          if (mItemSelectListener != null){
             int item = (Integer)v.getTag();
             if (mIsMultipleChoiceMode){
-               Integer boxedItem = new Integer(item);
+               Integer boxedItem = Integer.valueOf(item);
                if (mSelectedItems.contains(boxedItem)){
                   mSelectedItems.remove(boxedItem);
                   if (mUseCustomImageIdsOnSelect){
