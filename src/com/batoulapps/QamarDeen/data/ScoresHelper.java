@@ -95,8 +95,11 @@ public class ScoresHelper {
 
       stats.put(QamarConstants.TOTAL_ACTIONS_DONE, totalPrayers);
 
-      notSet = ((scores.size() - 1) * 5) - totalFara2id;
-      if (notSet < 0){ notSet = 0; }
+      if (scores != null){
+         notSet = ((scores.size() - 1) * 5) - totalFara2id;
+         if (notSet < 0){ notSet = 0; }
+      }
+
       stats.put(QamarConstants.PrayerType.NOT_SET, notSet);
 
       ScoreResult result = new ScoreResult();

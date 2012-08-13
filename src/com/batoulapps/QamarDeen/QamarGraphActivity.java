@@ -35,6 +35,10 @@ public class QamarGraphActivity extends SherlockActivity
    public static final int GRAPH_FASTING_TAB = 3;
    public static final int GRAPH_OVERVIEW_TAB = 4;
 
+   // for save instance state
+   private static final String LAST_SELECTED_TAB = "last_selected_tab";
+   private static final String LAST_DATE_OPTION = "last_date_option";
+
    private int mCurrentTab = 0;
    private int mDateOption = 1;
    private int[] mDateOffsets = new int[]{ 7, 14, 30, 60, 90, 180, 365, -1 };
@@ -48,6 +52,9 @@ public class QamarGraphActivity extends SherlockActivity
    private TextView mMaxDate;
    private GraphWidget mGraphWidget;
    private StatisticsWidget mStatisticsWidget;
+
+   // async task
+   private DataFetcher mDataFetchTask;
 
    private GraphPagerAdapter mGraphAdapter;
    private static DateFormat mDateFormat = DateFormat.getDateInstance();
@@ -77,14 +84,16 @@ public class QamarGraphActivity extends SherlockActivity
          actionbar.setTitle("");
       }
 
+      if (savedInstanceState != null){
+         mCurrentTab = savedInstanceState.getInt(LAST_SELECTED_TAB, 0);
+         mDateOption = savedInstanceState.getInt(LAST_DATE_OPTION, 1);
+         timeSelectorWidget.setSelectedPosition(mDateOption);
+      }
+
       actionbar.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
 
       for (int i = 0; i < mTabs.length; i++) {
-         ActionBar.Tab tab = actionbar.newTab();
-         tab.setText(mTabs[i]);
-         tab.setTag(i);
-         tab.setTabListener(this);
-         actionbar.addTab(tab);
+         addTab(actionbar, i);
       }
 
       Calendar today = QamarTime.getTodayCalendar();
@@ -95,8 +104,28 @@ public class QamarGraphActivity extends SherlockActivity
       observer.addOnGlobalLayoutListener(mLayoutListener);
    }
 
+   private void addTab(ActionBar actionbar, int tabNumber){
+      ActionBar.Tab tab = actionbar.newTab();
+      tab.setText(mTabs[tabNumber]);
+      tab.setTag(tabNumber);
+      tab.setTabListener(this);
+      actionbar.addTab(tab, tabNumber, tabNumber == mCurrentTab);
+   }
+
+   @Override
+   protected void onSaveInstanceState(Bundle outState) {
+      outState.putInt(LAST_SELECTED_TAB, mCurrentTab);
+      outState.putInt(LAST_DATE_OPTION, mDateOption);
+      super.onSaveInstanceState(outState);
+   }
+
    @Override
    protected void onDestroy(){
+      if (mDataFetchTask != null){
+         mDataFetchTask.cancel(true);
+         mDataFetchTask = null;
+      }
+
       mDatabaseAdapter.close();
       mGraphPager.getViewTreeObserver()
               .removeGlobalOnLayoutListener(mLayoutListener);
@@ -134,8 +163,10 @@ public class QamarGraphActivity extends SherlockActivity
    }
 
    public void refreshData(){
-      mGraphWidget.showProgressView();
-      mStatisticsWidget.showProgressView();
+      if (mGraphWidget != null && mStatisticsWidget != null){
+         mGraphWidget.showProgressView();
+         mStatisticsWidget.showProgressView();
+      }
       drawGraph();
    }
 
@@ -144,7 +175,11 @@ public class QamarGraphActivity extends SherlockActivity
       long maxTime = QamarTime.getGMTTimeFromLocal(today);
       long minTime = getGmtTimestamp(today);
 
-      new DataFetcher().execute(maxTime, minTime);
+      if (mDataFetchTask != null){
+         mDataFetchTask.cancel(true);
+      }
+      mDataFetchTask = new DataFetcher();
+      mDataFetchTask.execute(maxTime, minTime);
    }
 
    public long getGmtTimestamp(Calendar localCal){
@@ -200,6 +235,8 @@ public class QamarGraphActivity extends SherlockActivity
                mMinDate.setText(mDateFormat.format(lastDate));
             }
          }
+
+         mDataFetchTask = null;
       }
    }
 

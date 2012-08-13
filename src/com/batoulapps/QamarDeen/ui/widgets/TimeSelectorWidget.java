@@ -67,6 +67,10 @@ public class TimeSelectorWidget extends LinearLayout {
       }
    }
 
+   public void setSelectedPosition(int selection){
+      updateSelectedItem(selection);
+   }
+
    private void updateSelectedItem(int newSelction){
       if (newSelction != mSelectedPosition){
          TextView currentSelection = mTextViews.get(mSelectedPosition);
