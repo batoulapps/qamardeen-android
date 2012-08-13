@@ -156,6 +156,20 @@ public class QuranFragment extends QamarFragment
       }
       super.onPause();
    }
+
+   /**
+    * dismisses any selector popup if it exists.
+    * @return boolean as to whether or not it dismissed a popup.
+    */
+   @Override
+   public boolean dismissPopup(){
+      if (mQuranSelectorPopupHelper != null &&
+              mQuranSelectorPopupHelper.isShowing()){
+         mQuranSelectorPopupHelper.dismissPopup();
+         return true;
+      }
+      return false;
+   }
    
    @Override
    protected void initializePopup(Context context){

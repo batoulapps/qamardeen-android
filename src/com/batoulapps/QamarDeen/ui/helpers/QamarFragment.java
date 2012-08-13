@@ -131,6 +131,18 @@ public abstract class QamarFragment extends SherlockFragment
       mJustInitialized = false;
    }
 
+   /**
+    * dismisses any selector popup if it exists.
+    * @return boolean as to whether or not it dismissed a popup.
+    */
+   public boolean dismissPopup(){
+      if (mPopupHelper != null && mPopupHelper.isShowing()){
+         mPopupHelper.dismissPopup();
+         return true;
+      }
+      return false;
+   }
+
    protected int getLayout(){ return R.layout.qamar_list; }
    
    protected void initializePopup(Context context){

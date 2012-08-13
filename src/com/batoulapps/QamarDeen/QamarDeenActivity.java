@@ -21,6 +21,7 @@ import com.batoulapps.QamarDeen.ui.fragments.FastingFragment;
 import com.batoulapps.QamarDeen.ui.fragments.PrayerFragment;
 import com.batoulapps.QamarDeen.ui.fragments.QuranFragment;
 import com.batoulapps.QamarDeen.ui.fragments.SadaqahFragment;
+import com.batoulapps.QamarDeen.ui.helpers.QamarFragment;
 
 public class QamarDeenActivity extends SherlockFragmentActivity 
    implements ActionBar.TabListener {
@@ -110,7 +111,27 @@ public class QamarDeenActivity extends SherlockFragmentActivity
       
       return super.onOptionsItemSelected(item);
    }
-   
+
+   @Override
+   public void onBackPressed() {
+      if (mPagerAdapter != null && mQamarPager != null){
+         /* back now first checks if it can ask a fragment
+          * to dismiss a popup.  if it can, it dismisses it.
+          * if not, it leaves the app like it used to.
+          */
+         int item = mQamarPager.getCurrentItem();
+         String fragmentTag = mPagerAdapter.getFragmentTag(
+                 R.id.qamar_pager, item);
+         FragmentManager fm = getSupportFragmentManager();
+         Fragment f = fm.findFragmentByTag(fragmentTag);
+         if (f != null && f instanceof QamarFragment){
+            boolean dismissed = ((QamarFragment)f).dismissPopup();
+            if (dismissed){ return; }
+         }
+      }
+      super.onBackPressed();
+   }
+
    OnPageChangeListener mOnPageChangeListener = new OnPageChangeListener(){
 
       @Override
@@ -168,6 +189,19 @@ public class QamarDeenActivity extends SherlockFragmentActivity
          default:
             return FastingFragment.newInstance();
          }
+      }
+
+      /**
+       * this is a private method in FragmentPagerAdapter that
+       * allows getting the tag that it uses to store the fragment
+       * in (for use by getFragmentByTag).  in the future, this could
+       * change and cause us issues...
+       * @param viewId the view id of the viewpager
+       * @param index the index of the fragment to get
+       * @return the tag in which it would be stored under
+       */
+      public static String getFragmentTag(int viewId, int index){
+         return "android:switcher:" + viewId + ":" + index;
       }
    }
 }

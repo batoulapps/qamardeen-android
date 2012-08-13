@@ -237,7 +237,14 @@ public class QuranSelectorPopupHelper {
          }
       }
    };
-   
+
+   public boolean isShowing(){
+      if (mPopupWindow != null){
+         return mPopupWindow.isShowing();
+      }
+      return false;
+   }
+
    public void dismissPopup(){
       if (mPopupWindow != null){
          mPopupWindow.dismiss();
