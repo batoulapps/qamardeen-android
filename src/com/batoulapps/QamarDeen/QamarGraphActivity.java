@@ -1,8 +1,11 @@
 package com.batoulapps.QamarDeen;
 
+import android.content.SharedPreferences;
 import android.content.res.Configuration;
+import android.content.res.Resources;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
@@ -14,6 +17,7 @@ import com.actionbarsherlock.app.ActionBar;
 import com.actionbarsherlock.app.ActionBar.Tab;
 import com.actionbarsherlock.app.SherlockActivity;
 import com.actionbarsherlock.view.MenuItem;
+import com.batoulapps.QamarDeen.data.QamarConstants;
 import com.batoulapps.QamarDeen.data.QamarDbAdapter;
 import com.batoulapps.QamarDeen.data.ScoresHelper;
 import com.batoulapps.QamarDeen.data.ScoresHelper.ScoreResult;
@@ -24,6 +28,7 @@ import com.batoulapps.QamarDeen.utils.QamarTime;
 
 import java.text.DateFormat;
 import java.util.Calendar;
+import java.util.Locale;
 
 public class QamarGraphActivity extends SherlockActivity
         implements ActionBar.TabListener,
@@ -61,6 +66,17 @@ public class QamarGraphActivity extends SherlockActivity
 
    @Override
    public void onCreate(Bundle savedInstanceState) {
+
+      SharedPreferences prefs =
+              PreferenceManager.getDefaultSharedPreferences(this);
+      if (prefs.getBoolean(QamarConstants.PreferenceKeys.USE_ARABIC, false)) {
+         Resources resources = getResources();
+         Configuration config = resources.getConfiguration();
+         config.locale = new Locale("ar");
+         resources.updateConfiguration(config,
+                 resources.getDisplayMetrics());
+      }
+
       setTheme(R.style.Theme_Sherlock_Light);
       super.onCreate(savedInstanceState);
       setContentView(R.layout.graph_layout);

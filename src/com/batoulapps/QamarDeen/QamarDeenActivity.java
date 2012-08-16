@@ -1,14 +1,17 @@
 package com.batoulapps.QamarDeen;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.content.res.Configuration;
+import android.content.res.Resources;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.ViewPager;
 import android.support.v4.view.ViewPager.OnPageChangeListener;
-
 import android.view.ViewTreeObserver;
 import com.actionbarsherlock.app.ActionBar;
 import com.actionbarsherlock.app.ActionBar.Tab;
@@ -16,12 +19,15 @@ import com.actionbarsherlock.app.SherlockFragmentActivity;
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuInflater;
 import com.actionbarsherlock.view.MenuItem;
+import com.batoulapps.QamarDeen.data.QamarConstants;
 import com.batoulapps.QamarDeen.data.QamarDbAdapter;
 import com.batoulapps.QamarDeen.ui.fragments.FastingFragment;
 import com.batoulapps.QamarDeen.ui.fragments.PrayerFragment;
 import com.batoulapps.QamarDeen.ui.fragments.QuranFragment;
 import com.batoulapps.QamarDeen.ui.fragments.SadaqahFragment;
 import com.batoulapps.QamarDeen.ui.helpers.QamarFragment;
+
+import java.util.Locale;
 
 public class QamarDeenActivity extends SherlockFragmentActivity 
    implements ActionBar.TabListener {
@@ -34,32 +40,43 @@ public class QamarDeenActivity extends SherlockFragmentActivity
    
    @Override
    public void onCreate(Bundle savedInstanceState) {
-        setTheme(R.style.Theme_Sherlock_Light);
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.main);
-        
-        // open will happen during the first query, so this is
-        // safe for the ui thread since no actual io is done
-        mDatabaseAdapter = new QamarDbAdapter(this);
-        
-        mQamarPager = (ViewPager)findViewById(R.id.qamar_pager);
-        mPagerAdapter = new PagerAdapter(getSupportFragmentManager());
-        mQamarPager.setAdapter(mPagerAdapter);
-        mQamarPager.setOnPageChangeListener(mOnPageChangeListener);
-        
-        ActionBar actionbar = getSupportActionBar();
-        actionbar.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
 
-        for (int i=0; i<mTabs.length; i++){
-           ActionBar.Tab tab = actionbar.newTab();
-           tab.setText(mTabs[i]);
-           tab.setTag(i);
-           tab.setTabListener(this);
-           actionbar.addTab(tab);
-        }
+      SharedPreferences prefs =
+              PreferenceManager.getDefaultSharedPreferences(this);
+      if (prefs.getBoolean(QamarConstants.PreferenceKeys.USE_ARABIC, false)) {
+         Resources resources = getResources();
+         Configuration config = resources.getConfiguration();
+         config.locale = new Locale("ar");
+         resources.updateConfiguration(config,
+                 resources.getDisplayMetrics());
+      }
 
-        ViewTreeObserver observer = mQamarPager.getViewTreeObserver();
-        observer.addOnGlobalLayoutListener(mLayoutListener);
+      setTheme(R.style.Theme_Sherlock_Light);
+      super.onCreate(savedInstanceState);
+      setContentView(R.layout.main);
+
+      // open will happen during the first query, so this is
+      // safe for the ui thread since no actual io is done
+      mDatabaseAdapter = new QamarDbAdapter(this);
+
+      mQamarPager = (ViewPager) findViewById(R.id.qamar_pager);
+      mPagerAdapter = new PagerAdapter(getSupportFragmentManager());
+      mQamarPager.setAdapter(mPagerAdapter);
+      mQamarPager.setOnPageChangeListener(mOnPageChangeListener);
+
+      ActionBar actionbar = getSupportActionBar();
+      actionbar.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
+
+      for (int i = 0; i < mTabs.length; i++) {
+         ActionBar.Tab tab = actionbar.newTab();
+         tab.setText(mTabs[i]);
+         tab.setTag(i);
+         tab.setTabListener(this);
+         actionbar.addTab(tab);
+      }
+
+      ViewTreeObserver observer = mQamarPager.getViewTreeObserver();
+      observer.addOnGlobalLayoutListener(mLayoutListener);
    }
    
    @Override

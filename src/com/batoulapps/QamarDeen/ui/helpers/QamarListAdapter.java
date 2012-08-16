@@ -1,13 +1,9 @@
 package com.batoulapps.QamarDeen.ui.helpers;
 
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.List;
-
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.content.res.Resources;
+import android.preference.PreferenceManager;
 import android.text.format.DateUtils;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -17,23 +13,31 @@ import android.widget.AbsListView.OnScrollListener;
 import android.widget.BaseAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
-
 import com.batoulapps.QamarDeen.R;
+import com.batoulapps.QamarDeen.data.QamarConstants;
 import com.batoulapps.QamarDeen.ui.widgets.PinnedHeaderListView;
 import com.batoulapps.QamarDeen.ui.widgets.PinnedHeaderListView.PinnedHeaderAdapter;
 import com.batoulapps.QamarDeen.utils.QamarTime;
+
+import java.text.SimpleDateFormat;
+import java.util.*;
 
 public abstract class QamarListAdapter extends BaseAdapter implements 
       OnScrollListener, PinnedHeaderAdapter {
    
    protected List<Date> mDays;
    protected Context mContext;
+   protected boolean mIsArabic;
    protected LayoutInflater mInflater;
 
    public QamarListAdapter(Context context){
       mInflater = LayoutInflater.from(context);
       mDays = new ArrayList<Date>();
       mContext = context;
+      SharedPreferences prefs =
+              PreferenceManager.getDefaultSharedPreferences(mContext);
+      mIsArabic = prefs.getBoolean(
+              QamarConstants.PreferenceKeys.USE_ARABIC, false);
       addDays(30);
    }
 
@@ -145,15 +149,29 @@ public abstract class QamarListAdapter extends BaseAdapter implements
          holder.dayNumber.setTextColor(
                res.getColor(R.color.normal_day_color));
       }
-      
-      holder.dayOfWeek.setText(new SimpleDateFormat("EEE").format(date));
-      holder.dayNumber.setText(new SimpleDateFormat("dd").format(date));
+
+      SimpleDateFormat dayFormatter;
+      SimpleDateFormat monthFormatter;
+      SimpleDateFormat dayOfWeekFormatter;
+
+      if (mIsArabic){
+         dayOfWeekFormatter = new SimpleDateFormat("EEE", new Locale("ar"));
+         dayFormatter = new SimpleDateFormat("dd", new Locale("ar"));
+         monthFormatter = new SimpleDateFormat("MMM", new Locale("ar"));
+      }
+      else {
+         dayOfWeekFormatter = new SimpleDateFormat("EEE");
+         dayFormatter = new SimpleDateFormat("dd");
+         monthFormatter = new SimpleDateFormat("MMM");
+      }
+
+      holder.dayOfWeek.setText(dayOfWeekFormatter.format(date));
+      holder.dayNumber.setText(dayFormatter.format(date));
       
       final int section = getSectionForPosition(position);
       if (getPositionForSection(section) == position) {
          // show header
-         holder.headerMonth.setText(
-               new SimpleDateFormat("MMM").format(date));
+         holder.headerMonth.setText(monthFormatter.format(date));
          holder.headerView.setVisibility(View.VISIBLE);
          holder.dividerView.setVisibility(View.GONE);
       }
@@ -231,7 +249,13 @@ public abstract class QamarListAdapter extends BaseAdapter implements
          TextView monthArea =
                (TextView)v.findViewById(R.id.section_month_index);
          Date date = (Date)getItem(position);
-         monthArea.setText(new SimpleDateFormat("MMM").format(date));
+
+         SimpleDateFormat monthFormatter;
+         if (mIsArabic){
+            monthFormatter = new SimpleDateFormat("MMM", new Locale("ar"));
+         }
+         else { monthFormatter = new SimpleDateFormat("MMM"); }
+         monthArea.setText(monthFormatter.format(date));
          monthArea.setBackgroundResource(R.color.pinned_hdr_month_bg_color);
       }
    }

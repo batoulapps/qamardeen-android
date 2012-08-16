@@ -11,6 +11,7 @@ public class QamarConstants {
    public static class PreferenceKeys {
      public static final String GENDER_PREF = "user_gender"; 
      public static final String SHOW_EXTRA_PRAYERS = "show_extra_prayers";
+     public static final String USE_ARABIC = "use_arabic";
    };
    
    public static class Prayers {

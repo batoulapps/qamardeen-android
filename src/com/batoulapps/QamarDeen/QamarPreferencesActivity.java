@@ -1,13 +1,14 @@
 package com.batoulapps.QamarDeen;
 
 
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageInfo;
 import android.os.Bundle;
+import android.preference.CheckBoxPreference;
 import android.preference.Preference;
 import android.preference.Preference.OnPreferenceChangeListener;
 import android.preference.PreferenceManager;
-
 import android.preference.PreferenceScreen;
 import com.actionbarsherlock.app.SherlockPreferenceActivity;
 import com.actionbarsherlock.view.Menu;
@@ -15,11 +16,16 @@ import com.actionbarsherlock.view.MenuItem;
 import com.batoulapps.QamarDeen.data.QamarConstants;
 import com.batoulapps.QamarDeen.data.QamarConstants.PreferenceKeys;
 
+import java.util.Locale;
+
 public class QamarPreferencesActivity extends SherlockPreferenceActivity
    implements OnPreferenceChangeListener {
 
    private static final int MENU_DONE = 1;
    private Preference mGenderPreference = null;
+   private CheckBoxPreference mArabicPreference = null;
+   private boolean mUsingArabic = false;
+   private boolean mArabicChanged = false;
    
    @Override
    public boolean onCreateOptionsMenu(Menu menu){
@@ -32,7 +38,7 @@ public class QamarPreferencesActivity extends SherlockPreferenceActivity
    @Override
    public boolean onOptionsItemSelected(MenuItem item) {
       if (item.getItemId() == MENU_DONE){
-         finish();
+         leavePreferences();
          return true;
       }
       return super.onOptionsItemSelected(item);
@@ -62,6 +68,16 @@ public class QamarPreferencesActivity extends SherlockPreferenceActivity
          catch (Exception e){
          }
       }
+
+      mArabicPreference = (CheckBoxPreference)findPreference(
+              PreferenceKeys.USE_ARABIC);
+      if (mArabicPreference != null){
+         if ("ar".equals(Locale.getDefault().getLanguage())){
+            mArabicPreference.setEnabled(false);
+         }
+         else { mArabicPreference.setOnPreferenceChangeListener(this); }
+         mUsingArabic = mArabicPreference.isChecked();
+      }
    }
    
    @Override
@@ -69,13 +85,44 @@ public class QamarPreferencesActivity extends SherlockPreferenceActivity
       if (mGenderPreference != null){
          mGenderPreference.setOnPreferenceChangeListener(null);
       }
+
+      if (mArabicPreference != null){
+         mArabicPreference.setOnPreferenceChangeListener(null);
+      }
       super.onDestroy();
+   }
+
+   @Override
+   public void onBackPressed() {
+      if (mArabicChanged){
+         leavePreferences();
+         return;
+      }
+      super.onBackPressed();
+   }
+
+   private void leavePreferences(){
+      if (mArabicChanged){
+         Intent i = new Intent(this, QamarDeenActivity.class);
+         i.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+         startActivity(i);
+      }
+      finish();
    }
    
    @Override
    public boolean onPreferenceChange(Preference preference, Object newValue) {
       if (preference.getKey().equals(PreferenceKeys.GENDER_PREF)){
          updateGenderPreference(newValue);
+      }
+      else if (preference.getKey().equals(PreferenceKeys.USE_ARABIC)){
+         if (newValue != null && newValue instanceof Boolean){
+            Boolean value = (Boolean)newValue;
+            if (value != mUsingArabic){
+               mArabicChanged = true;
+            }
+            else { mArabicChanged = false; }
+         }
       }
       return true;
    }

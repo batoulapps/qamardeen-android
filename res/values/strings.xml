@@ -74,6 +74,8 @@
     <string name="qamar_about_summary">\u00a9 BatoulApps</string>
     <string name="pref_show_extra_prayers">Show Extra Prayers</string>
     <string name="pref_show_extra_prayers_desc">Show Duha and Qiyyam Prayers</string>
+    <string name="pref_use_arabic">Arabic Mode</string>
+    <string name="pref_use_arabic_desc">Use Arabic on devices that support Arabic</string>
     <string name="pref_gender">Gender</string>
     <string name="dialog_choose_gender_title">Choose Gender</string>
     <string name="pref_gender_male">Gender is currently set to male</string>
