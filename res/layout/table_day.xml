@@ -13,7 +13,7 @@
         android:layout_height="wrap_content"
         android:gravity="center"
         android:textColor="@color/normal_day_color"
-        android:textStyle="bold" />
+        android:textAppearance="@style/day_of_week" />
 
     <TextView
         android:id="@+id/day_number"

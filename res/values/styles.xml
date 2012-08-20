@@ -7,6 +7,19 @@
         <item name="android:textSize">12sp</item>
         <item name="android:textStyle">bold</item>
     </style>
+
+    <!-- day of week -->
+    <style name="day_of_week">
+        <item name="android:maxLines">1</item>
+        <item name="android:textSize">13sp</item>
+        <item name="android:textStyle">bold</item>
+    </style>
+
+    <!-- day of week -->
+    <style name="day_of_week_arabic" parent="day_of_week">
+        <item name="android:textSize">11sp</item>
+        <item name="android:textStyle">bold</item>
+    </style>
     
     <!-- prayer extended header text -->
     <style name="prayer_extended_hdr" parent="qamar_hdr">

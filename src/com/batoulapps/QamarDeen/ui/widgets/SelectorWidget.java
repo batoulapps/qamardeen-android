@@ -1,8 +1,5 @@
 package com.batoulapps.QamarDeen.ui.widgets;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import android.content.Context;
 import android.graphics.Color;
 import android.util.AttributeSet;
@@ -10,8 +7,10 @@ import android.view.Gravity;
 import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-
 import com.batoulapps.QamarDeen.R;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class SelectorWidget extends LinearLayout {
 
@@ -130,12 +129,13 @@ public class SelectorWidget extends LinearLayout {
       LinearLayout.LayoutParams textParams =
             new LinearLayout.LayoutParams(LayoutParams.MATCH_PARENT,
                   LayoutParams.WRAP_CONTENT);
+
       for (int i=0; i<labels.length; i++){
          TextView tv = new TextView(mContext);
          tv.setTextAppearance(mContext, R.style.popup_text_style);
          tv.setText(labels[i]);
          tv.setTag(tags[i]);
-         tv.setGravity(Gravity.CENTER_VERTICAL);
+         tv.setGravity(Gravity.CENTER_VERTICAL|Gravity.LEFT);
          
          if (selectedStateImageIds == null){
             // set default background

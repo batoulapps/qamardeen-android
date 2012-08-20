@@ -62,7 +62,7 @@ public class QamarGraphActivity extends SherlockActivity
    private DataFetcher mDataFetchTask;
 
    private GraphPagerAdapter mGraphAdapter;
-   private static DateFormat mDateFormat = DateFormat.getDateInstance();
+   private static DateFormat mDateFormat;;
 
    @Override
    public void onCreate(Bundle savedInstanceState) {
@@ -112,12 +112,29 @@ public class QamarGraphActivity extends SherlockActivity
          addTab(actionbar, i);
       }
 
+      updateLanguage();
       Calendar today = QamarTime.getTodayCalendar();
       mMaxDate.setText(mDateFormat.format(today.getTime()));
       drawGraph();
 
       ViewTreeObserver observer = mGraphPager.getViewTreeObserver();
       observer.addOnGlobalLayoutListener(mLayoutListener);
+   }
+
+   private void updateLanguage(){
+      SharedPreferences prefs =
+              PreferenceManager.getDefaultSharedPreferences(this);
+      boolean isArabic = prefs.getBoolean(
+              QamarConstants.PreferenceKeys.USE_ARABIC, false);
+      isArabic = isArabic || "ar".equals(Locale.getDefault().getLanguage());
+
+      if (isArabic){
+         mDateFormat = DateFormat.getDateInstance(DateFormat.DEFAULT,
+                 new Locale("ar"));
+      }
+      else {
+         mDateFormat = DateFormat.getDateInstance(DateFormat.DEFAULT);
+      }
    }
 
    private void addTab(ActionBar actionbar, int tabNumber){

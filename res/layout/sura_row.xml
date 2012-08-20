@@ -2,6 +2,6 @@
 <TextView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:gravity="center_vertical"
+    android:gravity="center_vertical|left"
     android:textAppearance="@style/qamar_row_text"
     android:drawableLeft="@drawable/quran_picker_edit" />

@@ -18,7 +18,7 @@
             android:background="@color/hdr_background"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:gravity="center_vertical"
+            android:gravity="center_vertical|left"
             android:paddingLeft="10dp"
             android:textAppearance="@style/qamar_hdr"
             android:text="@string/charities_given" />

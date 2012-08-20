@@ -1,10 +1,5 @@
 package com.batoulapps.QamarDeen.ui.fragments;
 
-import java.util.Calendar;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
-
 import android.content.Context;
 import android.database.Cursor;
 import android.os.AsyncTask;
@@ -15,7 +10,6 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.TextView;
-
 import com.batoulapps.QamarDeen.QamarDeenActivity;
 import com.batoulapps.QamarDeen.R;
 import com.batoulapps.QamarDeen.data.QamarDbAdapter;
@@ -24,6 +18,9 @@ import com.batoulapps.QamarDeen.ui.helpers.QamarListAdapter;
 import com.batoulapps.QamarDeen.utils.HijriUtils;
 import com.batoulapps.QamarDeen.utils.HijriUtils.HijriDate;
 import com.batoulapps.QamarDeen.utils.QamarTime;
+
+import java.text.NumberFormat;
+import java.util.*;
 
 public class FastingFragment extends QamarFragment {
 
@@ -233,6 +230,7 @@ public class FastingFragment extends QamarFragment {
       private String[] mFastingTypes = null;
       private String[] mIslamicMonths = null;
       private Map<Long, Integer> mDataMap = new HashMap<Long, Integer>();
+      private NumberFormat mHijriDateFormatter;
 
       public FastingListAdapter(Context context){
          super(context);
@@ -240,6 +238,20 @@ public class FastingFragment extends QamarFragment {
                .getStringArray(R.array.fasting_options);
          mIslamicMonths = getResources()
                .getStringArray(R.array.islamic_months);
+      }
+
+      @Override
+      protected boolean updateLanguage(){
+         boolean isArabic = super.updateLanguage();
+         if (isArabic){
+            mHijriDateFormatter = NumberFormat.getIntegerInstance(
+                    new Locale("ar"));
+         }
+         else {
+            mHijriDateFormatter = NumberFormat.getIntegerInstance();
+         }
+         mHijriDateFormatter.setMinimumIntegerDigits(2);
+         return isArabic;
       }
 
       public void addDayData(Map<Long, Integer> data){
@@ -287,7 +299,7 @@ public class FastingFragment extends QamarFragment {
          cal.setTime(date);
          HijriDate hijriDate = HijriUtils.getHijriDate(cal);
 
-         String dayString = ((hijriDate.day < 10)? "0" : "") + hijriDate.day;
+         String dayString = mHijriDateFormatter.format(hijriDate.day);
          holder.hijriDay.setText(dayString);
          holder.hijriMonth.setText(mIslamicMonths[hijriDate.month - 1]);
 

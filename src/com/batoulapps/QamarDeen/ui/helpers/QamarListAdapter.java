@@ -27,18 +27,40 @@ public abstract class QamarListAdapter extends BaseAdapter implements
    
    protected List<Date> mDays;
    protected Context mContext;
-   protected boolean mIsArabic;
    protected LayoutInflater mInflater;
+
+   protected int mDayOfWeekStyle = -1;
+   protected SimpleDateFormat mDayFormatter;
+   protected SimpleDateFormat mDayOfWeekFormatter;
+   protected SimpleDateFormat mMonthFormatter = new SimpleDateFormat("MMM");
 
    public QamarListAdapter(Context context){
       mInflater = LayoutInflater.from(context);
       mDays = new ArrayList<Date>();
       mContext = context;
+      updateLanguage();
+      addDays(30);
+   }
+
+   protected boolean updateLanguage(){
       SharedPreferences prefs =
               PreferenceManager.getDefaultSharedPreferences(mContext);
-      mIsArabic = prefs.getBoolean(
+      boolean isArabic = prefs.getBoolean(
               QamarConstants.PreferenceKeys.USE_ARABIC, false);
-      addDays(30);
+      isArabic = isArabic || "ar".equals(Locale.getDefault().getLanguage());
+
+      if (isArabic){
+         mDayOfWeekFormatter = new SimpleDateFormat("EEE", new Locale("ar"));
+         mDayFormatter = new SimpleDateFormat("dd", new Locale("ar"));
+         mDayOfWeekStyle = R.style.day_of_week_arabic;
+      }
+      else {
+         mDayOfWeekFormatter = new SimpleDateFormat("EEE");
+         mDayFormatter = new SimpleDateFormat("dd");
+         mDayOfWeekStyle = R.style.day_of_week;
+      }
+
+      return isArabic;
    }
 
    /**
@@ -150,28 +172,17 @@ public abstract class QamarListAdapter extends BaseAdapter implements
                res.getColor(R.color.normal_day_color));
       }
 
-      SimpleDateFormat dayFormatter;
-      SimpleDateFormat monthFormatter;
-      SimpleDateFormat dayOfWeekFormatter;
-
-      if (mIsArabic){
-         dayOfWeekFormatter = new SimpleDateFormat("EEE", new Locale("ar"));
-         dayFormatter = new SimpleDateFormat("dd", new Locale("ar"));
-         monthFormatter = new SimpleDateFormat("MMM", new Locale("ar"));
-      }
-      else {
-         dayOfWeekFormatter = new SimpleDateFormat("EEE");
-         dayFormatter = new SimpleDateFormat("dd");
-         monthFormatter = new SimpleDateFormat("MMM");
+      if (mDayOfWeekStyle != -1){
+         holder.dayOfWeek.setTextAppearance(mContext, mDayOfWeekStyle);
       }
 
-      holder.dayOfWeek.setText(dayOfWeekFormatter.format(date));
-      holder.dayNumber.setText(dayFormatter.format(date));
+      holder.dayOfWeek.setText(mDayOfWeekFormatter.format(date));
+      holder.dayNumber.setText(mDayFormatter.format(date));
       
       final int section = getSectionForPosition(position);
       if (getPositionForSection(section) == position) {
          // show header
-         holder.headerMonth.setText(monthFormatter.format(date));
+         holder.headerMonth.setText(mMonthFormatter.format(date));
          holder.headerView.setVisibility(View.VISIBLE);
          holder.dividerView.setVisibility(View.GONE);
       }
@@ -250,11 +261,7 @@ public abstract class QamarListAdapter extends BaseAdapter implements
                (TextView)v.findViewById(R.id.section_month_index);
          Date date = (Date)getItem(position);
 
-         SimpleDateFormat monthFormatter;
-         if (mIsArabic){
-            monthFormatter = new SimpleDateFormat("MMM", new Locale("ar"));
-         }
-         else { monthFormatter = new SimpleDateFormat("MMM"); }
+         SimpleDateFormat monthFormatter = new SimpleDateFormat("MMM");
          monthArea.setText(monthFormatter.format(date));
          monthArea.setBackgroundResource(R.color.pinned_hdr_month_bg_color);
       }

@@ -1,9 +1,11 @@
 package com.batoulapps.QamarDeen.ui.widgets;
 
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.content.res.Resources;
 import android.graphics.Color;
 import android.graphics.Typeface;
+import android.preference.PreferenceManager;
 import android.text.SpannableStringBuilder;
 import android.text.style.ForegroundColorSpan;
 import android.text.style.StyleSpan;
@@ -19,8 +21,10 @@ import com.batoulapps.QamarDeen.R;
 import com.batoulapps.QamarDeen.data.QamarConstants;
 
 import java.text.DecimalFormat;
+import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 public class StatisticsWidget extends RelativeLayout {
 
@@ -36,6 +40,7 @@ public class StatisticsWidget extends RelativeLayout {
            R.array.overview_values };
    private int[] mSummaryStrings = new int[]{ 0, R.array.quran_summary,
            R.array.sadaqah_summary, R.array.fasting_summary, 0 };
+   private NumberFormat mNumberFormatter;
 
    public StatisticsWidget(Context context){
       super(context);
@@ -57,7 +62,24 @@ public class StatisticsWidget extends RelativeLayout {
       mResources = mContext.getResources();
       mCountColor = mResources.getColor(R.color.stats_color);
       mStatsMargin = mResources.getDimensionPixelSize(R.dimen.stats_margin);
+      updateLanguage();
       showProgressView();
+   }
+
+   private void updateLanguage(){
+      SharedPreferences prefs =
+              PreferenceManager.getDefaultSharedPreferences(mContext);
+      boolean isArabic = prefs.getBoolean(
+              QamarConstants.PreferenceKeys.USE_ARABIC, false);
+      isArabic = isArabic || "ar".equals(Locale.getDefault().getLanguage());
+
+      if (isArabic){
+         mNumberFormatter = NumberFormat.getIntegerInstance(
+                 new Locale("ar"));
+      }
+      else {
+         mNumberFormatter = NumberFormat.getIntegerInstance();
+      }
    }
 
    public void showProgressView(){
@@ -189,7 +211,7 @@ public class StatisticsWidget extends RelativeLayout {
       builder.append(" ");
 
       int start = builder.length();
-      builder.append("(" + days + ")");
+      builder.append("(" + mNumberFormatter.format(days) + ")");
       builder.setSpan(new ForegroundColorSpan(mCountColor),
               start, builder.length(), 0);
       builder.setSpan(new StyleSpan(Typeface.BOLD), 0, builder.length(), 0);
@@ -198,7 +220,7 @@ public class StatisticsWidget extends RelativeLayout {
          builder.append(" ");
 
          start = builder.length();
-         builder.append(percent + "%");
+         builder.append(mNumberFormatter.format(percent) + "%");
          builder.setSpan(new ForegroundColorSpan(Color.LTGRAY),
                  start, builder.length(), 0);
       }

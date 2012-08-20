@@ -4,33 +4,34 @@
     <!-- quran summary (for stats) -->
     <string-array name="quran_summary">
         <item>ايام القراءة</item>
-        <item>ايام بدون قراءة</item>
+        <item>ايام بلا قراءة</item>
     </string-array>
 
     <!-- sadaqah summary (for stats) -->
     <string-array name="sadaqah_summary">
-        <item>ايام خيرية</item>
-        <item>ايام بدون خيرية</item>
+        <item>ايام العطاء</item>
+        <item>ايام بلا عطاء</item>
     </string-array>
     
    <!-- fasting summary (for stats) -->
     <string-array name="fasting_summary">
-        <item>ايام صيام</item>
-        <item>ايام بدون صيام</item>
+        <item>ايام الصيام</item>
+        <item>ايام الأفطار</item>
     </string-array>
 
     <!-- overview summary (for stats) -->
     <string-array name="overview_options">
-        <item>مجمل الصلوات</item>
-        <item>مجمل الايات المقروءه</item>
-        <item>مجمل الايام الخيرية</item>
-        <item>مجمل ايام الصيام</item>
+        <item>مجموع الصلوات</item>
+        <item>مجموع الايات </item>
+        <item>مجموع ايام الصدقة</item>
+        <item>مجموع ايام الصيام</item>
     </string-array>
 
    <!-- islamic months -->
     <string-array name="islamic_months">
         <item>محرم</item>
-        <item>صفربيع أول</item>
+		<item>صفر</item>
+        <item>ربيع أول</item>
         <item>ربيع ثاني</item>
         <item>جمادى أول</item>
         <item>جمادى ثاني</item>

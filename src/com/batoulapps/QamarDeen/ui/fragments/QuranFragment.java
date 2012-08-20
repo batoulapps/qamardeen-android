@@ -1,12 +1,5 @@
 package com.batoulapps.QamarDeen.ui.fragments;
 
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
 import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
@@ -21,7 +14,6 @@ import android.widget.AdapterView.OnItemClickListener;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
-
 import com.batoulapps.QamarDeen.QamarDeenActivity;
 import com.batoulapps.QamarDeen.R;
 import com.batoulapps.QamarDeen.SuraSelectorActivity;
@@ -32,6 +24,9 @@ import com.batoulapps.QamarDeen.ui.helpers.QamarListAdapter;
 import com.batoulapps.QamarDeen.ui.helpers.QuranSelectorPopupHelper;
 import com.batoulapps.QamarDeen.ui.helpers.QuranSelectorPopupHelper.OnQuranSelectionListener;
 import com.batoulapps.QamarDeen.utils.QamarTime;
+
+import java.text.NumberFormat;
+import java.util.*;
 
 public class QuranFragment extends QamarFragment
    implements OnQuranSelectionListener {
@@ -385,7 +380,7 @@ public class QuranFragment extends QamarFragment
    
    private class ReadQuranDataTask extends AsyncTask<Long, Void, Cursor> {
       private QuranData mEarlierData = null;
-      
+
       @Override
       protected Cursor doInBackground(Long... params){
          long maxDate = params[0];
@@ -471,7 +466,8 @@ public class QuranFragment extends QamarFragment
       private Map<Long, List<Integer>> mExtraData =
             new HashMap<Long, List<Integer>>();
       private String[] mSuras = null;
-      
+      private NumberFormat mAyahFormatter;
+
       // this is used to store the first entry not on the screen
       private QuranData mEarlierEntryData = null;
       
@@ -479,7 +475,19 @@ public class QuranFragment extends QamarFragment
          super(context);
          mSuras = context.getResources().getStringArray(R.array.sura_names);
       }
-      
+
+      @Override
+      protected boolean updateLanguage() {
+         boolean isArabic = super.updateLanguage();
+         if (isArabic){
+            mAyahFormatter = NumberFormat.getIntegerInstance(new Locale("ar"));
+         }
+         else {
+            mAyahFormatter = NumberFormat.getIntegerInstance();
+         }
+         return isArabic;
+      }
+
       @Override
       public void requestData(Long maxDate, Long minDate){
          requestRangeData(maxDate, minDate);
@@ -621,9 +629,10 @@ public class QuranFragment extends QamarFragment
                // set the sura name and ayah count
                holder.dailyReadings.setText(mSuras[data.getEndSura()-1]);
                int readAyahs = data.getAyahCount();
-               holder.ayahCount.setText("" + readAyahs);
+               holder.ayahCount.setText(mAyahFormatter.format(readAyahs));
                holder.ayahImage.setImageResource(R.drawable.quran_ayah);
-               holder.ayahNumber.setText("" + data.getEndAyah());
+               holder.ayahNumber.setText(
+                       mAyahFormatter.format(data.getEndAyah()));
             }
             else {
                // nothing is in this row, so just hide stuff

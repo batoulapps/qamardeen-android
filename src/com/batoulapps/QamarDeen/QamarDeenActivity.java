@@ -43,13 +43,18 @@ public class QamarDeenActivity extends SherlockFragmentActivity
 
       SharedPreferences prefs =
               PreferenceManager.getDefaultSharedPreferences(this);
+
+      Locale locale;
       if (prefs.getBoolean(QamarConstants.PreferenceKeys.USE_ARABIC, false)) {
-         Resources resources = getResources();
-         Configuration config = resources.getConfiguration();
-         config.locale = new Locale("ar");
-         resources.updateConfiguration(config,
-                 resources.getDisplayMetrics());
+         locale = new Locale("ar");
       }
+      else { locale = Locale.getDefault(); }
+
+      Resources resources = getResources();
+      Configuration config = resources.getConfiguration();
+      config.locale = locale;
+      resources.updateConfiguration(config,
+              resources.getDisplayMetrics());
 
       setTheme(R.style.Theme_Sherlock_Light);
       super.onCreate(savedInstanceState);
