@@ -2,7 +2,9 @@ package com.batoulapps.QamarDeen.ui.fragments;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.database.Cursor;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -633,6 +635,24 @@ public class QuranFragment extends QamarFragment
                holder.ayahImage.setImageResource(R.drawable.quran_ayah);
                holder.ayahNumber.setText(
                        mAyahFormatter.format(data.getEndAyah()));
+
+               final QuranData d = data;
+               holder.jumpImage.setOnClickListener(new OnClickListener() {
+                  @Override
+                  public void onClick(View view) {
+                     Intent i = new Intent(Intent.ACTION_VIEW);
+                     Uri uri = Uri.parse("quran://" + d.getEndSura() + "/" + d.getEndAyah());
+                     i.setData(uri);
+
+                     PackageManager pm = getActivity().getPackageManager();
+                     if (pm.queryIntentActivities(i, 0).size() == 0){
+                        uri = Uri.parse("http://quran.com/" +
+                                d.getEndSura() + "/" + d.getEndAyah());
+                        i.setData(uri);
+                     }
+                     startActivity(i);
+                  }
+               });
             }
             else {
                // nothing is in this row, so just hide stuff
