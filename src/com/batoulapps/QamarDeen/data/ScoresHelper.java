@@ -30,15 +30,16 @@ public class ScoresHelper {
 
       Calendar gmtCal = QamarTime.getGMTCalendar();
       gmtCal.setTimeInMillis(maxDate * 1000);
-      long maxDateMillis = QamarTime.getLocalTimeFromGMT(gmtCal);
+      Calendar localMaxCal = QamarTime.getLocalCalendarFromGMT(gmtCal);
 
       // fill all dates in the range with 0 score
       gmtCal.setTimeInMillis(timestamp);
-      long minDateMillis = QamarTime.getLocalTimeFromGMT(gmtCal);
-      long currentMillis = maxDateMillis;
-      while (currentMillis >= minDateMillis){
-         scores.put(currentMillis, 0);
-         currentMillis -= QamarConstants.MS_PER_DAY;
+      Calendar localMinCal = QamarTime.getLocalCalendarFromGMT(gmtCal);
+
+      while (localMaxCal.after(localMinCal) ||
+              localMaxCal.equals(localMinCal)){
+         scores.put(localMaxCal.getTimeInMillis(), 0);
+         localMaxCal.add(Calendar.DATE, -1);
       }
       return scores;
    }

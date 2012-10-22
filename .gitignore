@@ -4,3 +4,5 @@ bin
 gen
 .DS_Store
 local.properties
+.idea
+classes

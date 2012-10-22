@@ -33,11 +33,21 @@ public class QamarTime {
     * @return timestamp of 12:00:00 on the same day in the local timezone
     */
    public static long getLocalTimeFromGMT(Calendar gmtCal){
+      return getLocalCalendarFromGMT(gmtCal).getTimeInMillis();
+   }
+
+   /**
+    * given a gmt calendar at 12:00:00, returns the local calendar
+    * set at the same date as the gmt calendar at 12:00:00 local
+    * @param gmtCal a gmt calendar
+    * @return calendar of 12:00:00 on the same day in the local timezone
+    */
+   public static Calendar getLocalCalendarFromGMT(Calendar gmtCal){
       Calendar localTime = getTodayCalendar();
       localTime.set(gmtCal.get(Calendar.YEAR),
-            gmtCal.get(Calendar.MONTH),
-            gmtCal.get(Calendar.DATE));
-      return localTime.getTimeInMillis();
+              gmtCal.get(Calendar.MONTH),
+              gmtCal.get(Calendar.DATE));
+      return localTime;
    }
    
    /**
