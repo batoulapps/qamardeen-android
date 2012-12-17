@@ -25,7 +25,10 @@ public class ScoresHelper {
          timestamp = cursor.getLong(1) * 1000;
       }
       else if (timestamp == 0){
-         timestamp = (maxDate * 1000) - (30 * QamarConstants.MS_PER_DAY);
+         Calendar gmtCal = QamarTime.getGMTCalendar();
+         gmtCal.setTimeInMillis(maxDate * 1000);
+         gmtCal.add(Calendar.DATE, -30);
+         timestamp = gmtCal.getTimeInMillis();
       }
 
       Calendar gmtCal = QamarTime.getGMTCalendar();
