@@ -6,3 +6,5 @@ gen
 local.properties
 .idea
 classes
+.gradle
+*/build

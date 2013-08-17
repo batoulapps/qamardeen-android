@@ -52,7 +52,6 @@
     <string name="none">None</string>
     
     <string name="save">Save</string>
-    <string name="cancel">Cancel</string>
 
     <plurals name="surasSelected">
         <item quantity="one">1 sura read</item>

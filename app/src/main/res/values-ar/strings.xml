@@ -52,7 +52,6 @@
     <string name="none">بدون</string>
     
     <string name="save">حفظ</string>
-    <string name="cancel">إلغاء</string>
 
     <plurals name="surasSelected">
         <item quantity="one">قرأت سورة</item>
