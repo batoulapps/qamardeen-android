@@ -5,7 +5,7 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
 public class QamarDbHelper extends SQLiteOpenHelper {
-   private static final String DATABASE_NAME = "qamardeen.db";
+   public static final String DATABASE_NAME = "qamardeen.db";
    private static final int DATABASE_VERSION = 1;
    
    private static final String PRAYERS_TABLE_DEF =

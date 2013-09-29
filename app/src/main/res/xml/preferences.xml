@@ -41,6 +41,15 @@
 
     </PreferenceCategory>
 
+    <PreferenceCategory android:title="@string/backup_and_restore">
+        <Preference android:key="backup"
+                    android:title="@string/backup_preference"
+                    android:summary="@string/backukp_preference_summary"/>
+        <Preference android:key="restore"
+                    android:title="@string/restore_preference"
+                    android:summary="@string/restore_preference_summary"/>
+    </PreferenceCategory>
+
     <PreferenceCategory
             android:title="@string/qamar_preferences_about">
         <PreferenceScreen android:key="about"

@@ -83,4 +83,21 @@
     <!-- content description -->
     <string name="open_in_quran_description">Open in Quran</string>
     <string name="ayah_description">Ayah</string>
+
+    <!-- backup and restore -->
+    <string name="backup_and_restore">Backup and Restore (Experimental)</string>
+    <string name="backup_preference">Backup</string>
+    <string name="backukp_preference_summary">Backup the QamarDeen database to your sdcard.</string>
+    <string name="restore_preference">Restore</string>
+    <string name="restore_preference_summary">Replace QamarDeen\'s database with the one on the device\'s sdcard.</string>
+    <string name="error_backing_up_database">Unable to backup database.</string>
+    <string name="database_backed_up">Database backed up.</string>
+    <string name="error_restoring_database">Error restoring database.</string>
+    <string name="restore_successful">Restore successful.</string>
+    <string name="overwrite_current_db">Overwrite existing database?</string>
+    <string name="overwrite_current_backup_msg">A backup file already exists. Overwrite?</string>
+    <string name="yes">Yes</string>
+    <string name="no">No</string>
+    <string name="overwrite_current_db_msg">This will remove all QamarDeen\'s data and replace it with the data from the sdcard. Are you sure?</string>
+    <string name="please_wait">Please wait&#8230;</string>
 </resources>
