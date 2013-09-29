@@ -5,6 +5,7 @@
     android:versionName="1.0.3" >
 
     <uses-sdk android:minSdkVersion="7" android:targetSdkVersion="17" />
+    <uses-permission android:name="android.permission.INTERNET"/>
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
 
     <application
@@ -23,6 +24,8 @@
         <activity android:name=".QamarGraphActivity" />
         <activity android:name=".SuraSelectorActivity" />
         <activity android:name=".QamarPreferencesActivity" />
+        <meta-data android:name="com.crashlytics.ApiKey"
+                   android:value="795549011fa5a8142e877d7e28ad256d6ff072d7"/>
     </application>
 
 </manifest>

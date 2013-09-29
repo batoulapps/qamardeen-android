@@ -27,6 +27,7 @@ import com.batoulapps.QamarDeen.ui.fragments.QuranFragment;
 import com.batoulapps.QamarDeen.ui.fragments.SadaqahFragment;
 import com.batoulapps.QamarDeen.ui.helpers.QamarFragment;
 
+import com.crashlytics.android.Crashlytics;
 import java.util.Locale;
 
 public class QamarDeenActivity extends SherlockFragmentActivity 
@@ -58,6 +59,8 @@ public class QamarDeenActivity extends SherlockFragmentActivity
 
       setTheme(R.style.Theme_Sherlock_Light);
       super.onCreate(savedInstanceState);
+      Crashlytics.start(this);
+
       setContentView(R.layout.main);
 
       // open will happen during the first query, so this is
