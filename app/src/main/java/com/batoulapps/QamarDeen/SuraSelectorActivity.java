@@ -62,8 +62,11 @@ public class SuraSelectorActivity extends SherlockActivity {
       String selectedSuras = currentIntent
             .getStringExtra(QuranFragment.EXTRA_READ);
       if (savedInstanceState != null){
-        selectedSuras = savedInstanceState.getString(
-            SI_SELECTED_SURAS, selectedSuras);
+        Object sel = savedInstanceState.get(
+            SI_SELECTED_SURAS);
+        if (sel != null){
+          selectedSuras = sel.toString();
+        }
       }
 
       if (!TextUtils.isEmpty(selectedSuras)){
@@ -221,7 +224,7 @@ public class SuraSelectorActivity extends SherlockActivity {
       
       public void unselectSura(int sura){
          if (mSelectedSuras.get(sura, false)){
-            mSelectedSuras.put(sura, false);
+           mSelectedSuras.delete(sura);
          }
          updateCount(mSelectedSuras.size());
       }
