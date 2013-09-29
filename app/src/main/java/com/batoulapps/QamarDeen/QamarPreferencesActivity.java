@@ -7,7 +7,9 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageInfo;
-import android.os.*;
+import android.os.AsyncTask;
+import android.os.Bundle;
+import android.os.Environment;
 import android.os.Process;
 import android.preference.CheckBoxPreference;
 import android.preference.Preference;
@@ -17,8 +19,6 @@ import android.preference.PreferenceScreen;
 import android.widget.Toast;
 
 import com.actionbarsherlock.app.SherlockPreferenceActivity;
-import com.actionbarsherlock.view.Menu;
-import com.actionbarsherlock.view.MenuItem;
 import com.batoulapps.QamarDeen.data.QamarConstants;
 import com.batoulapps.QamarDeen.data.QamarConstants.PreferenceKeys;
 import com.batoulapps.QamarDeen.data.QamarDbHelper;
@@ -34,30 +34,12 @@ public class QamarPreferencesActivity extends SherlockPreferenceActivity
    implements OnPreferenceChangeListener {
    public static final String BACKUP_NAME = "qamardeen.db";
 
-   private static final int MENU_DONE = 1;
    private Preference mGenderPreference = null;
    private Preference mRestorePreference = null;
    private CheckBoxPreference mArabicPreference = null;
    private boolean mUsingArabic = false;
    private boolean mArabicChanged = false;
    private AlertDialog mDialog;
-   
-   @Override
-   public boolean onCreateOptionsMenu(Menu menu){
-      menu.add(Menu.NONE, MENU_DONE, Menu.NONE, R.string.cancel)
-         .setIcon(R.drawable.ic_action_cancel)
-         .setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM);
-      return super.onCreateOptionsMenu(menu);
-   }
-   
-   @Override
-   public boolean onOptionsItemSelected(MenuItem item) {
-      if (item.getItemId() == MENU_DONE){
-         leavePreferences();
-         return true;
-      }
-      return super.onOptionsItemSelected(item);
-   }
    
    @Override
    protected void onCreate(Bundle savedInstanceState){

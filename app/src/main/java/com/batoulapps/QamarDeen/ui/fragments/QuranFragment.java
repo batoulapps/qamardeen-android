@@ -316,7 +316,7 @@ public class QuranFragment extends QamarFragment
       
       @Override
       protected void onPostExecute(Boolean result) {
-         if (result != null && result == true){
+         if (result != null && result){
             // calculate the local timestamp
             Calendar gmtCal = QamarTime.getGMTCalendar();
             gmtCal.setTimeInMillis(mChangedTimestamp);

@@ -3,6 +3,7 @@
     <color name="transparent">#00000000</color>
     <color name="white">#ffffffff</color>
     <color name="black">#ff000000</color>
+    <color name="selected_blue">#a8dff4</color>
         
     <!-- header colors -->
     <color name="hdr_background">#55d6d6d6</color>
