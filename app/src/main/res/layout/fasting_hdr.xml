@@ -1,34 +1,41 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/quran_hdr"
-    android:layout_width="match_parent"
-    android:layout_height="@dimen/header_height"
-    android:orientation="horizontal"
-    android:background="@color/transparent" >
-    
-    <TextView android:id="@+id/section_month_index"
-        android:layout_width="40dp"
-        android:layout_height="match_parent"
-        android:gravity="center"
-        android:textColor="@color/hdr_text_color"
-        android:textStyle="bold"
-        android:background="@color/hdr_month_bg_color" />
-    
-    <TextView android:id="@+id/fasting_hijri_hdr"
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="0.7"
-            android:gravity="center_vertical|left"
-            android:paddingLeft="10dp"
-            android:textAppearance="@style/qamar_hdr"
-            android:text="@string/hijri_date" />
+              android:id="@+id/quran_hdr"
+              android:layout_width="match_parent"
+              android:layout_height="@dimen/header_height"
+              android:orientation="horizontal"
+              android:background="@color/transparent"
+    >
 
-    <TextView android:id="@+id/fasting_type_hdr"
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="0.3"
-            android:gravity="center_vertical|left"
-            android:textAppearance="@style/qamar_hdr"
-            android:text="@string/fast_type" />
+  <TextView
+      android:id="@+id/section_month_index"
+      android:layout_width="40dp"
+      android:layout_height="match_parent"
+      android:gravity="center"
+      android:textColor="@color/hdr_text_color"
+      android:textStyle="bold"
+      android:background="@color/hdr_month_bg_color"
+      />
+
+  <TextView
+      android:id="@+id/fasting_hijri_hdr"
+      android:layout_width="0dp"
+      android:layout_height="match_parent"
+      android:layout_weight="0.7"
+      android:gravity="center_vertical|left"
+      android:paddingLeft="10dp"
+      android:textAppearance="@style/qamar_hdr"
+      android:text="@string/hijri_date"
+      />
+
+  <TextView
+      android:id="@+id/fasting_type_hdr"
+      android:layout_width="0dp"
+      android:layout_height="match_parent"
+      android:layout_weight="0.3"
+      android:gravity="center_vertical|left"
+      android:textAppearance="@style/qamar_hdr"
+      android:text="@string/fast_type"
+      />
 
 </LinearLayout>

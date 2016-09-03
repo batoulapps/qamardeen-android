@@ -1,73 +1,73 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    
-    <!-- generic header text -->
-    <style name="qamar_hdr">
-        <item name="android:textColor">@color/white</item>
-        <item name="android:textSize">12sp</item>
-        <item name="android:textStyle">bold</item>
-    </style>
 
-    <!-- day of week -->
-    <style name="day_of_week">
-        <item name="android:maxLines">1</item>
-        <item name="android:textSize">13sp</item>
-        <item name="android:textStyle">bold</item>
-    </style>
+  <!-- generic header text -->
+  <style name="qamar_hdr">
+    <item name="android:textColor">@color/white</item>
+    <item name="android:textSize">12sp</item>
+    <item name="android:textStyle">bold</item>
+  </style>
 
-    <!-- day of week -->
-    <style name="day_of_week_arabic" parent="day_of_week">
-        <item name="android:textSize">11sp</item>
-        <item name="android:textStyle">bold</item>
-    </style>
-    
-    <!-- prayer extended header text -->
-    <style name="prayer_extended_hdr" parent="qamar_hdr">
-        <item name="android:textSize">10sp</item>
-    </style>
-    
-    <!-- popup -->
-    <style name="popup_text_style">
-        <item name="android:textSize">14sp</item>
-        <item name="android:textColor">@color/white</item>
-        <item name="android:textStyle">bold</item>
-    </style>
-    
-    <style name="popup_row_style" parent="popup_text_style">
-        <item name="android:textSize">16sp</item>
-    </style>
-    
-    <!-- qamar row text -->
-    <style name="qamar_row_text">
-        <item name="android:textSize">14sp</item>
-        <item name="android:textColor">@color/black</item>
-        <item name="android:textStyle">bold</item>
-    </style>
-    
-    <!-- ayah image text (for quran) -->
-    <style name="qamar_ayah_image_text" parent="qamar_row_text">
-        <item name="android:textSize">10sp</item>
-    </style>
-    
-    <!-- count text (for quran) -->
-    <style name="quran_ayah_count_text" parent="qamar_row_text">
-        <item name="android:textStyle">normal</item>
-        <item name="android:textSize">12sp</item>
-        <item name="android:textColor">@color/pinned_hdr_background</item>
-    </style>
-    
-    <!-- read suras text (for quran extra view) -->
-    <style name="quran_extra_sura_text" parent="qamar_row_text">
-        <item name="android:textStyle">normal</item>
-    </style>
+  <!-- day of week -->
+  <style name="day_of_week">
+    <item name="android:maxLines">1</item>
+    <item name="android:textSize">13sp</item>
+    <item name="android:textStyle">bold</item>
+  </style>
 
-    <!-- dates (for graph/stats view) -->
-    <style name="graph_stats_date_text">
-        <item name="android:textStyle">bold</item>
-        <item name="android:textSize">14sp</item>
-    </style>
+  <!-- day of week -->
+  <style name="day_of_week_arabic" parent="day_of_week">
+    <item name="android:textSize">11sp</item>
+    <item name="android:textStyle">bold</item>
+  </style>
 
-    <style name="graph_stats_datepick_text" parent="graph_stats_date_text">
-        <item name="android:textColor">@color/white</item>
-    </style>
+  <!-- prayer extended header text -->
+  <style name="prayer_extended_hdr" parent="qamar_hdr">
+    <item name="android:textSize">10sp</item>
+  </style>
+
+  <!-- popup -->
+  <style name="popup_text_style">
+    <item name="android:textSize">14sp</item>
+    <item name="android:textColor">@color/white</item>
+    <item name="android:textStyle">bold</item>
+  </style>
+
+  <style name="popup_row_style" parent="popup_text_style">
+    <item name="android:textSize">16sp</item>
+  </style>
+
+  <!-- qamar row text -->
+  <style name="qamar_row_text">
+    <item name="android:textSize">14sp</item>
+    <item name="android:textColor">@color/black</item>
+    <item name="android:textStyle">bold</item>
+  </style>
+
+  <!-- ayah image text (for quran) -->
+  <style name="qamar_ayah_image_text" parent="qamar_row_text">
+    <item name="android:textSize">10sp</item>
+  </style>
+
+  <!-- count text (for quran) -->
+  <style name="quran_ayah_count_text" parent="qamar_row_text">
+    <item name="android:textStyle">normal</item>
+    <item name="android:textSize">12sp</item>
+    <item name="android:textColor">@color/pinned_hdr_background</item>
+  </style>
+
+  <!-- read suras text (for quran extra view) -->
+  <style name="quran_extra_sura_text" parent="qamar_row_text">
+    <item name="android:textStyle">normal</item>
+  </style>
+
+  <!-- dates (for graph/stats view) -->
+  <style name="graph_stats_date_text">
+    <item name="android:textStyle">bold</item>
+    <item name="android:textSize">14sp</item>
+  </style>
+
+  <style name="graph_stats_datepick_text" parent="graph_stats_date_text">
+    <item name="android:textColor">@color/white</item>
+  </style>
 </resources>

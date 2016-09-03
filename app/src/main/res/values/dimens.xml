@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <dimen name="header_height">40dp</dimen>
-    <dimen name="list_item_height">48dp</dimen>
-    <dimen name="selector_margin">8dp</dimen>
-    <dimen name="extra_reading_padding">10dp</dimen>
-    <dimen name="stats_margin">10dp</dimen>
-    <dimen name="graph_datebar_height">40dp</dimen>
-    <dimen name="graph_datebar_margin">10dp</dimen>
+  <dimen name="header_height">40dp</dimen>
+  <dimen name="list_item_height">48dp</dimen>
+  <dimen name="selector_margin">8dp</dimen>
+  <dimen name="extra_reading_padding">10dp</dimen>
+  <dimen name="stats_margin">10dp</dimen>
+  <dimen name="graph_datebar_height">40dp</dimen>
+  <dimen name="graph_datebar_margin">10dp</dimen>
 </resources>

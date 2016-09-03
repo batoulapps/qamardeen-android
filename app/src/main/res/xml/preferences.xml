@@ -16,47 +16,51 @@
 
 <!-- This is a primitive example showing the different types of preferences available. -->
 <PreferenceScreen
-        xmlns:android="http://schemas.android.com/apk/res/android">
+    xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <PreferenceCategory
-            android:title="@string/qamar_preferences">
+  <PreferenceCategory
+      android:title="@string/qamar_preferences">
 
-        <CheckBoxPreference
-                android:key="show_extra_prayers"
-                android:title="@string/pref_show_extra_prayers"
-                android:summary="@string/pref_show_extra_prayers_desc" />
+    <CheckBoxPreference
+        android:key="show_extra_prayers"
+        android:title="@string/pref_show_extra_prayers"
+        android:summary="@string/pref_show_extra_prayers_desc"/>
 
-        <ListPreference
-                android:key="user_gender"
-                android:title="@string/pref_gender"
-                android:defaultValue="male"
-                android:entries="@array/gender_preference"
-                android:entryValues="@array/gender_preference_values"
-                android:dialogTitle="@string/dialog_choose_gender_title" />
+    <ListPreference
+        android:key="user_gender"
+        android:title="@string/pref_gender"
+        android:defaultValue="male"
+        android:entries="@array/gender_preference"
+        android:entryValues="@array/gender_preference_values"
+        android:dialogTitle="@string/dialog_choose_gender_title"/>
 
-        <CheckBoxPreference
-                android:key="use_arabic"
-                android:title="@string/pref_use_arabic"
-                android:summary="@string/pref_use_arabic_desc" />
+    <CheckBoxPreference
+        android:key="use_arabic"
+        android:title="@string/pref_use_arabic"
+        android:summary="@string/pref_use_arabic_desc"/>
 
-    </PreferenceCategory>
+  </PreferenceCategory>
 
-    <PreferenceCategory android:title="@string/backup_and_restore">
-        <Preference android:key="backup"
-                    android:title="@string/backup_preference"
-                    android:summary="@string/backukp_preference_summary"/>
-        <Preference android:key="restore"
-                    android:title="@string/restore_preference"
-                    android:summary="@string/restore_preference_summary"/>
-    </PreferenceCategory>
+  <PreferenceCategory android:title="@string/backup_and_restore">
+    <Preference
+        android:key="backup"
+        android:title="@string/backup_preference"
+        android:summary="@string/backukp_preference_summary"/>
+    <Preference
+        android:key="restore"
+        android:title="@string/restore_preference"
+        android:summary="@string/restore_preference_summary"/>
+  </PreferenceCategory>
 
-    <PreferenceCategory
-            android:title="@string/qamar_preferences_about">
-        <PreferenceScreen android:key="about"
-                android:title="@string/qamar_about_title"
-                android:summary="@string/qamar_about_summary">
-            <intent android:action="android.intent.action.VIEW"
-                    android:data="http://batoulapps.com" />
-        </PreferenceScreen>
-    </PreferenceCategory>
+  <PreferenceCategory
+      android:title="@string/qamar_preferences_about">
+    <PreferenceScreen
+        android:key="about"
+        android:title="@string/qamar_about_title"
+        android:summary="@string/qamar_about_summary">
+      <intent
+          android:action="android.intent.action.VIEW"
+          android:data="http://batoulapps.com"/>
+    </PreferenceScreen>
+  </PreferenceCategory>
 </PreferenceScreen>
