@@ -2,7 +2,8 @@
 <resources>
   <color name="main_color">#EF6C00</color>
   <color name="main_color_dark">#E65100</color>
-  <color name="accent_color">#00B8D4</color>
+  <color name="accent_color">#A7FFEB</color>
+  <color name="accent_color_dark">#004D40</color>
 
   <color name="transparent">#00000000</color>
   <color name="white">#ffffffff</color>
