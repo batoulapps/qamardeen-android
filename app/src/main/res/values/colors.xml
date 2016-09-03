@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-  <color name="main_color">#ef6c00</color>
-  <color name="main_color_dark">#e65100</color>
-  <color name="accent_color">#00b8d4</color>
+  <color name="main_color">#EF6C00</color>
+  <color name="main_color_dark">#E65100</color>
+  <color name="accent_color">#00B8D4</color>
 
   <color name="transparent">#00000000</color>
   <color name="white">#ffffffff</color>
@@ -11,18 +11,18 @@
 
   <!-- header colors -->
   <color name="hdr_background">#55d6d6d6</color>
-  <color name="hdr_month_bg_color">#440b0b</color>
-  <color name="pinned_hdr_month_bg_color">#aa440b0b</color>
+  <color name="hdr_month_bg_color">#B71C1C</color>
+  <color name="pinned_hdr_month_bg_color">#AAB71C1C</color>
   <color name="pinned_hdr_background">#aa666666</color>
   <color name="hdr_text_color">#ffffff</color>
 
   <!-- date colors -->
-  <color name="today_bg_color">#2e5080</color>
-  <color name="normal_day_bg_color">#8a1717</color>
-  <color name="today_weekday_color">#ffffff</color>
+  <color name="today_bg_color">#01579B</color>
+  <color name="normal_day_bg_color">#BF360C</color>
+  <color name="today_weekday_color">@color/white</color>
   <color name="normal_weekday_color">#d4bbbb</color>
-  <color name="today_day_color">#ffffff</color>
-  <color name="normal_day_color">#ff5858</color>
+  <color name="today_day_color">@color/white</color>
+  <color name="normal_day_color">#FFAB91</color>
 
   <!-- shaded column color -->
   <color name="shaded_column_color">#55e2e2e2</color>

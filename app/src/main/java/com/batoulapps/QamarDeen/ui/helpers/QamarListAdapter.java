@@ -134,10 +134,8 @@ public abstract class QamarListAdapter extends BaseAdapter implements
     */
    public void populateDayInfoInHolder(QamarViewHolder holder,
                               View convertView, int headerId){
-      holder.headerView = (View)convertView.findViewById(headerId);
-      holder.dateAreaView = (View)convertView
-            .findViewById(R.id.section_date_index);
-      holder.dividerView = (View)convertView.findViewById(R.id.list_divider);
+      holder.headerView = convertView.findViewById(headerId);
+      holder.dateAreaView = convertView.findViewById(R.id.section_date_index);
       holder.dayOfWeek = (TextView)convertView.findViewById(R.id.day_of_week);
       holder.dayNumber = (TextView)convertView.findViewById(R.id.day_number);
       holder.headerMonth = (TextView)convertView
@@ -184,20 +182,10 @@ public abstract class QamarListAdapter extends BaseAdapter implements
          // show header
          holder.headerMonth.setText(mMonthFormatter.format(date));
          holder.headerView.setVisibility(View.VISIBLE);
-         holder.dividerView.setVisibility(View.GONE);
       }
       else {
          // hide header, show divider
          holder.headerView.setVisibility(View.GONE);
-         holder.dividerView.setVisibility(View.VISIBLE);
-      }
-      
-      // move the divider for the last item in a section
-      if (getPositionForSection(section + 1) - 1 == position) {
-         holder.dividerView.setVisibility(View.GONE);
-      }
-      else {
-         holder.dividerView.setVisibility(View.VISIBLE);
       }
    }
 
@@ -303,7 +291,6 @@ public abstract class QamarListAdapter extends BaseAdapter implements
    
    protected abstract class QamarViewHolder {
       public View headerView;
-      public View dividerView;
       public View dateAreaView;
       public TextView dayOfWeek;
       public TextView dayNumber;
