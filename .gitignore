@@ -5,6 +5,7 @@ gen
 .DS_Store
 local.properties
 .idea
+*.iml
 classes
 .gradle
-*/build
+build/

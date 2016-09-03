@@ -13,6 +13,7 @@ import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.ViewPager;
 import android.support.v4.view.ViewPager.OnPageChangeListener;
 import android.view.ViewTreeObserver;
+
 import com.actionbarsherlock.app.ActionBar;
 import com.actionbarsherlock.app.ActionBar.Tab;
 import com.actionbarsherlock.app.SherlockFragmentActivity;
@@ -26,9 +27,11 @@ import com.batoulapps.QamarDeen.ui.fragments.PrayerFragment;
 import com.batoulapps.QamarDeen.ui.fragments.QuranFragment;
 import com.batoulapps.QamarDeen.ui.fragments.SadaqahFragment;
 import com.batoulapps.QamarDeen.ui.helpers.QamarFragment;
-
 import com.crashlytics.android.Crashlytics;
+
 import java.util.Locale;
+
+import io.fabric.sdk.android.Fabric;
 
 public class QamarDeenActivity extends SherlockFragmentActivity 
    implements ActionBar.TabListener {
@@ -59,7 +62,10 @@ public class QamarDeenActivity extends SherlockFragmentActivity
 
       setTheme(R.style.Theme_Sherlock_Light);
       super.onCreate(savedInstanceState);
-      Crashlytics.start(this);
+
+      if (!BuildConfig.DEBUG) {
+         Fabric.with(this, new Crashlytics());
+      }
 
       setContentView(R.layout.main);
 
