@@ -12,14 +12,12 @@ import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.ViewPager;
 import android.support.v4.view.ViewPager.OnPageChangeListener;
-import android.view.ViewTreeObserver;
+import android.support.v7.app.ActionBar;
+import android.support.v7.app.AppCompatActivity;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 
-import com.actionbarsherlock.app.ActionBar;
-import com.actionbarsherlock.app.ActionBar.Tab;
-import com.actionbarsherlock.app.SherlockFragmentActivity;
-import com.actionbarsherlock.view.Menu;
-import com.actionbarsherlock.view.MenuInflater;
-import com.actionbarsherlock.view.MenuItem;
 import com.batoulapps.QamarDeen.data.QamarConstants;
 import com.batoulapps.QamarDeen.data.QamarDbAdapter;
 import com.batoulapps.QamarDeen.ui.fragments.FastingFragment;
@@ -33,8 +31,7 @@ import java.util.Locale;
 
 import io.fabric.sdk.android.Fabric;
 
-public class QamarDeenActivity extends SherlockFragmentActivity
-    implements ActionBar.TabListener {
+public class QamarDeenActivity extends AppCompatActivity implements ActionBar.TabListener {
 
   private ViewPager mQamarPager;
   private PagerAdapter mPagerAdapter;
@@ -61,7 +58,6 @@ public class QamarDeenActivity extends SherlockFragmentActivity
     resources.updateConfiguration(config,
         resources.getDisplayMetrics());
 
-    setTheme(R.style.Theme_Sherlock_Light);
     super.onCreate(savedInstanceState);
 
     if (!BuildConfig.DEBUG) {
@@ -77,10 +73,13 @@ public class QamarDeenActivity extends SherlockFragmentActivity
     mQamarPager = (ViewPager) findViewById(R.id.qamar_pager);
     mPagerAdapter = new PagerAdapter(getSupportFragmentManager());
     mQamarPager.setAdapter(mPagerAdapter);
-    mQamarPager.setOnPageChangeListener(mOnPageChangeListener);
+    mQamarPager.addOnPageChangeListener(mOnPageChangeListener);
 
     ActionBar actionbar = getSupportActionBar();
     actionbar.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
+    if (config.orientation == Configuration.ORIENTATION_LANDSCAPE) {
+      actionbar.setDisplayShowTitleEnabled(false);
+    }
 
     for (int i = 0; i < mTabs.length; i++) {
       ActionBar.Tab tab = actionbar.newTab();
@@ -89,32 +88,13 @@ public class QamarDeenActivity extends SherlockFragmentActivity
       tab.setTabListener(this);
       actionbar.addTab(tab);
     }
-
-    ViewTreeObserver observer = mQamarPager.getViewTreeObserver();
-    observer.addOnGlobalLayoutListener(mLayoutListener);
   }
 
   @Override
   protected void onDestroy() {
     mDatabaseAdapter.close();
-    mQamarPager.getViewTreeObserver()
-        .removeGlobalOnLayoutListener(mLayoutListener);
     super.onDestroy();
   }
-
-  ViewTreeObserver.OnGlobalLayoutListener mLayoutListener =
-      new ViewTreeObserver.OnGlobalLayoutListener() {
-        @Override
-        public void onGlobalLayout() {
-          ActionBar actionbar = getSupportActionBar();
-          int barHeight = actionbar.getHeight();
-          int defaultHeight = getResources().getDimensionPixelSize(
-              R.dimen.abs__action_bar_default_height);
-          if (barHeight == defaultHeight) {
-            actionbar.setDisplayShowTitleEnabled(false);
-          }
-        }
-      };
 
   public QamarDbAdapter getDatabaseAdapter() {
     return mDatabaseAdapter;
@@ -123,7 +103,7 @@ public class QamarDeenActivity extends SherlockFragmentActivity
   @Override
   public boolean onCreateOptionsMenu(Menu menu) {
     super.onCreateOptionsMenu(menu);
-    MenuInflater inflater = getSupportMenuInflater();
+    MenuInflater inflater = getMenuInflater();
     inflater.inflate(R.menu.qamar_menu, menu);
     return true;
   }
@@ -178,25 +158,24 @@ public class QamarDeenActivity extends SherlockFragmentActivity
 
     @Override
     public void onPageSelected(int position) {
-      ActionBar actionbar = getSherlock().getActionBar();
-      Tab tab = actionbar.getTabAt(position);
+      ActionBar actionbar = getSupportActionBar();
+      ActionBar.Tab tab = actionbar.getTabAt(position);
       actionbar.selectTab(tab);
     }
-
   };
 
   @Override
-  public void onTabSelected(Tab tab, FragmentTransaction transaction) {
+  public void onTabSelected(ActionBar.Tab tab, FragmentTransaction transaction) {
     Integer tag = (Integer) tab.getTag();
     mQamarPager.setCurrentItem(tag);
   }
 
   @Override
-  public void onTabReselected(Tab tab, FragmentTransaction transaction) {
+  public void onTabReselected(ActionBar.Tab tab, FragmentTransaction transaction) {
   }
 
   @Override
-  public void onTabUnselected(Tab tab, FragmentTransaction transaction) {
+  public void onTabUnselected(ActionBar.Tab tab, FragmentTransaction transaction) {
   }
 
   public static class PagerAdapter extends FragmentPagerAdapter {

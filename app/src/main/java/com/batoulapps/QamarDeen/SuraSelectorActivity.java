@@ -4,10 +4,14 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
+import android.support.v7.view.ActionMode;
 import android.text.TextUtils;
 import android.util.SparseBooleanArray;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
@@ -16,10 +20,6 @@ import android.widget.BaseAdapter;
 import android.widget.CheckBox;
 import android.widget.ListView;
 
-import com.actionbarsherlock.app.SherlockActivity;
-import com.actionbarsherlock.view.ActionMode;
-import com.actionbarsherlock.view.Menu;
-import com.actionbarsherlock.view.MenuItem;
 import com.batoulapps.QamarDeen.data.QamarConstants;
 import com.batoulapps.QamarDeen.data.QamarDbAdapter;
 import com.batoulapps.QamarDeen.data.QuranData;
@@ -30,7 +30,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-public class SuraSelectorActivity extends SherlockActivity {
+public class SuraSelectorActivity extends AppCompatActivity {
   private static final String SI_SELECTED_SURAS = "SI_SELECTED_SURAS";
 
   private SuraAdapter mListAdapter;
@@ -41,7 +41,6 @@ public class SuraSelectorActivity extends SherlockActivity {
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
-    setTheme(R.style.Theme_Sherlock_Light);
     super.onCreate(savedInstanceState);
 
     // initialize the view
@@ -87,7 +86,7 @@ public class SuraSelectorActivity extends SherlockActivity {
     listView.setOnItemClickListener(mOnItemClickListener);
 
     // set the title
-    mMode = startActionMode(new QuranSelectorActionMode());
+    mMode = startSupportActionMode(new QuranSelectorActionMode());
     updateCount(mListAdapter.getSelectedCount());
   }
 

@@ -1,8 +1,5 @@
 package com.batoulapps.QamarDeen.ui.helpers;
 
-import java.util.Calendar;
-import java.util.List;
-
 import android.app.Activity;
 import android.content.Context;
 import android.content.res.Resources;
@@ -11,22 +8,27 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.support.v4.app.Fragment;
+import android.support.v7.app.ActionBar;
+import android.support.v7.app.AppCompatActivity;
 import android.util.DisplayMetrics;
+import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewGroup.LayoutParams;
 import android.widget.AbsListView;
-
 import android.widget.Button;
 
-import com.actionbarsherlock.app.SherlockFragment;
 import com.batoulapps.QamarDeen.R;
 import com.batoulapps.QamarDeen.ui.helpers.QamarSelectorHelper.OnQamarSelectionListener;
 import com.batoulapps.QamarDeen.ui.widgets.PinnedHeaderListView;
 import com.batoulapps.QamarDeen.utils.QamarTime;
 
-public abstract class QamarFragment extends SherlockFragment
+import java.util.Calendar;
+import java.util.List;
+
+public abstract class QamarFragment extends Fragment
     implements OnQamarSelectionListener {
 
   public static final int REFRESH_MSG = 1;
@@ -68,8 +70,7 @@ public abstract class QamarFragment extends SherlockFragment
     Resources res = activity.getResources();
     mHeaderHeight = res.getDimensionPixelSize(R.dimen.header_height);
     int itemHeight = res.getDimensionPixelSize(R.dimen.list_item_height);
-    int abHeight =
-        res.getDimensionPixelSize(R.dimen.abs__action_bar_default_height);
+    int abHeight = getActionBarHeight((AppCompatActivity) activity, res);
 
     // set the footer
     DisplayMetrics metrics = new DisplayMetrics();
@@ -130,6 +131,23 @@ public abstract class QamarFragment extends SherlockFragment
       refreshData();
     }
     mJustInitialized = false;
+  }
+
+  private int getActionBarHeight(AppCompatActivity activity, Resources resources) {
+    int abHeight = 0;
+    final ActionBar ab = activity.getSupportActionBar();
+    if (ab != null) {
+      abHeight = ab.getHeight();
+    }
+
+    if (abHeight == 0) {
+      final TypedValue tv = new TypedValue();
+      if (activity.getTheme()
+          .resolveAttribute(android.support.v7.appcompat.R.attr.actionBarSize, tv, true)) {
+        abHeight = TypedValue.complexToDimensionPixelSize(tv.data, resources.getDisplayMetrics());
+      }
+    }
+    return abHeight;
   }
 
   /**

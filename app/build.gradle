@@ -11,10 +11,13 @@ android {
     }
 }
 
+ext {
+    supportLibVersion = '24.2.0'
+}
+
 dependencies {
     compile 'org.achartengine:achartengine:1.1.0'
-    compile 'com.actionbarsherlock:actionbarsherlock:4.4.0@aar'
-    compile 'com.android.support:support-v4:18.0.0'
+    compile "com.android.support:appcompat-v7:${supportLibVersion}"
     compile ('com.crashlytics.sdk.android:crashlytics:2.5.5@aar') {
       transitive = true;
     }

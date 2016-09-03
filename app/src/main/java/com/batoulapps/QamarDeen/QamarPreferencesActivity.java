@@ -14,11 +14,11 @@ import android.os.Process;
 import android.preference.CheckBoxPreference;
 import android.preference.Preference;
 import android.preference.Preference.OnPreferenceChangeListener;
+import android.preference.PreferenceActivity;
 import android.preference.PreferenceManager;
 import android.preference.PreferenceScreen;
 import android.widget.Toast;
 
-import com.actionbarsherlock.app.SherlockPreferenceActivity;
 import com.batoulapps.QamarDeen.data.QamarConstants;
 import com.batoulapps.QamarDeen.data.QamarConstants.PreferenceKeys;
 import com.batoulapps.QamarDeen.data.QamarDbHelper;
@@ -30,7 +30,7 @@ import java.io.IOException;
 import java.nio.channels.FileChannel;
 import java.util.Locale;
 
-public class QamarPreferencesActivity extends SherlockPreferenceActivity
+public class QamarPreferencesActivity extends PreferenceActivity
     implements OnPreferenceChangeListener {
   public static final String BACKUP_NAME = "qamardeen.db";
 
@@ -43,7 +43,6 @@ public class QamarPreferencesActivity extends SherlockPreferenceActivity
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
-    setTheme(R.style.Theme_Sherlock_Light);
     super.onCreate(savedInstanceState);
     addPreferencesFromResource(R.xml.preferences);
 

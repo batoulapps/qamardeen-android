@@ -9,15 +9,13 @@ import android.preference.PreferenceManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
+import android.support.v7.app.ActionBar;
+import android.support.v7.app.AppCompatActivity;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.ViewTreeObserver;
 import android.widget.TextView;
 
-import com.actionbarsherlock.app.ActionBar;
-import com.actionbarsherlock.app.ActionBar.Tab;
-import com.actionbarsherlock.app.SherlockActivity;
-import com.actionbarsherlock.view.MenuItem;
 import com.batoulapps.QamarDeen.data.QamarConstants;
 import com.batoulapps.QamarDeen.data.QamarDbAdapter;
 import com.batoulapps.QamarDeen.data.ScoresHelper;
@@ -31,7 +29,7 @@ import java.text.DateFormat;
 import java.util.Calendar;
 import java.util.Locale;
 
-public class QamarGraphActivity extends SherlockActivity
+public class QamarGraphActivity extends AppCompatActivity
     implements ActionBar.TabListener,
     TimeSelectorWidget.TimeSelectedListener {
 
@@ -79,7 +77,6 @@ public class QamarGraphActivity extends SherlockActivity
           resources.getDisplayMetrics());
     }
 
-    setTheme(R.style.Theme_Sherlock_Light);
     super.onCreate(savedInstanceState);
     setContentView(R.layout.graph_layout);
 
@@ -118,9 +115,6 @@ public class QamarGraphActivity extends SherlockActivity
     Calendar today = QamarTime.getTodayCalendar();
     mMaxDate.setText(mDateFormat.format(today.getTime()));
     drawGraph();
-
-    ViewTreeObserver observer = mGraphPager.getViewTreeObserver();
-    observer.addOnGlobalLayoutListener(mLayoutListener);
   }
 
   private void updateLanguage() {
@@ -161,24 +155,8 @@ public class QamarGraphActivity extends SherlockActivity
     }
 
     mDatabaseAdapter.close();
-    mGraphPager.getViewTreeObserver()
-        .removeGlobalOnLayoutListener(mLayoutListener);
     super.onDestroy();
   }
-
-  ViewTreeObserver.OnGlobalLayoutListener mLayoutListener =
-      new ViewTreeObserver.OnGlobalLayoutListener() {
-        @Override
-        public void onGlobalLayout() {
-          ActionBar actionbar = getSupportActionBar();
-          int barHeight = actionbar.getHeight();
-          int defaultHeight = getResources().getDimensionPixelSize(
-              R.dimen.abs__action_bar_default_height);
-          if (barHeight == defaultHeight) {
-            actionbar.setDisplayShowTitleEnabled(false);
-          }
-        }
-      };
 
   @Override
   public void timeSelected(int position) {
@@ -273,7 +251,7 @@ public class QamarGraphActivity extends SherlockActivity
   }
 
   @Override
-  public void onTabSelected(Tab tab, FragmentTransaction transaction) {
+  public void onTabSelected(ActionBar.Tab tab, FragmentTransaction transaction) {
     Integer tag = (Integer) tab.getTag();
     if (tag != null && tag != mCurrentTab) {
       mCurrentTab = tag;
@@ -282,11 +260,11 @@ public class QamarGraphActivity extends SherlockActivity
   }
 
   @Override
-  public void onTabReselected(Tab tab, FragmentTransaction transaction) {
+  public void onTabReselected(ActionBar.Tab tab, FragmentTransaction transaction) {
   }
 
   @Override
-  public void onTabUnselected(Tab tab, FragmentTransaction transaction) {
+  public void onTabUnselected(ActionBar.Tab tab, FragmentTransaction transaction) {
   }
 
   public class GraphPagerAdapter extends PagerAdapter {
