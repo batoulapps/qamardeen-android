@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+  <string name="app_name">QamarDeen</string>
+
+  <string name="prayers_tab">Prayers</string>
+  <string name="quran_tab">Quran</string>
+  <string name="sadaqah_tab">Sadaqah</string>
+  <string name="fasting_tab">Fasting</string>
+  <string name="overview_tab">Overview</string>
+
+  <string name="settings_menu">Settings</string>
+  <string name="graphs">Graphs</string>
+
+  <string name="done">Done</string>
+  <string name="cancel">Cancel</string>
+
+  <string name="load_more">Show More</string>
+
+  <string name="fajr">Fajr</string>
+  <string name="duha">Duha</string>
+  <string name="dhuhr">Dhuhr</string>
+  <string name="asr">Asr</string>
+  <string name="maghrib">Maghrib</string>
+  <string name="isha">Isha</string>
+  <string name="qiyyam">Qiyyam</string>
+
+  <string name="jama_sunnah">Jama\'a + Sunnah</string>
+  <string name="jama">Jama\'a</string>
+  <string name="alone_sunnah">Alone + Sunnah</string>
+  <string name="alone">Alone</string>
+  <string name="late">Late</string>
+  <string name="not_set">Not Set</string>
+  <string name="excused">Excused</string>
+
+  <string name="charities_given">Charities Given</string>
+
+  <string name="money">Money</string>
+  <string name="effort">Effort</string>
+  <string name="food">Food</string>
+  <string name="clothes">Clothes</string>
+  <string name="smile">Smile</string>
+  <string name="other">Other</string>
+
+  <string name="daily_readings">Daily Readings</string>
+  <string name="ayah_count">Ayah Count</string>
+  <string name="extra_readings">Extra Readings</string>
+  <string name="daily_button">Daily</string>
+  <string name="extra_button">Extra</string>
+  <string name="avg_ayahs_per_day">Average Ayahs Read Per Day</string>
+
+  <string name="select_last_read">Select the last surah and ayah read</string>
+  <string name="none">None</string>
+
+  <string name="save">Save</string>
+
+  <plurals name="surasSelected">
+    <item quantity="one">1 sura read</item>
+    <item quantity="other">%d suras read</item>
+  </plurals>
+
+  <string name="hijri_date">Hijri Date</string>
+  <string name="fast_type">Fast Type</string>
+
+  <string name="fareedah">Fareedah</string>
+  <string name="sunnah">Sunnah</string>
+  <string name="qada">Qada\'</string>
+  <string name="kaffarah">Kaffarah</string>
+  <string name="nazr">Nazr</string>
+
+  <string name="qamar_preferences">QamarDeen Preferences</string>
+  <string name="qamar_preferences_about">About QamarDeen</string>
+  <string name="qamar_about_title">QamarDeen %1$s</string>
+  <string name="qamar_about_summary">\u00a9 BatoulApps</string>
+  <string name="pref_show_extra_prayers">Show Extra Prayers</string>
+  <string name="pref_show_extra_prayers_desc">Show Duha and Qiyyam Prayers</string>
+  <string name="pref_use_arabic">Arabic Mode</string>
+  <string name="pref_use_arabic_desc">Use Arabic on devices that support Arabic</string>
+  <string name="pref_gender">Gender</string>
+  <string name="dialog_choose_gender_title">Choose Gender</string>
+  <string name="pref_gender_male">Gender is currently set to male</string>
+  <string name="pref_gender_female">Gender is currently set to female</string>
+
+  <!-- content description -->
+  <string name="open_in_quran_description">Open in Quran</string>
+  <string name="ayah_description">Ayah</string>
+
+  <!-- backup and restore -->
+  <string name="backup_and_restore">Backup and Restore (Experimental)</string>
+  <string name="backup_preference">Backup</string>
+  <string name="backukp_preference_summary">Backup the QamarDeen database to your sdcard.</string>
+  <string name="restore_preference">Restore</string>
+  <string name="restore_preference_summary">Replace QamarDeen\'s database with the one on the device\'s sdcard.</string>
+  <string name="error_backing_up_database">Unable to backup database.</string>
+  <string name="database_backed_up">Database backed up.</string>
+  <string name="error_restoring_database">Error restoring database.</string>
+  <string name="restore_successful">Restore successful.</string>
+  <string name="overwrite_current_db">Overwrite existing database?</string>
+  <string name="overwrite_current_backup_msg">A backup file already exists. Overwrite?</string>
+  <string name="yes">Yes</string>
+  <string name="no">No</string>
+  <string name="overwrite_current_db_msg">This will remove all QamarDeen\'s data and replace it with the data from the sdcard. Are you sure?</string>
+  <string name="please_wait">Please wait&#8230;</string>
+</resources>

@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+  <color name="main_color">#EF6C00</color>
+  <color name="main_color_dark">#E65100</color>
+  <color name="accent_color">#A7FFEB</color>
+  <color name="accent_color_dark">#004D40</color>
+
+  <color name="transparent">#00000000</color>
+  <color name="white">#ffffffff</color>
+  <color name="black">#ff000000</color>
+  <color name="selected_blue">#a8dff4</color>
+
+  <!-- header colors -->
+  <color name="hdr_background">#55d6d6d6</color>
+  <color name="hdr_month_bg_color">#B71C1C</color>
+  <color name="pinned_hdr_month_bg_color">#AAB71C1C</color>
+  <color name="pinned_hdr_background">#aa666666</color>
+  <color name="hdr_text_color">#ffffff</color>
+
+  <!-- date colors -->
+  <color name="today_bg_color">#01579B</color>
+  <color name="normal_day_bg_color">#BF360C</color>
+  <color name="today_weekday_color">@color/white</color>
+  <color name="normal_weekday_color">#d4bbbb</color>
+  <color name="today_day_color">@color/white</color>
+  <color name="normal_day_color">#FFAB91</color>
+
+  <!-- shaded column color -->
+  <color name="shaded_column_color">#55e2e2e2</color>
+
+  <!-- divider color -->
+  <color name="divider_color">#ffcbcbcb</color>
+
+  <color name="selected_color">#aa555555</color>
+
+  <!-- popup -->
+  <color name="popup_background">#cc000000</color>
+
+  <!-- statistics -->
+  <color name="stats_color">#ffa67c53</color>
+  <color name="stats_selected_date">#ff0069ec</color>
+</resources>

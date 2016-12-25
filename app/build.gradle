@@ -1,0 +1,24 @@
+apply plugin: 'com.android.application'
+apply plugin: 'io.fabric'
+
+android {
+    compileSdkVersion 24
+    buildToolsVersion "24.0.2"
+
+    defaultConfig {
+        minSdkVersion 14
+        targetSdkVersion 24
+    }
+}
+
+ext {
+    supportLibVersion = '24.2.0'
+}
+
+dependencies {
+    compile 'org.achartengine:achartengine:1.1.0'
+    compile "com.android.support:appcompat-v7:${supportLibVersion}"
+    compile ('com.crashlytics.sdk.android:crashlytics:2.5.5@aar') {
+      transitive = true;
+    }
+}

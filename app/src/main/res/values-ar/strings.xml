@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+  <string name="app_name">قمر الدين</string>
+
+  <string name="prayers_tab">الصلاة</string>
+  <string name="quran_tab">القران</string>
+  <string name="sadaqah_tab">الصدقة</string>
+  <string name="fasting_tab">الصيام</string>
+  <string name="overview_tab">نظرة عامة</string>
+
+  <string name="settings_menu">اعدادات</string>
+  <string name="graphs">رسم بياني</string>
+
+  <string name="done">إتمام</string>
+  <string name="cancel">إلغاء</string>
+
+  <string name="load_more">المزيد</string>
+
+  <string name="fajr">فجر</string>
+  <string name="duha">ضحى</string>
+  <string name="dhuhr">ظهر</string>
+  <string name="asr">عصر</string>
+  <string name="maghrib">مغرب</string>
+  <string name="isha">عشاء</string>
+  <string name="qiyyam">قيام</string>
+
+  <string name="jama_sunnah">جماعة+السنًّة</string>
+  <string name="jama">جماعة</string>
+  <string name="alone_sunnah">مفرد+السنًّة</string>
+  <string name="alone">مفرد</string>
+  <string name="late">خارج الوقت</string>
+  <string name="not_set">غير محدد</string>
+  <string name="excused">معذورة</string>
+
+  <string name="charities_given">الصدقة</string>
+
+  <string name="money">مال</string>
+  <string name="effort">مجهود</string>
+  <string name="food">إطعام</string>
+  <string name="clothes">كسوة</string>
+  <string name="smile">إبتسامة</string>
+  <string name="other">اخرى</string>
+
+  <string name="daily_readings"> اليومية</string>
+  <string name="ayah_count">عدد الآيات</string>
+  <string name="extra_readings"> الأضافية</string>
+  <string name="daily_button">يومي</string>
+  <string name="extra_button">إضافي</string>
+  <string name="avg_ayahs_per_day">متوسط عدد الآيات في اليوم</string>
+
+  <string name="select_last_read">اختر سورة و آية التوقف</string>
+  <string name="none">بدون</string>
+
+  <string name="save">حفظ</string>
+
+  <plurals name="surasSelected">
+    <item quantity="one">قرأت سورة</item>
+    <item quantity="two">قرأت سورتان</item>
+    <item quantity="few">قرأت %d سور</item>
+    <item quantity="many">قرأت %d سورة</item>
+    <item quantity="other">قرأت %d سورة</item>
+  </plurals>
+
+  <string name="hijri_date">التاريخ الهجري</string>
+  <string name="fast_type">نوع </string>
+
+  <string name="fareedah">فريضة</string>
+  <string name="sunnah">تطوع</string>
+  <string name="qada">قضاء</string>
+  <string name="kaffarah">كفارة</string>
+  <string name="nazr">نذر</string>
+
+  <string name="qamar_preferences">الإعدادات</string>
+  <string name="qamar_preferences_about">عن قمر الدين</string>
+  <string name="qamar_about_title">قمر الدين %1$s</string>
+  <string name="qamar_about_summary">\u00a9 BatoulApps</string>
+  <string name="pref_show_extra_prayers">اظهار صلوات أضافية</string>
+  <string name="pref_show_extra_prayers_desc">إظهار صلاة الضحى والقيام</string>
+  <string name="pref_gender">الجنس</string>
+  <string name="dialog_choose_gender_title">اختيار الجنس</string>
+  <string name="pref_gender_male">الجنس المعد حاليا هو ذكر</string>
+  <string name="pref_gender_female">الجنس المعد حاليا هو أنثى</string>
+
+  <!-- content description -->
+  <string name="open_in_quran_description">أفتح على القرءان</string>
+  <string name="ayah_description">آية</string>
+</resources>

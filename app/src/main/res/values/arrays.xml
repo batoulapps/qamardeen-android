@@ -1,0 +1,270 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+  <!-- possible values for prayer -->
+  <string-array name="prayer_options_m">
+    <item>@string/jama_sunnah</item>
+    <item>@string/jama</item>
+    <item>@string/alone_sunnah</item>
+    <item>@string/alone</item>
+    <item>@string/late</item>
+    <item>@string/not_set</item>
+  </string-array>
+
+  <string-array name="prayer_options_f">
+    <item>@string/jama_sunnah</item>
+    <item>@string/jama</item>
+    <item>@string/alone_sunnah</item>
+    <item>@string/alone</item>
+    <item>@string/late</item>
+    <item>@string/not_set</item>
+    <item>@string/excused</item>
+  </string-array>
+
+  <!-- map "prayer_options" to corresponding values
+       can use for male and female since the excused
+       option is the last option, so it will be ignored
+       for the male case since the corresponding strings
+       array will contain one element less than the values
+       array -->
+  <integer-array name="prayer_values">
+    <item>4</item>  <!-- jama3a with sunnah -->
+    <item>3</item>  <!-- jama3a -->
+    <item>2</item>  <!-- alone with sunnah -->
+    <item>1</item>  <!-- alone -->
+    <item>5</item>  <!-- late -->
+    <item>0</item>  <!-- not set -->
+    <item>6</item>  <!-- excused -->
+  </integer-array>
+
+  <!-- quran summary (for stats) -->
+  <string-array name="quran_summary">
+    <item>Reading Days</item>
+    <item>Non-Reading Days</item>
+  </string-array>
+
+  <!-- possible values for sadaqah -->
+  <string-array name="charity_options">
+    <item>@string/money</item>
+    <item>@string/effort</item>
+    <item>@string/food</item>
+    <item>@string/clothes</item>
+    <item>@string/smile</item>
+    <item>@string/other</item>
+  </string-array>
+
+  <!-- map "charity_options" to corresponding values -->
+  <integer-array name="charity_values">
+    <item>0</item>  <!-- money -->
+    <item>1</item>  <!-- effort -->
+    <item>2</item>  <!-- food -->
+    <item>3</item>  <!-- clothes -->
+    <item>4</item>  <!-- smile -->
+    <item>5</item>  <!-- other -->
+  </integer-array>
+
+  <!-- sadaqah summary (for stats) -->
+  <string-array name="sadaqah_summary">
+    <item>Charitable Days</item>
+    <item>Uncharitable Days</item>
+  </string-array>
+
+  <!-- possible values for fasting -->
+  <string-array name="fasting_options">
+    <item>@string/fareedah</item>
+    <item>@string/sunnah</item>
+    <item>@string/qada</item>
+    <item>@string/kaffarah</item>
+    <item>@string/nazr</item>
+    <item>@string/none</item>
+  </string-array>
+
+  <!-- map "fasting_options" to corresponding values -->
+  <integer-array name="fasting_values">
+    <item>1</item>  <!-- fareeda -->
+    <item>2</item>  <!-- sunnah -->
+    <item>3</item>  <!-- qada' -->
+    <item>4</item>  <!-- kaffara -->
+    <item>5</item>  <!-- nazr -->
+    <item>0</item>  <!-- none -->
+  </integer-array>
+
+  <!-- fasting summary (for stats) -->
+  <string-array name="fasting_summary">
+    <item>Days Fasted</item>
+    <item>Days Not Fasted</item>
+  </string-array>
+
+  <!-- overview summary (for stats) -->
+  <string-array name="overview_options">
+    <item>Total Prayers</item>
+    <item>Total Ayahs Read</item>
+    <item>Total Charitable Days</item>
+    <item>Total Days Fasted</item>
+  </string-array>
+
+  <!-- overview overall values (for stats) -->
+  <integer-array name="overview_values">
+    <item>1</item>  <!-- prayer -->
+    <item>2</item>  <!-- quran -->
+    <item>3</item>  <!-- sadaqa -->
+    <item>4</item>  <!-- fasting -->
+  </integer-array>
+
+  <string-array name="graph_durations">
+    <item>1w</item>
+    <item>2w</item>
+    <item>1m</item>
+    <item>2m</item>
+    <item>3m</item>
+    <item>6m</item>
+    <item>1y</item>
+    <item>All</item>
+  </string-array>
+
+  <!-- islamic months -->
+  <string-array name="islamic_months">
+    <item>Muharram</item>
+    <item>Safar</item>
+    <item>Rabee\' I</item>
+    <item>Rabee\' II</item>
+    <item>Jumada I</item>
+    <item>Jumada II</item>
+    <item>Rajab</item>
+    <item>Sha\'ban</item>
+    <item>Ramadan</item>
+    <item>Shawwal</item>
+    <item>Dhul Qi\'da</item>
+    <item>Dhul Hijja</item>
+  </string-array>
+
+  <!-- quran sura names -->
+  <string-array name="sura_names">
+    <item>Al-Fatiha</item>
+    <item>Al-Baqara</item>
+    <item>Aal Imran</item>
+    <item>An-Nisa</item>
+    <item>Al-Ma\'ida</item>
+    <item>Al-An\'am</item>
+    <item>Al-A\'raf</item>
+    <item>Al-Anfal</item>
+    <item>At-Tawba</item>
+    <item>Yunus</item>
+    <item>Hud</item>
+    <item>Yusuf</item>
+    <item>Ar-Ra\'d</item>
+    <item>Ibrahim</item>
+    <item>Al-Hijr</item>
+    <item>An-Nahl</item>
+    <item>Al-Isra</item>
+    <item>Al-Kahf</item>
+    <item>Maryam</item>
+    <item>Ta-Ha</item>
+    <item>Al-Anbiya</item>
+    <item>Al-Hajj</item>
+    <item>Al-Muminun</item>
+    <item>An-Noor</item>
+    <item>Al-Furqan</item>
+    <item>Ash-Shu\'ara</item>
+    <item>An-Naml</item>
+    <item>Al-Qasas</item>
+    <item>Al-Ankaboot</item>
+    <item>Ar-Rum</item>
+    <item>Luqman</item>
+    <item>As-Sajda</item>
+    <item>Al-Ahzab</item>
+    <item>Saba</item>
+    <item>Fatir</item>
+    <item>Ya-Seen</item>
+    <item>As-Saaffat</item>
+    <item>Sad</item>
+    <item>Az-Zumar</item>
+    <item>Ghafir</item>
+    <item>Fussilat</item>
+    <item>Ash-Shura</item>
+    <item>Az-Zukhruf</item>
+    <item>Ad-Dukhan</item>
+    <item>Al-Jathiya</item>
+    <item>Al-Ahqaf</item>
+    <item>Muhammad</item>
+    <item>Al-Fath</item>
+    <item>Al-Hujraat</item>
+    <item>Qaf</item>
+    <item>Adh-Dhariyat</item>
+    <item>At-Tur</item>
+    <item>An-Najm</item>
+    <item>Al-Qamar</item>
+    <item>Ar-Rahman</item>
+    <item>Al-Waqia</item>
+    <item>Al-Hadid</item>
+    <item>Al-Mujadila</item>
+    <item>Al-Hashr</item>
+    <item>Al-Mumtahina</item>
+    <item>As-Saff</item>
+    <item>Al-Jumua</item>
+    <item>Al-Munafiqoon</item>
+    <item>At-Taghabun</item>
+    <item>At-Talaq</item>
+    <item>At-Tahrim</item>
+    <item>Al-Mulk</item>
+    <item>Al-Qalam</item>
+    <item>Al-Haaqqa</item>
+    <item>Al-Maarij</item>
+    <item>Nooh</item>
+    <item>Al-Jinn</item>
+    <item>Al-Muzzammil</item>
+    <item>Al-Muddaththir</item>
+    <item>Al-Qiyama</item>
+    <item>Al-Insan</item>
+    <item>Al-Mursalat</item>
+    <item>An-Naba</item>
+    <item>An-Naziat</item>
+    <item>Abasa</item>
+    <item>At-Takwir</item>
+    <item>Al-Infitar</item>
+    <item>Al-Mutaffifin</item>
+    <item>Al-Inshiqaq</item>
+    <item>Al-Burooj</item>
+    <item>At-Tariq</item>
+    <item>Al-Ala</item>
+    <item>Al-Ghashiya</item>
+    <item>Al-Fajr</item>
+    <item>Al-Balad</item>
+    <item>Ash-Shams</item>
+    <item>Al-Lail</item>
+    <item>Ad-Dhuha</item>
+    <item>Al-Inshirah</item>
+    <item>At-Tin</item>
+    <item>Al-Alaq</item>
+    <item>Al-Qadr</item>
+    <item>Al-Bayyina</item>
+    <item>Az-Zalzala</item>
+    <item>Al-Adiyat</item>
+    <item>Al-Qaria</item>
+    <item>At-Takathur</item>
+    <item>Al-Asr</item>
+    <item>Al-Humaza</item>
+    <item>Al-Fil</item>
+    <item>Quraish</item>
+    <item>Al-Maun</item>
+    <item>Al-Kauther</item>
+    <item>Al-Kafiroon</item>
+    <item>An-Nasr</item>
+    <item>Al-Masadd</item>
+    <item>Al-Ikhlas</item>
+    <item>Al-Falaq</item>
+    <item>An-Nas</item>
+  </string-array>
+
+  <!-- gender preference -->
+  <string-array name="gender_preference">
+    <item>Male</item>
+    <item>Female</item>
+  </string-array>
+
+  <!-- gender values - do not translate -->
+  <string-array name="gender_preference_values">
+    <item>male</item>
+    <item>female</item>
+  </string-array>
+</resources>

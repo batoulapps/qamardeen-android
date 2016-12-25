@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:id="@+id/prayer_hdr"
+              android:layout_width="match_parent"
+              android:layout_height="@dimen/header_height"
+              android:orientation="horizontal"
+              android:background="@color/transparent"
+    >
+
+  <TextView
+      android:id="@+id/section_month_index"
+      android:layout_width="40dp"
+      android:layout_height="match_parent"
+      android:gravity="center"
+      android:textColor="@color/hdr_text_color"
+      android:textStyle="bold"
+      android:background="@color/hdr_month_bg_color"
+      />
+
+  <com.batoulapps.QamarDeen.ui.widgets.PrayerBoxesHeaderLayout
+      android:id="@+id/prayer_header_boxes"
+      android:background="@color/hdr_background"
+      android:layout_width="match_parent"
+      android:layout_height="@dimen/header_height"
+      />
+
+</LinearLayout>
